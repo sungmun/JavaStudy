@@ -1,0 +1,13 @@
+/Block.class
+/BlockAxis.class
+/BlockAxisDefinition.class
+/Control.class
+/CreateBlock.class
+/Map.class
+/MoveType.class
+/Point.class
+/Space.class
+/SpaceBlockView.class
+/Tetrino.class
+/TetrinoType.class
+/TetrisControlManager.class
