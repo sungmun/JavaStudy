@@ -1,2 +1,2 @@
 # JavaStudy
-This is a storage space for studying Java
+We will create a Tetris using Java, and we will create a text version and a GUI version
