@@ -17,7 +17,7 @@ public class Tetrino implements BlockAxis,MoveType{
 		}
 	}
 	public boolean moveTetrino(int direction){
-		return (Math.abs(direction)==1)?sideMoveTetrino(direction):downTetrino();
+		return (Math.abs(direction)==1)?sideMoveTetrino(direction):downMoveTetrino();
 	}
 	private boolean sideMoveTetrino(int direction){ //오른쪽은 +1 왼쪽은 -1
 		if((direction==RIGHT&&(flowtetrino.getX()+3>21))||(direction==LEFT&&(flowtetrino.getX()-3<0))){
@@ -38,7 +38,7 @@ public class Tetrino implements BlockAxis,MoveType{
 		return true;
 	}
 	
-	private boolean downTetrino(){
+	private boolean downMoveTetrino(){
 		for(int y=0;y<5;y++){
 			for(int x=0;x<6;x++){
 				if(area[x][y].getSpace()&&((Block)area[x][y]).ismove){
@@ -66,10 +66,13 @@ public class Tetrino implements BlockAxis,MoveType{
 		}
 		for(int y=0;y<4;y++){
 			for(int x=1;x<5;x++){
-				if(area[y][x].getSpace()&&(!((Block)area[y][x]).ismove)){//블럭이 고정블럭인가?
-					if(temp[y][x].getSpace()){		//넣을 게 블럭인가?
-						area=temp1;					//이동한 블럭을 원상 복귀후
-						return false;				//그러면 블럭 회전 실패
+				if(area[y][x].toString()=="Block"){
+					Block temp3=(Block)area[y][x];
+					if(!temp3.ismove){//블럭이 고정블럭인가?
+						if(temp[y][x].getSpace()){		//넣을 게 블럭인가?
+							area=temp1;					//이동한 블럭을 원상 복귀후
+							return false;				//그러면 블럭 회전 실패
+						}
 					}
 				}
 				area[y][x]=temp[y][x];				//블럭을 이동
