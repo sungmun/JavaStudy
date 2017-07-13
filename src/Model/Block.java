@@ -1,3 +1,4 @@
+package Model;
 
 public class Block extends Space{
 	boolean ismove=true;		  //블럭고정이면 false, 블럭유동이면 true
@@ -12,12 +13,8 @@ public class Block extends Space{
 	private static boolean isLiquidity(Block bck){
 		return bck.ismove;
 	}
-	public static boolean BlockCheack(Space spc){
-		if(!spc.getSpace()){
-			return false;
-		}
-		spc=new Block();
-		return true;
+	public boolean getIsMove() {
+		return ismove;
 	}
 	@Override
 	public String toString() {

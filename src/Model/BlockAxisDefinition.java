@@ -1,4 +1,7 @@
+package Model;
 import java.util.HashMap;
+
+import Control.Point;
 
 public class BlockAxisDefinition {
 	private static HashMap<Integer,Point> blockAxis=new HashMap<>();

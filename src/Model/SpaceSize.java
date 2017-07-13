@@ -1,3 +1,4 @@
+package Model;
 
 public interface SpaceSize {
 	int HEIGHT=20;

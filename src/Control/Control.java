@@ -1,3 +1,7 @@
+package Control;
+
+import Model.Block;
+import View.MainView;
 
 public class Control {
 
@@ -6,7 +10,7 @@ public class Control {
 		
 		TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();
 		
-		
+		MainView view=new MainView(36, 36);
 	}
 
 }

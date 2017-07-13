@@ -1,3 +1,6 @@
+package Model;
+import Control.Point;
+
 public interface BlockAxis {
 	
 	Point[] CENTER={

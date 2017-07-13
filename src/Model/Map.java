@@ -1,3 +1,4 @@
+package Model;
 public class Map {
 	
 	private static int width,height;
@@ -29,5 +30,8 @@ public class Map {
 	}
 	public static int getMapHeight(){
 		return Map.height;
+	}
+	public Space[][] getMap(){
+		return map;
 	}
 }

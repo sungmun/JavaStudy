@@ -1,3 +1,5 @@
+package Control;
+import Model.MoveType;
 
 public class Tic extends Thread implements MoveType{
 	TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();

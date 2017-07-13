@@ -1,3 +1,4 @@
+package Model;
 
 public class Space implements SpaceSize{
 	private boolean isblock=false; //블럭이 있으면 true;

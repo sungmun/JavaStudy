@@ -1,5 +1,11 @@
-import java.lang.reflect.Array;
+package Control;
 import java.util.Arrays;
+
+import Model.Block;
+import Model.CreateBlock;
+import Model.Map;
+import Model.Space;
+import Model.Tetrino;
 
 public class TetrisControlManager {
 	
@@ -13,7 +19,7 @@ public class TetrisControlManager {
 	
 	private TetrisControlManager() {
 		Map tetris=Map.createMap(11, 21);
-		realtimemap=tetris.map;
+		realtimemap=tetris.getMap();
 	}
 
 	public static TetrisControlManager createTetrisControlManager(){
@@ -39,8 +45,11 @@ public class TetrisControlManager {
 		for(int i=0;i<4;i++){
 			for(int j=1;j<5;j++){
 				Space spc=realtimemap[x+j][y+i];
-				if(spc.getSpace()&&((Block)spc).ismove){
-					realtimemap[x+j][y+i]=new Space();
+				if(spc.toString()=="Space"){
+					Block temp1=(Block)spc;
+					if(temp1.getIsMove()){
+						realtimemap[x+j][y+i]=new Space();
+					}
 				}
 			}
 		}//유동 블럭을 전부 제거
@@ -55,8 +64,11 @@ public class TetrisControlManager {
 		for (int j=0;y<4;y++) {
 			for (int i=1;x<5;x++) {
 				Space spc=tetrino.getTetrino()[j][i];
-				if(spc.getSpace()&&((Block)spc).ismove){
-					realtimemap[x+j][y+i]=spc;
+				if(spc.toString()=="Space"){
+					Block temp1=(Block)spc;
+					if(temp1.getIsMove()){
+						realtimemap[x+j][y+i]=spc;
+					}
 				}
 			}
 		}

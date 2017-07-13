@@ -1,3 +1,4 @@
+package Model;
 public class CreateBlock implements TetrinoType{
 	static int type;
 	public static Tetrino tetrinoRandomCreate(){
