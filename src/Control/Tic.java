@@ -1,8 +1,11 @@
 package Control;
 import Model.MoveType;
+import Model.Space;
+import View.TetrinoBlockPanel;
 
 public class Tic extends Thread implements MoveType{
 	TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();
+	TetrinoBlockPanel panel=TetrinoBlockPanel.createTetrinoBlockPanel();
 	double speed=1.0;
 	@Override
 	public void run() {
@@ -20,6 +23,16 @@ public class Tic extends Thread implements MoveType{
 				}
 			}
 			try {
+				panel.repaint();
+				for (Space[] spaces : manager.realtimemap) {
+					for (Space space : spaces) {
+						System.out.print(((space.toString()=="Space")?0:1)+" ");
+					}
+					System.out.println();
+				}
+				System.out.println();
+				System.out.println();
+				System.out.println();
 				sleep((long)(speed*1000));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

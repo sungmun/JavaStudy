@@ -1,22 +1,30 @@
 package Model;
 import Control.Point;
+import Control.TetrisControlManager;
 
-public class Tetrino implements BlockAxis,MoveType{
+public class Tetrino implements BlockAxis,MoveType,TetrinoType{
 
 	int mode=1;//1부터 4까지 있다
 	private Point flowtetrino; 				//테트리노의 현재 위치
 	//테트리노의 현재 위치는 area를 기준으로 보면 [4][1]의 위치로 표시하며
 	//이 위치는 배열 0까지 포함한 위치이다.
 	
-	private Space[][] area=new Space[5][4];
+	private Space[][] area=new Space[5][6];
 	
-	public Tetrino(int[][] tetrino) {
+	public Tetrino(int[][] tetrino,int type) {
 		for(int y=0;y<4;y++){
+			area[y][0]=new Space();
 			for(int x=1;x<5;x++){
-				if(tetrino[y][x]==1){
-					area[y][x]=new Block();
+				if(tetrino[y][x-1]==1){
+					area[y][x]=new Block(type);
+				}else{
+					area[y][x]=new Space();
 				}
 			}
+			area[y][5]=new Space();
+		}
+		for(int x=0;x<6;x++){
+			area[4][x]=new Space();
 		}
 	}
 	public boolean moveTetrino(int direction){
@@ -44,8 +52,12 @@ public class Tetrino implements BlockAxis,MoveType{
 	private boolean downMoveTetrino(){
 		for(int y=0;y<5;y++){
 			for(int x=0;x<6;x++){
-				if(area[x][y].getSpace()&&((Block)area[x][y]).ismove){
-					if(area[x][y+1].getSpace()&&(!((Block)area[x][y+1]).ismove)){
+				if(area[y][x].toString()=="Block"&&area[y+1][x].toString()=="Block"){
+					Block spc1=(Block)area[y][x];
+					Block spc2=(Block)area[y+1][x];
+					if((spc1.ismove&&(!spc2.ismove))){
+						return false;
+					}else if(flowtetrino.getY()+y >= TetrisControlManager.getHeight()){
 						return false;
 					}
 				}
@@ -118,7 +130,7 @@ public class Tetrino implements BlockAxis,MoveType{
 		return flowtetrino;
 	}
 	public void setArea(int x,int y,Space spc){
-		area[x][y]=spc;
+		area[y][x]=spc;
 	}
 	public Space[][] getTetrino() {
 		return area;

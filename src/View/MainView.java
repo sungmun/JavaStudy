@@ -21,7 +21,9 @@ public class MainView {
 		
 		panel.setBounds(5, 5, width*10,height*20-1);
 		contentPane.add(panel);
-
+		
+		TetrisMapPanel nowmappanel=new TetrisMapPanel(width, height);
+		panel.add(nowmappanel);
 		
 		jf.getContentPane().setBackground(Color.BLACK);
 	}

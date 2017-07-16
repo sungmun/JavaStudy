@@ -27,7 +27,8 @@ public class CreateBlock implements TetrinoType{
 				{0,1,1,0},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		
+		return new Tetrino(type,CreateBlock.type); 
 	}
 	private static Tetrino tetrinoIType(){
 		int[][] type={
@@ -36,7 +37,7 @@ public class CreateBlock implements TetrinoType{
 				{0,0,0,0},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		return new Tetrino(type,CreateBlock.type);
 	}
 	private static Tetrino tetrinoSType(){
 		int[][] type={
@@ -45,7 +46,7 @@ public class CreateBlock implements TetrinoType{
 				{0,1,1,0},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		return new Tetrino(type,CreateBlock.type);
 	}
 	private static Tetrino tetrinoZType(){
 		int[][] type={
@@ -54,7 +55,7 @@ public class CreateBlock implements TetrinoType{
 				{0,0,1,1},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		return new Tetrino(type,CreateBlock.type);
 	}
 	private static Tetrino tetrinoLType(){
 		int[][] type={
@@ -63,7 +64,7 @@ public class CreateBlock implements TetrinoType{
 				{0,1,0,0},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		return new Tetrino(type,CreateBlock.type);
 	}
 	private static Tetrino tetrinoJType(){
 		int[][] type={
@@ -72,7 +73,7 @@ public class CreateBlock implements TetrinoType{
 				{0,0,0,1},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		return new Tetrino(type,CreateBlock.type);
 	}
 	private static Tetrino tetrinoTType(){
 		int[][] type={
@@ -81,6 +82,6 @@ public class CreateBlock implements TetrinoType{
 				{0,0,1,0},
 				{0,0,0,0},
 		};
-		return new Tetrino(type);
+		return new Tetrino(type,CreateBlock.type);
 	}
 }
