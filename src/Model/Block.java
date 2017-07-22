@@ -1,10 +1,13 @@
 package Model;
 
-public class Block extends Space{
+public class Block extends Space implements TetrinoType{
 	boolean ismove=true;		  //블럭고정이면 false, 블럭유동이면 true
 	private int type;
 	public Block(int type) {
 		this.type=type;
+		if(type==DEFULT){
+			ismove=false;
+		}
 	}
 	public void stateChange(){
 		this.ismove=false;

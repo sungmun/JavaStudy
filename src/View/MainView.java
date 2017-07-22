@@ -1,30 +1,36 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Container;
 
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class MainView {
 	MainViewFrame jf;
-	private JPanel contentPane;
+	TetrisMapPanel mappanel;
+	TetrinoBlockPanel nowmappanel;
+	
 	public MainView(int width,int height) {
 		// TODO Auto-generated constructor stub
 		jf=new MainViewFrame(width, height);
 		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		jf.setContentPane(contentPane);
+		Container contentPane = jf.getContentPane();
 		contentPane.setLayout(null);
 		
-		TetrisMapPanel panel = new TetrisMapPanel(width,height);
+		mappanel = new TetrisMapPanel(width,height);
+		nowmappanel=TetrinoBlockPanel.createTetrinoBlockPanel(width, height);
 		
-		panel.setBounds(5, 5, width*10,height*20-1);
-		contentPane.add(panel);
-		
-		TetrisMapPanel nowmappanel=new TetrisMapPanel(width, height);
-		panel.add(nowmappanel);
+		contentPane.add(mappanel);
+
+		mappanel.add(nowmappanel);
 		
 		jf.getContentPane().setBackground(Color.BLACK);
+	}
+	public TetrisMapPanel getTetrisMapPanel(){
+		return mappanel;
+	}
+	public TetrinoBlockPanel getTetrinoBlockPanel(){
+		return nowmappanel;
 	}
 }

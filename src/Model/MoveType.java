@@ -1,8 +1,8 @@
 package Model;
 
 public interface MoveType {
-	int RIGHT=1;
-	int DOWN =0;
-	int LEFT =-1;
-	
+	int RIGHT=0x1;
+	int DOWN =0x2;
+	int LEFT =0x3;
+	int TURN =0x4;
 }

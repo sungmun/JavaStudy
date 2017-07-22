@@ -8,4 +8,5 @@ public interface TetrinoType {
 	int LTYPE=0x4;
 	int JTYPE=0x5;
 	int TTYPE=0x6;
+	int DEFULT=0x7;
 }

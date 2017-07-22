@@ -6,8 +6,9 @@ import Model.CreateBlock;
 import Model.Map;
 import Model.Space;
 import Model.Tetrino;
+import Model.TetrinoType;
 
-public class TetrisControlManager {
+public class TetrisControlManager implements TetrinoType{
 	
 	private static int height=23;
 	private static int width=11;
@@ -32,14 +33,17 @@ public class TetrisControlManager {
 		int createposition=width/3;
 		tetrino=CreateBlock.tetrinoRandomCreate();
 		for (int y=0;y<4;y++) {
-			for (int x=1;x<4;x++) {
+			for (int x=1;x<5;x++) {
 				realtimemap[y][x+createposition]=tetrino.getTetrino()[y][x];
 			}
 		}
 		tetrino.setFlowTetrino(new Point(1, createposition+3));
 	}
 	public boolean TetrinoBlockMove(int moveType){//테트리노의 이동시 현재 맵의 정보 리프래쉬
-		Space[][] temp=realtimemap;
+		Space[][] temp=new Space[height][width];
+		for(int i=0;i<realtimemap.length;i++){
+			temp[i]=realtimemap[i].clone();
+		}
 		int x=tetrino.getFlowTetrino().getX()-3;
 		int y=tetrino.getFlowTetrino().getY()-1;
 		Point temp1=pos(new Point(y, x));
@@ -57,6 +61,17 @@ public class TetrisControlManager {
 		}//유동 블럭을 전부 제거
 		if(!tetrino.moveTetrino(moveType)){//이동을 실패한 경우
 			realtimemap=temp; 			   //원상 복귀
+			for(int i=0;i<temp1.getY();i++){
+				for(int j=0;j<temp1.getX();j++){
+					Space spc=realtimemap[y+i][x+j];
+					if(spc.toString()=="Block"){
+						Block temp2=(Block)spc;
+						if(temp2.getIsMove()){
+							((Block)realtimemap[y+i][x+j]).stateChange();
+						}
+					}
+				}
+			}
 			return false;						   //함수 종료
 		}
 		//테트리노의 이동
@@ -71,7 +86,7 @@ public class TetrisControlManager {
 				if(spc.toString()=="Block"){
 					Block temp2=(Block)spc;
 					if(temp2.getIsMove()){
-						realtimemap[i+y][j+i]=spc;
+						realtimemap[i+y][j+x]=spc;
 					}
 				}
 			}
@@ -85,12 +100,21 @@ public class TetrisControlManager {
 		int x=tetrino.getFlowTetrino().getX()-3;
 		int y=tetrino.getFlowTetrino().getY()-1;
 		
-		Point temp=pos(new Point(y, x));
-		x=(x<0)?0:x;
+		Point temp=new Point(5, 6);
 		for(int i=0;i<temp.getY();i++){
 			for(int j=0;j<temp.getX();j++){
-				Space spc=realtimemap[y+i][x+j];
+				Space spc = null;
+				if(tetrino.getFlowTetrino().getY()+i > TetrisControlManager.getHeight()){
+					spc= new Block(DEFULT);
+				}else if(x+j<0){
+					spc= new Block(DEFULT);
+				}else if(x+j>TetrisControlManager.getWidth()){
+					spc= new Block(DEFULT);
+				}else{
+					spc=realtimemap[y+i][x+j];
+				}
 				tetrino.setArea(j, i, spc);
+				
 			}
 		}
 	}

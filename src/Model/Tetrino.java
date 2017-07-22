@@ -50,17 +50,16 @@ public class Tetrino implements BlockAxis,MoveType,TetrinoType{
 	}
 	
 	private boolean downMoveTetrino(){
-		for(int y=0;y<5;y++){
+		for(int y=0;y<4;y++){
 			for(int x=0;x<6;x++){
-				if(area[y][x].toString()=="Block"&&area[y+1][x].toString()=="Block"){
+				if(area[y][x].toString()=="Block"&&!(((Block)area[y][x]).getType()==DEFULT)&&area[y+1][x].toString()=="Block"){
 					Block spc1=(Block)area[y][x];
 					Block spc2=(Block)area[y+1][x];
 					if((spc1.ismove&&(!spc2.ismove))){
 						return false;
-					}else if(flowtetrino.getY()+y >= TetrisControlManager.getHeight()){
-						return false;
 					}
 				}
+				
 			}
 		}
 		flowtetrino=new Point(flowtetrino.getY()+1, flowtetrino.getX());

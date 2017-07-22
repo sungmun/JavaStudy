@@ -10,11 +10,14 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 
 class TetrisMapPanel extends JPanel{
+
+	private static final long serialVersionUID = 1L;
 	int cellx,celly;
 	public TetrisMapPanel(int width,int height) {
 		super();
 		cellx=width;
 		celly=height;
+		setBounds(5, 5, width*10,height*20-1);
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
