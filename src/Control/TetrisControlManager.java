@@ -11,10 +11,10 @@ import Model.TetrinoType;
 public class TetrisControlManager implements TetrinoType{
 	
 	private static int height=23;
-	private static int width=11;
+	private static int width=10;
 	
-	Space[][] realtimemap;
-	Tetrino tetrino; 
+	public Space[][] realtimemap;
+	public Tetrino tetrino; 
 	
 	static TetrisControlManager tetrismanager=null;
 	
@@ -51,24 +51,20 @@ public class TetrisControlManager implements TetrinoType{
 		for(int i=0;i<temp1.getY();i++){
 			for(int j=0;j<temp1.getX();j++){
 				Space spc=realtimemap[y+i][x+j];
-				if(spc.toString()=="Block"){
-					Block temp2=(Block)spc;
-					if(temp2.getIsMove()){
-						realtimemap[y+i][x+j]=new Space();
-					}
+				if(spc.getIsblock()==Space.FLOW){
+					realtimemap[y+i][x+j]=new Space();
 				}
 			}
 		}//유동 블럭을 전부 제거
 		if(!tetrino.moveTetrino(moveType)){//이동을 실패한 경우
-			realtimemap=temp; 			   //원상 복귀
-			for(int i=0;i<temp1.getY();i++){
-				for(int j=0;j<temp1.getX();j++){
-					Space spc=realtimemap[y+i][x+j];
-					if(spc.toString()=="Block"){
-						Block temp2=(Block)spc;
-						if(temp2.getIsMove()){
-							((Block)realtimemap[y+i][x+j]).stateChange();
-						}
+			//원상 복귀
+			for(int i=0;i<temp.length;i++){
+				realtimemap[i]=temp[i].clone();
+			}
+			for(int i=0;i<realtimemap.length;i++){
+				for(int j=0;j<realtimemap[i].length;j++){
+					if(realtimemap[i][j].getIsblock()==Space.FLOW){
+						realtimemap[i][j].setIsblock(Space.FIXED);
 					}
 				}
 			}
@@ -83,14 +79,13 @@ public class TetrisControlManager implements TetrinoType{
 		for(int i=0;i<temp1.getY();i++){
 			for(int j=0;j<temp1.getX();j++){
 				Space spc=tetrino.getTetrino()[i][j];
-				if(spc.toString()=="Block"){
-					Block temp2=(Block)spc;
-					if(temp2.getIsMove()){
-						realtimemap[i+y][j+x]=spc;
-					}
-				}
+				if(spc.getIsblock()==Space.FLOW){
+					realtimemap[i+y][j+x]=spc;
+				}	
 			}
 		}
+		tetrino.setFlowTetrino(new Point(y+1,x+3));
+		//이동한 테트리노의 위치 저장
 		//이동한 테트리노를 실시간 맵에 반영
 		aroundSearch();
 		//테트리노의 주변 정보를 입력
@@ -100,23 +95,28 @@ public class TetrisControlManager implements TetrinoType{
 		int x=tetrino.getFlowTetrino().getX()-3;
 		int y=tetrino.getFlowTetrino().getY()-1;
 		
-		Point temp=new Point(5, 6);
-		for(int i=0;i<temp.getY();i++){
-			for(int j=0;j<temp.getX();j++){
+		for(int i=0;i<5;i++){
+			for(int j=0;j<6;j++){
 				Space spc = null;
 				if(tetrino.getFlowTetrino().getY()+i > TetrisControlManager.getHeight()){
-					spc= new Block(DEFULT);
+					spc= new Block();
+					spc.setIsblock(Space.ETC);
 				}else if(x+j<0){
-					spc= new Block(DEFULT);
-				}else if(x+j>TetrisControlManager.getWidth()){
-					spc= new Block(DEFULT);
+					spc= new Block();
+					spc.setIsblock(Space.ETC);
+				}else if(x+j>TetrisControlManager.getWidth()-1){
+					spc= new Block();
+					spc.setIsblock(Space.ETC);
 				}else{
 					spc=realtimemap[y+i][x+j];
 				}
-				tetrino.setArea(j, i, spc);
-				
+				if(!tetrino.getArea()[i][j].equals(spc)){
+					tetrino.setArea(i, j, spc);
+				}
 			}
 		}
+		
+		tetrino.viewPointCheck();
 	}
 	public Space[][] getRangeRealTimeMap(int height){
 		Space[][] spc=new Space[4][width];
@@ -161,7 +161,7 @@ public class TetrisControlManager implements TetrinoType{
 				}
 			}
 			if(cheack){
-				returnvalue|=(0x01<<i);
+				returnvalue|=0x01<<i;
 			}
 		}
 		return returnvalue;
@@ -220,5 +220,34 @@ public class TetrisControlManager implements TetrinoType{
 			tempy+=height-(y+4)-1;
 		}
 		return new Point(tempy, tempx);
+	}
+	public void paint(){
+		System.out.print("flowposX: "+tetrino.getFlowTetrino().getX());
+		System.out.print(" flowposY: "+tetrino.getFlowTetrino().getY());
+		System.out.println();
+		System.out.println("type: "+tetrino.getType());
+		for (Space[] spaces : tetrino.getArea()) {
+				for (Space space : spaces) {
+					
+					System.out.print((space.getIsblock()>=0?" ":"")+space.getIsblock());
+				}
+				System.out.println();
+		}
+		System.out.println();
+		System.out.println();
+	}
+	public void mapPaint(){
+		System.out.print("flowposX: "+tetrino.getFlowTetrino().getX());
+		System.out.print(" flowposY: "+tetrino.getFlowTetrino().getY());
+		System.out.println();
+		System.out.println("type: "+tetrino.getType());
+		for (Space[] spaces : realtimemap) {
+				for (Space space : spaces) {
+					System.out.print((space.getIsblock()>=0?" ":"")+space.getIsblock());
+				}
+				System.out.println();
+		}
+		System.out.println();
+		System.out.println();
 	}
 }

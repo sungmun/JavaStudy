@@ -14,12 +14,12 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener,MoveType{
 	public void keyPressed(KeyEvent e) {
 		int key=e.getKeyCode();
 		switch(key){
-		case KeyEvent.KEY_LOCATION_RIGHT:
+		case KeyEvent.VK_RIGHT:
 			manager.TetrinoBlockMove(RIGHT);
 			panel.revalidate();
 			panel.repaint();
 			break;
-		case KeyEvent.KEY_LOCATION_LEFT:
+		case KeyEvent.VK_LEFT:
 			manager.TetrinoBlockMove(LEFT);
 			panel.revalidate();
 			panel.repaint();

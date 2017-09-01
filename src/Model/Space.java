@@ -1,12 +1,14 @@
 package Model;
 
-public class Space implements SpaceSize{
-	private boolean isblock=false; //블럭이 있으면 true;
-	public void spaceChange() {
-		// TODO Auto-generated method stub
-		isblock=(!isblock);
+public class Space implements SpaceSize,BlockType{
+	private int isblock=SPACE;
+	public int getIsblock() {
+		return isblock;
 	}
-	public boolean getSpace(){
+	public void setIsblock(int isblock) {
+		this.isblock = isblock;
+	}
+	public int getSpace(){
 		return isblock;
 	}
 	@Override

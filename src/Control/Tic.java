@@ -1,45 +1,34 @@
 package Control;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Timer;
+
 import Model.MoveType;
+import View.MainView;
 import View.TetrinoBlockPanel;
 
-public class Tic extends Thread implements MoveType{
+public class Tic implements MoveType,ActionListener{
 	TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();
-	TetrinoBlockPanel panel=TetrinoBlockPanel.createTetrinoBlockPanel();
-	double speed=0.1;
+	
 	@Override
-	public void run() {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		while(true){
-			if(manager.getNowTetrino()==null){
-				manager.createBlock();
-			}else{
-				if(!manager.TetrinoBlockMove(DOWN)){
-					Point nowpos=manager.tetrino.getFlowTetrino();
-					if(manager.gameOverCheack(nowpos)){
-						break;
-					}
-					manager.setNowTetrino(null);
+
+		if(manager.getNowTetrino()==null){
+			manager.createBlock();
+		}else{
+			if(!manager.TetrinoBlockMove(DOWN)){
+				Point nowpos=manager.tetrino.getFlowTetrino();
+				if(manager.gameOverCheack(nowpos)){
+					new MainView().getTime().stop();
 				}
-			}
-			try {
-				panel.revalidate();
-				panel.repaint();
-				synchronized (this) {
-					wait();
-				}
-				//print();
-				sleep((long)(speed*1000));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				manager.setNowTetrino(null);
 			}
 		}
-		/*
-		이부분에 네트워크 부분 작성 
-		*/
+		new MainView().blockMoveRePaint();
 	}
-	public void speedUp() {
-		speed+=0.1;
-	}
+	
+	
 	
 }
