@@ -2,11 +2,8 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Timer;
-
 import Model.MoveType;
 import View.MainView;
-import View.TetrinoBlockPanel;
 
 public class Tic implements MoveType,ActionListener{
 	TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();
@@ -21,7 +18,7 @@ public class Tic implements MoveType,ActionListener{
 			if(!manager.TetrinoBlockMove(DOWN)){
 				Point nowpos=manager.tetrino.getFlowTetrino();
 				if(manager.gameOverCheack(nowpos)){
-					new MainView().getTime().stop();
+					MainView.getTime().stop();
 				}
 				manager.setNowTetrino(null);
 			}

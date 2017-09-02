@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 
 public class MainViewFrame extends JFrame{
 	
+	private static final long serialVersionUID = 1L;
+
 	public MainViewFrame(int width,int height) {
 		super("Tetris");
 		int cellwidth=width*10;

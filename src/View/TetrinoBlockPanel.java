@@ -66,13 +66,15 @@ public class TetrinoBlockPanel extends JPanel{
 			Graphics graphics=(Graphics2D)buffer.getGraphics();
 			Point pos=manager.getNowTetrino().getFlowTetrino();
 			Rectangle rec=manager.getNowTetrino().getActivespace();
-			int x=pos.getX()+(int)rec.getX()-3;
-			int y=pos.getY()+(int)rec.getY()-1;
-			//x의 값이 범위를 초과한다
-			g.clearRect(x*this.width, y*this.height, (int)rec.getWidth()*width, (int)rec.getHeight()*height);
+			//rec는 그림을 그려야 하는 범위를 표시한다
+			//pos는 현제 테트리노의 위치를 알려준다
+			int repaintx=pos.getX()+(int)rec.getX()-4;
+			int repainty=pos.getY()+(int)rec.getY()-1;
+			//이부분에서의 x와 y의 값은 repaint를 해야하는 부분이다
+			g.clearRect(repaintx*this.width, repainty*this.height, (int)rec.getWidth()*width, (int)rec.getHeight()*height);
 			try{
-				for(;y<(int)rec.getHeight()+pos.getY();y++){
-					for(;x<(int)rec.getWidth()+pos.getX();x++){
+				for(int y=repainty;y<(int)rec.getHeight()+repainty;y++){
+					for(int x=repaintx;x<(int)rec.getWidth()+repaintx;x++){
 						
 							Space spc=manager.getRealTimeMap()[y][x];
 							if(spc.getIsblock()==Space.FLOW||spc.getIsblock()==Space.FIXED){
@@ -86,9 +88,9 @@ public class TetrinoBlockPanel extends JPanel{
 					}
 				}
 			}catch (ArrayIndexOutOfBoundsException e) {
-				/*
-				System.out.println("x: "+x+"\t (int)rec.getWidth():  "+(int)rec.getWidth()+"\t pos.getX():  "+pos.getX());
-				System.out.println("y: "+y+"\t (int)rec.getHeight(): "+(int)rec.getHeight()+"\t pos.getY(): "+pos.getY());
+				
+				System.out.println("repaintx: "+repaintx+"\t (int)rec.getWidth():  "+(int)rec.getWidth()+"\t pos.getX():  "+pos.getX());
+				System.out.println("repainty: "+repainty+"\t (int)rec.getHeight(): "+(int)rec.getHeight()+"\t pos.getY(): "+pos.getY());
 				System.out.println("max x: "+(int)rec.getWidth()+pos.getX());
 				System.out.println("max y: "+(int)rec.getHeight()+pos.getY());
 				for (Space spcs[] : manager.getRealTimeMap()) {
@@ -99,7 +101,7 @@ public class TetrinoBlockPanel extends JPanel{
 				}
 				System.out.println();
 				System.out.println();
-			*/	
+			
 			}
 		}
 		g.drawImage(buffer, 0, 0, this);

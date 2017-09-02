@@ -1,8 +1,6 @@
 package View;
 
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,10 +12,14 @@ import javax.swing.border.TitledBorder;
 
 import Control.Point;
 import Control.TetrisControlManager;
-import Control.Tic;
 import Model.MoveType;
 
 public class MainView extends JFrame implements MoveType{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	TetrisMapPanel mappanel;
 	TetrinoBlockPanel nowmapblockpanel;
 	TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();
