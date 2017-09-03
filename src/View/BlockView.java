@@ -1,65 +1,73 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import Control.Point;
-import Model.TetrinoType;
 
-public class BlockView implements TetrinoType{
-	private Color Blockcol;
-	private Point pos;
-	private int width,height;
-	
-	public BlockView(Color col, Point pos, int width, int height) {
-		this.Blockcol=col;
-		this.pos=pos;
-		this.width=width;
-		this.height=height;
+public class BlockView {
+
+	Point pos;
+
+	// width and height of DrawingPanel JPanel
+	private int dpWidth;
+	private int dpHeight;
+
+	// image to draw
+	private Image image;
+	private Color col;
+
+	public BlockView(int dpWidth, int dpHeight, Point pos) {
+		this.dpHeight = dpHeight;
+		this.dpWidth = dpWidth;
+		this.pos = pos;
+		this.col=new Color(255, 0, 0, 0);
 	}
-	
-	public static Color SetBlockColor(int type){
-		switch(type){
-		case OTYPE:
-			return new Color(255, 255, 0);
-		case ITYPE:
-			return new Color(135, 206, 235);
-		case STYPE:
-			return new Color(0, 128, 0);
-		case ZTYPE:
-			return new Color(255, 0, 0);
-		case LTYPE:
-			return new Color(248, 155, 0);
-		case JTYPE:
-			return new Color(0, 153, 255);
-		case TTYPE:
-			return new Color(102, 0, 153);
-		default:
-			return new Color(128, 128, 128);
-		}
+
+	public void BlockChange(Color col) {
+		this.setCol(col);
 	}
-	
-	public void setWidth(int width) {
-		this.width=width;
+
+	public int getDpWidth() {
+		return dpWidth;
 	}
-	public void setHeight(int height) {
-		this.height=height;
+
+	public void setDpWidth(int dpWidth) {
+		this.dpWidth = dpWidth;
 	}
-	public void setPos(Point pos) {
-		this.pos=pos;
+
+	public int getDpHeight() {
+		return dpHeight;
 	}
-	public void setBlockColor(Color col) {
-		this.Blockcol=col;
+
+	public void setDpHeight(int dpHeight) {
+		this.dpHeight = dpHeight;
 	}
-	public int getwidth(){
-		return width;
+
+	public Image getImage() {
+		return image;
 	}
-	public int getheight(){
-		return height;
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
-	public Color getColor(){
-		return Blockcol;
+
+	public Color getCol() {
+		return col;
 	}
-	public Point getPos(){
+
+	public void setCol(Color col) {
+		this.col = col;
+	}
+
+	public Point getPos() {
 		return pos;
 	}
+
+	public void setPos(Point pos) {
+		this.pos = pos;
+	}
+
 }

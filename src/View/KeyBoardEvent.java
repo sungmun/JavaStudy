@@ -7,13 +7,14 @@ import java.awt.event.KeyListener;
 import Control.TetrisControlManager;
 import Model.MoveType;
 
-public class KeyBoardEvent extends KeyAdapter implements KeyListener,MoveType{
-	TetrisControlManager manager=TetrisControlManager.createTetrisControlManager();
-	TetrinoBlockPanel panel=TetrinoBlockPanel.createTetrinoBlockPanel();
+public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
+	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
+	TetrinoBlockPanel panel = TetrinoBlockPanel.getTetrinoBlockPanel();
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int key=e.getKeyCode();
-		switch(key){
+		int key = e.getKeyCode();
+		switch (key) {
 		case KeyEvent.VK_RIGHT:
 			manager.TetrinoBlockMove(RIGHT);
 			panel.revalidate();
