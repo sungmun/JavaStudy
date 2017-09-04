@@ -19,7 +19,7 @@ public class MainView extends JFrame implements MoveType {
 	TetrinoBlockPanel nowmapblockpanel;
 	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 
-	double speed = 0.1;
+	double speed = 100;
 
 	static private Tic time;
 	static private MainView mainviewcopy;

@@ -59,12 +59,11 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 				if (spc1.getIsblock() == Block.ETC) {
 					continue;
 				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
-
-				if ((spc1.getIsblock() == Space.FLOW) && (spc2.getIsblock() == Space.FIXED)) {
-					return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
-				} else if ((spc2.getIsblock() == Space.ETC)) {
-					return false;
-				} // 확인하는 공간의 아래공간이 예외적인 공간이면 블럭의 이동을 정지
+				if (spc1.getIsblock() == Space.FLOW) {
+					if (spc2.getIsblock() == Space.FIXED||(spc2.getIsblock() == Space.ETC)) {
+						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
+					}
+				}
 			}
 		}
 		flowtetrino = new Point(flowtetrino.getY() + 1, flowtetrino.getX());
@@ -140,7 +139,7 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 			y = 0;
 			for (int i = 0; i < 5; i++) {
 				if (area[i][3].getIsblock() == Space.ETC) {
-					height = i;
+					height = i+1;
 					break;
 				}
 			}
@@ -161,8 +160,8 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 				}
 			}
 		}
-		height = (height == 0) ? 4 : height;
-		width = (width == 0) ? 5 : width;
+		height = (height == 0) ? 5 : height;
+		width = (width == 0) ? 6 : width;
 		activespace = new Rectangle(x, y, width, height);
 	}
 

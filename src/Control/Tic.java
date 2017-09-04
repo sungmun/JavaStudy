@@ -17,13 +17,13 @@ public class Tic extends Timer implements MoveType {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Tic.Tic(...).new ActionListener() {...}.actionPerformed()");
 				if (manager.getNowTetrino() == null) {
 					manager.createBlock();
 				} else {
 					if (!manager.TetrinoBlockMove(DOWN)) {
 						Point nowpos = manager.tetrino.getFlowTetrino();
 						if (manager.gameOverCheack(nowpos)) {
+							MainView.getMainviewcopy().blockMoveRePaint();
 							MainView.getTime().stop();
 						}
 						manager.setNowTetrino(null);
