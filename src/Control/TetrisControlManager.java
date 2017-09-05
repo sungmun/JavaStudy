@@ -160,8 +160,14 @@ public class TetrisControlManager implements TetrinoType {
 		for (int i = 0; i < realtimemap.length; i++) {
 			temp[i] = realtimemap[i].clone();
 		}
-		int x = tetrino.getFlowTetrino().getX() - 3;
-		int y = tetrino.getFlowTetrino().getY() - 1;
+		int x = 0;
+		int y = 0;
+		try {
+			x = tetrino.getFlowTetrino().getX() - 3;
+			y = tetrino.getFlowTetrino().getY() - 1;
+		} catch (NullPointerException e) {
+			System.out.println("TetrisControlManager.TetrinoBlockMove()");
+		}
 		Point temp1 = pos(new Point(y, x));
 		x = (x < 0) ? 0 : x;
 		for (int i = 0; i < temp1.getY(); i++) {
@@ -209,7 +215,7 @@ public class TetrisControlManager implements TetrinoType {
 					TetrisControlManager.getTetrisControlManager().mapPaint();
 					System.err.println("temp : "+temp1.toString());
 					System.err.println("오류가 난 위치 : [j="+j+",i="+i+"]");
-					System.err.println();
+					System.err.println("");
 				}
 			}
 		}

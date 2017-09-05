@@ -16,14 +16,23 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 		int key = e.getKeyCode();
 		switch (key) {
 		case KeyEvent.VK_RIGHT:
+			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
+				return;
+			}
 			manager.TetrinoBlockMove(RIGHT);
 			MainView.getMainviewcopy().blockMoveRePaint();
 			break;
 		case KeyEvent.VK_LEFT:
+			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
+				return;
+			}
 			manager.TetrinoBlockMove(LEFT);
 			MainView.getMainviewcopy().blockMoveRePaint();
 			break;
 		case KeyEvent.VK_SPACE:
+			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
+				return;
+			}
 			manager.TetrinoBlockMove(TURN);
 			MainView.getMainviewcopy().blockMoveRePaint();
 			break;

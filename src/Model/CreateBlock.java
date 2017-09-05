@@ -17,8 +17,10 @@ public class CreateBlock implements TetrinoType{
 			return tetrinoLType();
 		case JTYPE:
 			return tetrinoJType();
-		default:
+		case TTYPE:
 			return tetrinoTType();
+		default:
+			return tetrinoZType();
 		}
 	}
 	private static Tetrino tetrinoOType(){

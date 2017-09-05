@@ -82,7 +82,7 @@ public class MainView extends JFrame implements MoveType {
 	}
 
 	public void blockMoveRePaint() {
-		nowmapblockpanel.blockViewCheck();
+//		nowmapblockpanel.blockViewCheck();
 		invalidate();
 		repaint();
 	}

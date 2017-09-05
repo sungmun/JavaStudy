@@ -2,7 +2,6 @@ package View;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -21,13 +20,18 @@ public class TetrinoBlockPanel extends JPanel {
 	int width, height;
 	BufferedImage buffer = null;
 	public static BlockView[][] squareList = new BlockView[Map.getMapHeight() - 2][Map.getMapWidth()];
-
+	Color[] tetrino_type= {
+			new Color(255, 0, 0, 0),
+			new Color(255, 255, 0),
+			new Color(135, 206, 235),
+			new Color(0, 128, 0),
+			new Color(255, 0, 0),
+			new Color(248, 155, 0),
+			new Color(0, 153, 255),
+			new Color(102, 0, 153),
+		 };
+	
 	private TetrinoBlockPanel(int width, int height) {
-		for (int y = 0; y < Map.getMapHeight() - 2; y++) {
-			for (int x = 0; x < Map.getMapWidth(); x++) {
-				squareList[y][x] = new BlockView(width, height, new Point(y, x));
-			}
-		}
 		this.width = width;
 		this.height = height;
 	}
@@ -46,7 +50,7 @@ public class TetrinoBlockPanel extends JPanel {
 
 	/**
 	 * 
-	 */
+	 *//*
 	public void blockViewCheck() {
 		for (int y = 2; y < Map.getMapHeight(); y++) {
 			for (int x = 0; x < Map.getMapWidth(); x++) {
@@ -61,12 +65,22 @@ public class TetrinoBlockPanel extends JPanel {
 				squareList[y-2][x].BlockChange(col);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		int indexY=0;
+		int indexX=0;
+		for (Space[] spcs : manager.getRealTimeMap()) {
+			indexX=0;
+			for (Space spc : spcs) {
+				g.setColor(tetrino_type[spc.getType()]);
+				g.fill3DRect(indexX*width, (indexY-3)*height, width, height,true);
+				indexX++;
+			}
+			indexY++;
+		}/*
 		for (BlockView[] blockViews : squareList) {
 			for (BlockView bV : blockViews) {
 				int width = bV.getDpWidth();
@@ -76,6 +90,6 @@ public class TetrinoBlockPanel extends JPanel {
 				g.setColor(bV.getCol());
 				g.fill3DRect(x, y, width, height, true);
 			}
-		}
+		}*/
 	}
 }
