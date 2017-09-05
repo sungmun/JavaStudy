@@ -16,7 +16,7 @@ public class TetrisControlManager implements TetrinoType {
 
 	public Space[][] realtimemap;
 	public Tetrino tetrino;
-
+ 
 	static TetrisControlManager tetrismanager = null;
 
 	private TetrisControlManager() {
@@ -29,12 +29,12 @@ public class TetrisControlManager implements TetrinoType {
 		int y = pos.getY();
 		int tempx = 6;
 		int tempy = 5;
-
-		if (x + 5 >= width) {
-			tempy += width - (x + 5);
+		
+		if (x + 6 >= width) {
+			tempx += width - (x + 6);
 		}
-		if (y + 4 >= height) {
-			tempy += height - (y + 4) - 1;
+		if (y + 5 >= height) {
+			tempy += height - (y + 5);
 		}
 		return new Point(tempy, tempx);
 	}
@@ -45,6 +45,7 @@ public class TetrisControlManager implements TetrinoType {
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
+				
 				Space spc = null;
 				if (tetrino.getFlowTetrino().getY() + i > TetrisControlManager.getHeight()) {
 					spc = new Block();
@@ -77,7 +78,7 @@ public class TetrisControlManager implements TetrinoType {
 	public static TetrisControlManager getTetrisControlManager() {
 		return tetrismanager;
 	}
-	
+
 	public static int getWidth() {
 		return width;
 	}
@@ -94,7 +95,7 @@ public class TetrisControlManager implements TetrinoType {
 				realtimemap[y][x + createposition] = tetrino.getTetrino()[y][x];
 			}
 		}
-		tetrino.setFlowTetrino(new Point(1, createposition + 3));
+		tetrino.setFlowTetrino(new Point(1, createposition + 2));
 		tetrino.viewPointCheck();
 	}
 
@@ -173,9 +174,14 @@ public class TetrisControlManager implements TetrinoType {
 		} // 유동 블럭을 전부 제거
 		if (!tetrino.moveTetrino(moveType)) {// 이동을 실패한 경우
 			// 원상 복귀
+			
 			for (int i = 0; i < temp.length; i++) {
 				realtimemap[i] = temp[i].clone();
 			}
+			if (Math.abs(moveType) == 1) {
+				return false;
+			}
+
 			for (int i = 0; i < realtimemap.length; i++) {
 				for (int j = 0; j < realtimemap[i].length; j++) {
 					if (realtimemap[i][j].getIsblock() == Space.FLOW) {
@@ -189,13 +195,21 @@ public class TetrisControlManager implements TetrinoType {
 		x = tetrino.getFlowTetrino().getX() - 3;
 		y = tetrino.getFlowTetrino().getY() - 1;
 		temp1 = pos(new Point(y, x));
-		x = (x < 0) ? 0 : x;
+		
 		// 테트리노의 이동 위치 재정의
 		for (int i = 0; i < temp1.getY(); i++) {
 			for (int j = 0; j < temp1.getX(); j++) {
-				Space spc = tetrino.getTetrino()[i][j];
+				try {
+					Space spc = tetrino.getTetrino()[i][j];
 				if (spc.getIsblock() == Space.FLOW) {
 					realtimemap[i + y][j + x] = spc;
+				} 
+				} catch (ArrayIndexOutOfBoundsException e) {
+					System.err.println("TetrisControlManager.TetrinoBlockMove()");
+					TetrisControlManager.getTetrisControlManager().mapPaint();
+					System.err.println("temp : "+temp1.toString());
+					System.err.println("오류가 난 위치 : [j="+j+",i="+i+"]");
+					System.err.println();
 				}
 			}
 		}

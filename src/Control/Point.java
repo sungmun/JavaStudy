@@ -27,4 +27,9 @@ public class Point {
 	public boolean equals(Point pos) {
 		return (pos.getX()==x&&pos.getY()==y)?true:false; 
 	}
+	@Override
+	public String toString() {
+		return "Point [x=" + x + ", y=" + y + "]";
+	}
+	
 }

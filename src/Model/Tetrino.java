@@ -29,28 +29,33 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 	}
 
 	private boolean sideMoveTetrino(int direction) { // 오른쪽은 +1 왼쪽은 -1
-		if (direction == RIGHT && flowtetrino.getX() + 3 > 21) {
+
+		/*if (direction == RIGHT && flowtetrino.getX() + 2 > 20) {
 			return false; // 오른 쪽 끝에서 더 오른 쪽으로 가려고 하거나 외쪽으로 가려고 하는 경우
-		} else if (direction == LEFT && flowtetrino.getX() - 3 < 0) {
+		} else if (direction == LEFT && flowtetrino.getX() < 0) {
 			return false;
-		}
-		for (int y = 0; y < 5; y++) {
+		}*/
 			for (int x = 0; x < 6; x++) {
-				if (area[x][y].equals(area[x + direction][y])) {
-					return false;
-				} else if (area[x][y].getIsblock() == Space.SPACE) {
-					return true;
+				if (x + direction < 0 || x + direction >= 6) {
+					continue;
 				}
-			}
+				Space spc1 = area[3][x];
+				Space spc2 = area[3][x + direction];
+				if (spc1.getIsblock() == Block.ETC) {
+					continue;
+				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
+				if (spc1.getIsblock() == Space.FLOW) {
+					if (spc2.getIsblock() == Space.FIXED || (spc2.getIsblock() == Space.ETC)) {
+						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
+					}
+				}
 		}
 		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + direction);
+		
 		return true;
 	}
 
 	private boolean downMoveTetrino() {
-		if (getFlowTetrino().getY() == 19) {
-			System.out.print("");
-		}
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
 				Space spc1 = area[y][x];
@@ -60,7 +65,7 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 					continue;
 				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
 				if (spc1.getIsblock() == Space.FLOW) {
-					if (spc2.getIsblock() == Space.FIXED||(spc2.getIsblock() == Space.ETC)) {
+					if (spc2.getIsblock() == Space.FIXED || (spc2.getIsblock() == Space.ETC)) {
 						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
 					}
 				}
@@ -131,38 +136,36 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 	}
 
 	public void viewPointCheck() {
-		int x = 0, y = 0, height = 0, width = 0;
-		if (flowtetrino.getY() < 3) {
+		int x = 0, y = 0, height = 5, width = 6;
+		if (flowtetrino.getY() <= 3) {
 			y = 3;
 			height = flowtetrino.getY() + 2;
 		} else if (flowtetrino.getY() > 15) {
 			y = 0;
 			for (int i = 0; i < 5; i++) {
 				if (area[i][3].getIsblock() == Space.ETC) {
-					height = i+1;
+					height = i;
 					break;
 				}
 			}
 		}
-		if (flowtetrino.getX() < 3) {
+		if (flowtetrino.getX() <= 3) {
+			width=0;
 			for (int i = 0; i < 6; i++) {
-				if (area[2][i].getIsblock() == Space.ETC) {
-					x = i;
-				} else {
+				if (area[2][i].getIsblock() != Space.ETC) {
 					width++;
 				}
 			}
+			x=6-width;
 		} else if (flowtetrino.getX() > 7) {
 			x = 0;
 			for (int i = 0; i < 6; i++) {
 				if (area[2][i].getIsblock() == Space.ETC) {
-					width = i;
+					width = i - 1;
 				}
 			}
 		}
-		height = (height == 0) ? 5 : height;
-		width = (width == 0) ? 6 : width;
-		activespace = new Rectangle(x, y, width, height);
+		activespace = new RePaintRectangle(x, y, width, height);
 	}
 
 	public Point getFlowTetrino() {

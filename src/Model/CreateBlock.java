@@ -3,7 +3,7 @@ public class CreateBlock implements TetrinoType{
 	static int type;
 	public static Tetrino tetrinoRandomCreate(){
 		type=(int)(Math.random()*10)%6;
-		
+
 		switch(type){
 		case OTYPE:
 			return tetrinoOType();
