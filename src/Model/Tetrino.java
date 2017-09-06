@@ -1,10 +1,8 @@
 package Model;
 
-import java.awt.Rectangle;
-
 import Control.Point;
 
-public class Tetrino implements BlockAxis, MoveType, TetrinoType {
+public class Tetrino implements MoveType, TetrinoType {
 
 	int mode = 1;// 1부터 4까지 있다
 	private int type;
@@ -12,7 +10,6 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 	// 테트리노의 현재 위치는 area를 기준으로 보면 [4][1]의 위치로 표시하며
 	// 이 위치는 배열 0까지 포함한 위치이다.
 	private Space[][] area = new Space[5][6];
-	private Rectangle activespace;
 
 	public Tetrino(int[][] tetrino, int type) {
 		for (int y = 0; y < 4; y++) {
@@ -44,10 +41,10 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
 					}
 				}
-			} 
+			}
 		}
 		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + direction);
-		
+
 		return true;
 	}
 
@@ -72,96 +69,57 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 	}
 
 	public boolean moveTetrino(int direction) {
-		return (Math.abs(direction) == 1) ? sideMoveTetrino(direction) : downMoveTetrino();
+		switch (direction) {
+		case RIGHT:
+		case LEFT:
+			return sideMoveTetrino(direction);
+		case DOWN:
+			return downMoveTetrino();
+		case TURN:
+			return turnTetrino();
+		case DROP:
+		default:
+			return false;
+		}
 	}
 
 	public boolean turnTetrino() {
-		Space[][] temp = new Space[5][4];
-		Space[][] temp1 = area;
-		for (int y = 0; y < 5; y++) {
+		Space[][] temp = new Space[4][6];
+		Space[][] temp1 = new Space[4][6];
+		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
-				if (area[y][x].getIsblock() == Space.FLOW) {// 공간이 비어있지 않고
-					blockTurnMove(x, y, (Block[][]) temp);// 움직이는 블럭일때
-				}
+				temp[y][x] = new Space();
+				temp1[y][x] = (area[y][x].getIsblock() != Space.FLOW) ? area[y][x] : new Space();
+
 			}
 		}
+		temp[0][2] = area[0][4];
+		temp[0][3] = area[1][4];
+		temp[0][4] = area[2][4];
+		temp[1][2] = area[0][3];
+		temp[1][3] = area[1][3];
+		temp[1][4] = area[2][3];
+		temp[2][2] = area[0][2];
+		temp[2][3] = area[1][2];
+		temp[2][4] = area[2][2];
+		temp[1][1] = area[3][3];
+		temp[3][3] = area[1][1];
 		for (int y = 0; y < 4; y++) {
-			for (int x = 1; x < 5; x++) {
-				if (area[y][x].getIsblock() == Block.FIXED) {// 블럭이 고정블럭인가?
-					if (temp[y][x].getIsblock() == Space.SPACE) {
-						continue;
-					}
-					// 넣을 게 블럭인가?
-					area = temp1; // 이동한 블럭을 원상 복귀후
-					return false; // 그러면 블럭 회전 실패
+			for (int x = 0; x < 6; x++) {
+				if (temp[y][x].getIsblock() != Space.FLOW) {
+					continue;
 				}
-				area[y][x] = temp[y][x]; // 블럭을 이동
+				if (area[y][x].getIsblock() == Space.FIXED || area[y][x].getIsblock() == Space.ETC) {
+					return false;
+				}
+				temp1[y][x] = temp[y][x];
 			}
+		}
+		for (int i = 0; i < temp.length; i++) {
+			area[i] = temp1[i].clone();
 		}
 		mode++;
 		return true;
-	}
-
-	public void blockTurnMove(int x, int y, Block[][] blk) {
-		Block temp = (Block) area[y][x];
-		Point pos = new Point(x, y);
-
-		if (pos.equals(new Point(1, 3))) {
-			return;
-		}
-
-		if (pos.equals(new Point(1, 1))) {
-			blk[3][3] = temp;
-			return;
-		} else if (pos.equals(new Point(3, 3))) {
-			blk[1][1] = temp;
-			return;
-		}
-
-		for (int i = 0; i < 5; i++) {
-			if (pos.equals(SUBURB[i])) {
-				pos = SUBURB[i + 1];
-				break;
-			} else if (pos.equals(CENTER[i])) {
-				pos = CENTER[i + 1];
-				;
-				break;
-			}
-		}
-		blk[pos.getY()][pos.getX()] = temp;
-	}
-
-	public void viewPointCheck() {
-		int x = 0, y = 0, height = 5, width = 6;
-		if (flowtetrino.getY() <= 3) {
-			y = 3;
-			height = flowtetrino.getY() + 2;
-		} else if (flowtetrino.getY() > 15) {
-			y = 0;
-			for (int i = 0; i < 5; i++) {
-				if (area[i][3].getIsblock() == Space.ETC) {
-					height = i;
-					break;
-				}
-			}
-		}
-		if (flowtetrino.getX() <= 3) {
-			width=0;
-			for (int i = 0; i < 6; i++) {
-				if (area[2][i].getIsblock() != Space.ETC) {
-					width++;
-				}
-			}
-			x=6-width;
-		} else if (flowtetrino.getX() > 7) {
-			x = 0;
-			for (int i = 0; i < 6; i++) {
-				if (area[2][i].getIsblock() == Space.ETC) {
-					width = i - 1;
-				}
-			}
-		}
-		activespace = new RePaintRectangle(x, y, width, height);
 	}
 
 	public Point getFlowTetrino() {
@@ -174,10 +132,6 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 
 	public Space[][] getArea() {
 		return area;
-	}
-
-	public Rectangle getActivespace() {
-		return activespace;
 	}
 
 	public int getType() {
@@ -198,11 +152,6 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 
 	public void setFlowTetrino(Point pos) {
 		flowtetrino = pos;
-	}
-
-	public void setActivespace(Rectangle activeSpace) {
-		System.out.println("Tetrino.setActivespace()");
-		this.activespace = activeSpace;
 	}
 
 	public void setType(int type) {
