@@ -9,7 +9,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import Control.TetrisControlManager;
-import Control.Tic;
+import Control.TicAction;
 import Model.MoveType;
 
 @SuppressWarnings("serial")
@@ -19,9 +19,9 @@ public class MainView extends JFrame implements MoveType {
 	TetrinoBlockPanel nowmapblockpanel;
 	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 
-	double speed = 100;
+	int speed = 500;
 
-	static private Tic time;
+	static private Timer time;
 	static private MainView mainviewcopy;
 
 	private MainView(int width, int height) {
@@ -57,7 +57,7 @@ public class MainView extends JFrame implements MoveType {
 		mainpanel.add(mappanel);
 		add(mainpanel);
 
-		time = new Tic((int) speed, manager);
+		time = new Timer(speed, TicAction.ticActionCreate(manager));
 
 		blockMoveRePaint();
 

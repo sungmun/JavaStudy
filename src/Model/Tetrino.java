@@ -29,18 +29,13 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 	}
 
 	private boolean sideMoveTetrino(int direction) { // 오른쪽은 +1 왼쪽은 -1
-
-		/*if (direction == RIGHT && flowtetrino.getX() + 2 > 20) {
-			return false; // 오른 쪽 끝에서 더 오른 쪽으로 가려고 하거나 외쪽으로 가려고 하는 경우
-		} else if (direction == LEFT && flowtetrino.getX() < 0) {
-			return false;
-		}*/
+		for (int y = 0; y < 5; y++) {
 			for (int x = 0; x < 6; x++) {
 				if (x + direction < 0 || x + direction >= 6) {
 					continue;
 				}
-				Space spc1 = area[3][x];
-				Space spc2 = area[3][x + direction];
+				Space spc1 = area[y][x];
+				Space spc2 = area[y][x + direction];
 				if (spc1.getIsblock() == Block.ETC) {
 					continue;
 				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
@@ -49,6 +44,7 @@ public class Tetrino implements BlockAxis, MoveType, TetrinoType {
 						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
 					}
 				}
+			} 
 		}
 		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + direction);
 		

@@ -212,7 +212,10 @@ public class TetrisControlManager implements TetrinoType {
 				} 
 				} catch (ArrayIndexOutOfBoundsException e) {
 					System.err.println("TetrisControlManager.TetrinoBlockMove()");
+					System.err.println("전체 맵");
 					TetrisControlManager.getTetrisControlManager().mapPaint();
+					System.err.println("부분 맵");
+					TetrisControlManager.getTetrisControlManager().paint();
 					System.err.println("temp : "+temp1.toString());
 					System.err.println("오류가 난 위치 : [j="+j+",i="+i+"]");
 					System.err.println("");

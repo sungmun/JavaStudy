@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import Control.TetrisControlManager;
+import Control.TicAction;
 import Model.MoveType;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
@@ -29,11 +30,21 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 			manager.TetrinoBlockMove(LEFT);
 			MainView.getMainviewcopy().blockMoveRePaint();
 			break;
-		case KeyEvent.VK_SPACE:
+		case KeyEvent.VK_UP:
 			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
 				return;
 			}
 			manager.TetrinoBlockMove(TURN);
+			MainView.getMainviewcopy().blockMoveRePaint();
+			break;
+		case KeyEvent.VK_DOWN:
+			TicAction.getTic().ticActions();
+			break;
+		case KeyEvent.VK_SPACE:
+			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
+				return;
+			}
+			manager.TetrinoBlockMove(DROP);
 			MainView.getMainviewcopy().blockMoveRePaint();
 			break;
 		}
