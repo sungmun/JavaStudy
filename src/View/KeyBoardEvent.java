@@ -22,21 +22,21 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 				return;
 			}
 			manager.TetrinoBlockMove(RIGHT);
-			MainView.getMainviewcopy().blockMoveRePaint();
+			MainFrame.getMainviewcopy().blockMoveRePaint();
 			break;
 		case KeyEvent.VK_LEFT:
 			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
 				return;
 			}
 			manager.TetrinoBlockMove(LEFT);
-			MainView.getMainviewcopy().blockMoveRePaint();
+			MainFrame.getMainviewcopy().blockMoveRePaint();
 			break;
 		case KeyEvent.VK_UP:
 			if(TetrisControlManager.getTetrisControlManager().getNowTetrino()==null) {
 				return;
 			}
 			manager.TetrinoBlockMove(TURN);
-			MainView.getMainviewcopy().blockMoveRePaint();
+			MainFrame.getMainviewcopy().blockMoveRePaint();
 			break;
 		case KeyEvent.VK_DOWN:
 			TicAction.getTic().ticActions();
@@ -49,7 +49,7 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 			if(!success) {
 				Point nowpos = manager.tetrino.getFlowTetrino();
 				if (manager.gameOverCheack(nowpos)) {
-					MainView.getTime().stop();
+					MainFrame.getTime().stop();
 					return;
 				}
 				manager.setNowTetrino(null);
@@ -60,11 +60,11 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 				manager.createBlock();
 				return;
 			}
-			MainView.getMainviewcopy().blockMoveRePaint();
+			MainFrame.getMainviewcopy().blockMoveRePaint();
 			return;
 		case KeyEvent.VK_Z: //현재 테트리스 저장및 불러오기
 			manager.saveBlock();
-			MainView.getMainviewcopy().blockMoveRePaint();
+			MainFrame.getMainviewcopy().blockMoveRePaint();
 			break;
 		}
 		

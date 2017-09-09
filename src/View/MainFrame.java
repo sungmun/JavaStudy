@@ -10,24 +10,25 @@ import Control.TicAction;
 import Model.MoveType;
 
 @SuppressWarnings("serial")
-public class MainView extends JFrame implements MoveType {
+public class MainFrame extends JFrame implements MoveType {
 
 	private TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 
 	int speed = 500;
 
 	static private Timer time;
-	static private MainView mainviewcopy;
+	static private MainFrame mainviewcopy;
 
-	private MainView(int width, int height) {
+	private MainFrame(int width, int height) {
 		super("Tetris");
 		int cellwidth = width * 10;
 		int cellheight = height * 20;
 
-		setSize(cellwidth + 300, cellheight + 50);
+		setSize(cellwidth + 225, cellheight+48);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-
+		setResizable(false);
+		
 		MainPanel mainpanel = new MainPanel(width, height);
 
 		getContentPane().setBackground(Color.BLACK);
@@ -43,14 +44,14 @@ public class MainView extends JFrame implements MoveType {
 		setVisible(true);
 	}
 
-	public static MainView createMainView(int width, int height) {
+	public static MainFrame createMainView(int width, int height) {
 		if (mainviewcopy == null) {
-			mainviewcopy = new MainView(width, height);
+			mainviewcopy = new MainFrame(width, height);
 		}
 		return mainviewcopy;
 	}
 
-	public static MainView getMainviewcopy() {
+	public static MainFrame getMainviewcopy() {
 		return mainviewcopy;
 	}
 

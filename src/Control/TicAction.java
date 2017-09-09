@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import Model.MoveType;
-import View.MainView;
+import View.MainFrame;
 
 public class TicAction implements ActionListener, MoveType {
 	TetrisControlManager manager;
@@ -38,8 +38,8 @@ public class TicAction implements ActionListener, MoveType {
 			if (!manager.TetrinoBlockMove(DOWN)) {
 				Point nowpos = manager.tetrino.getFlowTetrino();
 				if (manager.gameOverCheack(nowpos)) {
-					MainView.getMainviewcopy().blockMoveRePaint();
-					MainView.getTime().stop();
+					MainFrame.getMainviewcopy().blockMoveRePaint();
+					MainFrame.getTime().stop();
 					return;
 				}
 				manager.setNowTetrino(null);
@@ -50,6 +50,6 @@ public class TicAction implements ActionListener, MoveType {
 				return;
 			}
 		}
-		MainView.getMainviewcopy().blockMoveRePaint();
+		MainFrame.getMainviewcopy().blockMoveRePaint();
 	}
 }

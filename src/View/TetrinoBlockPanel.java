@@ -31,7 +31,8 @@ public class TetrinoBlockPanel extends JPanel {
 		this.width = width;
 		this.height = height;
 		setLayout(null);
-		setBounds(1, 1, (width*10) - 2, (height*20) - 3);
+		setLocation(0, 0);
+		setSize(width*10, height*20);
 		setOpaque(false);
 	}
 

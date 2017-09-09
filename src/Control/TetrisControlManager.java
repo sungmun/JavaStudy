@@ -17,7 +17,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 	private Tetrino save_block = null;
 	private Tetrino next_block = null;
-	
+
 	public Space[][] realtimemap;
 	public Tetrino tetrino;
 
@@ -33,7 +33,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		for (Space[] spaces : realtimemap) {
 			for (Space space : spaces) {
 				if (space.getIsblock() == Space.FLOW) {
-					realtimemap[y][x]=new Space();
+					realtimemap[y][x] = new Space();
 				}
 				x++;
 			}
@@ -41,12 +41,12 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 			x = 0;
 		}
 		if (this.save_block == null) {
-			save_block = tetrino;	
+			save_block = tetrino;
 			createBlock();
 		} else {
-			Tetrino temp_block=tetrino;
+			Tetrino temp_block = tetrino;
 			tetrino = save_block;
-			save_block=temp_block;
+			save_block = temp_block;
 		}
 	}
 
@@ -114,12 +114,12 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 	public void createBlock() {
 		int createposition = width / 3;
-		if(next_block==null) {
+		if (next_block == null) {
 			tetrino = CreateBlock.tetrinoRandomCreate();
-			next_block=CreateBlock.tetrinoRandomCreate();
-		}else {
-			tetrino=next_block;
-			next_block=CreateBlock.tetrinoRandomCreate();
+			next_block = CreateBlock.tetrinoRandomCreate();
+		} else {
+			tetrino = next_block;
+			next_block = CreateBlock.tetrinoRandomCreate();
 		}
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
@@ -306,4 +306,15 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		}
 		return returnvalue;
 	}
+	
+
+	public Tetrino getSave_block() {
+		return save_block;
+	}
+	
+
+	public Tetrino getNext_block() {
+		return next_block;
+	}
+
 }
