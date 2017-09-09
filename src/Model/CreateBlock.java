@@ -2,7 +2,7 @@ package Model;
 public class CreateBlock implements TetrinoType{
 	static int type;
 	public static Tetrino tetrinoRandomCreate(){
-		type=(int)(Math.random()*10)%6;
+		type=(int)(Math.random()*10)%7+1;
 
 		switch(type){
 		case OTYPE:
@@ -14,7 +14,7 @@ public class CreateBlock implements TetrinoType{
 		case ZTYPE:
 			return tetrinoZType();
 		case LTYPE:
-			return tetrinoLType();
+	 		return tetrinoLType();
 		case JTYPE:
 			return tetrinoJType();
 		case TTYPE:

@@ -13,13 +13,19 @@ import javax.swing.JPanel;
 class TetrisMapPanel extends JPanel{
 	BufferedImage buffer=null;
 	Graphics2D graphics;
+	private TetrinoBlockPanel nowmapblockpanel;
+	
 	private static final long serialVersionUID = 1L;
 	int cellx,celly;
 	public TetrisMapPanel(int width,int height) {
 		super();
+		nowmapblockpanel = TetrinoBlockPanel.createTetrinoBlockPanel(width, height);
 		cellx=width;
 		celly=height;
-		
+		setLayout(null);
+		setBounds(6, 6, width*10, height*20);
+		setOpaque(false);
+		add(nowmapblockpanel);
 	}
 	@Override
 	protected void paintComponent(Graphics g) {

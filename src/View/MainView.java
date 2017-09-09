@@ -3,10 +3,7 @@ package View;
 import java.awt.Color;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 import Control.TetrisControlManager;
 import Control.TicAction;
@@ -15,9 +12,7 @@ import Model.MoveType;
 @SuppressWarnings("serial")
 public class MainView extends JFrame implements MoveType {
 
-	TetrisMapPanel mappanel;
-	TetrinoBlockPanel nowmapblockpanel;
-	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
+	private TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 
 	int speed = 500;
 
@@ -28,33 +23,15 @@ public class MainView extends JFrame implements MoveType {
 		super("Tetris");
 		int cellwidth = width * 10;
 		int cellheight = height * 20;
-		
+
 		setSize(cellwidth + 300, cellheight + 50);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo( null );
-		
-		JPanel mainpanel = new JPanel();
-		mappanel = new TetrisMapPanel(width, height);
-		nowmapblockpanel = TetrinoBlockPanel.createTetrinoBlockPanel(width, height);
+		setLocationRelativeTo(null);
 
-		mappanel.setLayout(null);
-		nowmapblockpanel.setLayout(null);
-		mainpanel.setLayout(null);
-
-		mappanel.setBounds(6, 6, cellwidth, cellheight);
-		nowmapblockpanel.setBounds(1, 1, cellwidth - 2, cellheight - 3);
-		mainpanel.setBounds(20, 20, cellwidth + 260, cellheight + 10);
-
-		nowmapblockpanel.setBorder(new TitledBorder(new LineBorder(Color.RED)));
-
-		mainpanel.setOpaque(false);
-		nowmapblockpanel.setOpaque(false);
-		mappanel.setOpaque(false);
+		MainPanel mainpanel = new MainPanel(width, height);
 
 		getContentPane().setBackground(Color.BLACK);
 
-		mappanel.add(nowmapblockpanel);
-		mainpanel.add(mappanel);
 		add(mainpanel);
 
 		time = new Timer(speed, TicAction.ticActionCreate(manager));
@@ -82,17 +59,9 @@ public class MainView extends JFrame implements MoveType {
 	}
 
 	public void blockMoveRePaint() {
-//		nowmapblockpanel.blockViewCheck();
+		// nowmapblockpanel.blockViewCheck();
 		invalidate();
 		repaint();
-	}
-
-	public TetrisMapPanel getTetrisMapPanel() {
-		return mappanel;
-	}
-
-	public TetrinoBlockPanel getTetrinoBlockPanel() {
-		return nowmapblockpanel;
 	}
 
 	public void speedUp() {

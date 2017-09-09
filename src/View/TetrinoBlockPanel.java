@@ -9,14 +9,14 @@ import javax.swing.JPanel;
 import Control.TetrisControlManager;
 import Model.Space;
 
+@SuppressWarnings("serial")
 public class TetrinoBlockPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
 	private static TetrinoBlockPanel tetrinoblockpanel = null;
 	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 	int width, height;
 	BufferedImage buffer = null;
-	Color[] tetrino_type= {
+	static Color[] tetrino_type= {
 			new Color(255, 0, 0, 0), 	//투명 디폴트 값
 			new Color(135, 206, 235),	//하늘색	- I
 			new Color(0, 153, 255),		//파랑	- J
@@ -30,6 +30,9 @@ public class TetrinoBlockPanel extends JPanel {
 	private TetrinoBlockPanel(int width, int height) {
 		this.width = width;
 		this.height = height;
+		setLayout(null);
+		setBounds(1, 1, (width*10) - 2, (height*20) - 3);
+		setOpaque(false);
 	}
 
 	public static TetrinoBlockPanel getTetrinoBlockPanel() {

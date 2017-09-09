@@ -15,6 +15,9 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	private static int height = 23;
 	private static int width = 10;
 
+	private Tetrino save_block = null;
+	private Tetrino next_block = null;
+	
 	public Space[][] realtimemap;
 	public Tetrino tetrino;
 
@@ -23,6 +26,28 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	private TetrisControlManager() {
 		Map tetris = new Map(width, height);
 		realtimemap = tetris.getMap();
+	}
+
+	public void saveBlock() {
+		int y = 0, x = 0;
+		for (Space[] spaces : realtimemap) {
+			for (Space space : spaces) {
+				if (space.getIsblock() == Space.FLOW) {
+					realtimemap[y][x]=new Space();
+				}
+				x++;
+			}
+			y++;
+			x = 0;
+		}
+		if (this.save_block == null) {
+			save_block = tetrino;	
+			createBlock();
+		} else {
+			Tetrino temp_block=tetrino;
+			tetrino = save_block;
+			save_block=temp_block;
+		}
 	}
 
 	private Point pos(Point pos) {
@@ -89,7 +114,13 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 	public void createBlock() {
 		int createposition = width / 3;
-		tetrino = CreateBlock.tetrinoRandomCreate();
+		if(next_block==null) {
+			tetrino = CreateBlock.tetrinoRandomCreate();
+			next_block=CreateBlock.tetrinoRandomCreate();
+		}else {
+			tetrino=next_block;
+			next_block=CreateBlock.tetrinoRandomCreate();
+		}
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
 				realtimemap[y][x + createposition] = tetrino.getTetrino()[y][x];
@@ -101,32 +132,32 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	public void lineClear(int clearline, Point pos) {
 		Space[] spc = new Space[width];
 		int startpos = pos.getY() - 1;
-		int endpos=4;
+		int endpos = 4;
 		boolean success;
-		
-		if(startpos>17) {
-			endpos=TetrisControlManager.height-startpos-1;
+
+		if (startpos > 17) {
+			endpos = TetrisControlManager.height - startpos - 1;
 		}
-		for(int x=0;x<width;x++) {
-			spc[x]=new Space();
+		for (int x = 0; x < width; x++) {
+			spc[x] = new Space();
 		}
-		
+
 		for (int i = 0; i <= endpos; i++) {
 			int bit = 0x01 << i;
 			if ((clearline & bit) == bit) {
 				realtimemap[startpos + i] = spc.clone();
 			}
 		}
-		success=true;
-		while(success) {
-			success=false;
-			for (int i = startpos + endpos; i > startpos + endpos-4; i--) {
+		success = true;
+		while (success) {
+			success = false;
+			for (int i = startpos + endpos; i > startpos + endpos - 4; i--) {
 				if (Arrays.equals(spc, realtimemap[i])) {
 					for (int j = i; j > 0; j--) {
 						realtimemap[j] = realtimemap[j - 1].clone();
 					}
 					realtimemap[0] = spc;
-					success=true;
+					success = true;
 				}
 			}
 		}
@@ -136,6 +167,12 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		tetrino = ttrn;
 	}
 
+	public void TetrinoBlockDropMove() {
+		boolean sucess = true;
+		while (sucess) {
+			sucess = TetrinoBlockMove(DOWN);
+		}
+	}
 
 	public boolean TetrinoBlockMove(int moveType) {// 테트리노의 이동시 현재 맵의 정보 리프래쉬
 		Space[][] temp = new Space[height][width];
@@ -227,12 +264,12 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	}
 
 	public Space[][] getRangeRealTimeMap(int height) {
-	
-		int temp_height=4;
-		if(height>17) {
-			temp_height=TetrisControlManager.height-height-1;
+
+		int temp_height = 4;
+		if (height > 17) {
+			temp_height = TetrisControlManager.height - height - 1;
 		}
-		Space[][] spc=new Space[temp_height+1][width];
+		Space[][] spc = new Space[temp_height + 1][width];
 		for (int i = 0; i <= temp_height; i++) {
 			for (int j = 0; j < width; j++) {
 				spc[i][j] = realtimemap[i + height][j];
@@ -253,10 +290,10 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		Space[][] spc = getRangeRealTimeMap(pos.getY() - 1);
 		boolean cheack = false;
 		int returnvalue = 0;
-		
+
 		for (int i = 0; i < spc.length; i++) {
 			for (int j = 0; j < spc[i].length; j++) {
-				if (spc[i][j].getIsblock() ==Space.SPACE) {
+				if (spc[i][j].getIsblock() == Space.SPACE) {
 					cheack = false;
 					break;
 				} else {
