@@ -24,11 +24,11 @@ public class MainFrame extends JFrame implements MoveType {
 		int cellwidth = width * 10;
 		int cellheight = height * 20;
 
-		setSize(cellwidth + 225, cellheight+48);
+		setSize(cellwidth + 225, cellheight + 43);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		
+
 		MainPanel mainpanel = new MainPanel(width, height);
 
 		getContentPane().setBackground(Color.BLACK);

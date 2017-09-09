@@ -46,8 +46,6 @@ public class BlockBackGroudPanel extends JPanel {
 		return save_block_back_ground;
 	}
 
-
-
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

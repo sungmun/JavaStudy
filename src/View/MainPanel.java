@@ -17,7 +17,7 @@ public class MainPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setOpaque(false);
 		
-		etc_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+		etc_panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 20));
 		add(gamepanel);
 		add(etc_panel);
 	}
