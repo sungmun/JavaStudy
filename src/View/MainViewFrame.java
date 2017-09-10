@@ -17,6 +17,6 @@ public class MainViewFrame extends JFrame{
 		getContentPane().setBackground(Color.BLACK);
 		
 		setVisible(true);
-		System.out.println("MainViewFrame.MainViewFrame()");
+		
 	}
 }
