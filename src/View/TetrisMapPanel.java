@@ -19,7 +19,7 @@ class TetrisMapPanel extends JPanel{
 		super();
 		cellx=width;
 		celly=height;
-		
+		System.out.println("TetrisMapPanel.TetrisMapPanel()");
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
