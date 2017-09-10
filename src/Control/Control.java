@@ -1,6 +1,6 @@
 package Control;
 
-import View.MainView;
+import View.MainFrame;
 
 public class Control {
 
@@ -9,8 +9,8 @@ public class Control {
 
 		TetrisControlManager.createTetrisControlManager();
 		TetrisControlManager.getTetrisControlManager().createBlock();
-		MainView.createMainView(36, 36);
-		MainView.getTime().start();
+		MainFrame.createMainView(36, 36);
+		MainFrame.getTime().start();
 	}
 
 }

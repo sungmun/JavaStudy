@@ -5,18 +5,22 @@ import java.util.Arrays;
 import Model.Block;
 import Model.CreateBlock;
 import Model.Map;
+import Model.MoveType;
 import Model.Space;
 import Model.Tetrino;
 import Model.TetrinoType;
 
-public class TetrisControlManager implements TetrinoType {
+public class TetrisControlManager implements TetrinoType, MoveType {
 
 	private static int height = 23;
 	private static int width = 10;
 
+	private Tetrino save_block = null;
+	private Tetrino next_block = null;
+
 	public Space[][] realtimemap;
 	public Tetrino tetrino;
- 
+
 	static TetrisControlManager tetrismanager = null;
 
 	private TetrisControlManager() {
@@ -24,12 +28,34 @@ public class TetrisControlManager implements TetrinoType {
 		realtimemap = tetris.getMap();
 	}
 
+	public void saveBlock() {
+		int y = 0, x = 0;
+		for (Space[] spaces : realtimemap) {
+			for (Space space : spaces) {
+				if (space.getIsblock() == Space.FLOW) {
+					realtimemap[y][x] = new Space();
+				}
+				x++;
+			}
+			y++;
+			x = 0;
+		}
+		if (this.save_block == null) {
+			save_block = tetrino;
+			createBlock();
+		} else {
+			Tetrino temp_block = tetrino;
+			tetrino = save_block;
+			save_block = temp_block;
+		}
+	}
+
 	private Point pos(Point pos) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int tempx = 6;
 		int tempy = 5;
-		
+
 		if (x + 6 >= width) {
 			tempx += width - (x + 6);
 		}
@@ -45,7 +71,7 @@ public class TetrisControlManager implements TetrinoType {
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
-				
+
 				Space spc = null;
 				if (tetrino.getFlowTetrino().getY() + i > TetrisControlManager.getHeight()) {
 					spc = new Block();
@@ -65,7 +91,6 @@ public class TetrisControlManager implements TetrinoType {
 			}
 		}
 
-		tetrino.viewPointCheck();
 	}
 
 	public static TetrisControlManager createTetrisControlManager() {
@@ -89,70 +114,64 @@ public class TetrisControlManager implements TetrinoType {
 
 	public void createBlock() {
 		int createposition = width / 3;
-		tetrino = CreateBlock.tetrinoRandomCreate();
+		if (next_block == null) {
+			tetrino = CreateBlock.tetrinoRandomCreate();
+			next_block = CreateBlock.tetrinoRandomCreate();
+		} else {
+			tetrino = next_block;
+			next_block = CreateBlock.tetrinoRandomCreate();
+		}
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
 				realtimemap[y][x + createposition] = tetrino.getTetrino()[y][x];
 			}
 		}
 		tetrino.setFlowTetrino(new Point(1, createposition + 2));
-		tetrino.viewPointCheck();
 	}
 
 	public void lineClear(int clearline, Point pos) {
 		Space[] spc = new Space[width];
 		int startpos = pos.getY() - 1;
+		int endpos = 4;
+		boolean success;
 
-		for (int i = 0; i < 4; i++) {
+		if (startpos > 17) {
+			endpos = TetrisControlManager.height - startpos - 1;
+		}
+		for (int x = 0; x < width; x++) {
+			spc[x] = new Space();
+		}
+
+		for (int i = 0; i <= endpos; i++) {
 			int bit = 0x01 << i;
 			if ((clearline & bit) == bit) {
-				realtimemap[startpos + i] = spc;
+				realtimemap[startpos + i] = spc.clone();
 			}
 		}
-		for (int i = startpos + 4; i >= 0; i--) {
-			if (Arrays.equals(spc, realtimemap[i])) {
-				for (int j = i; j > 0; i--) {
-					realtimemap[j] = realtimemap[j - 1];
+		success = true;
+		while (success) {
+			success = false;
+			for (int i = startpos + endpos; i > startpos + endpos - 4; i--) {
+				if (Arrays.equals(spc, realtimemap[i])) {
+					for (int j = i; j > 0; j--) {
+						realtimemap[j] = realtimemap[j - 1].clone();
+					}
+					realtimemap[0] = spc;
+					success = true;
 				}
-				realtimemap[0] = spc;
 			}
 		}
-
 	}
 
 	public void setNowTetrino(Tetrino ttrn) {
 		tetrino = ttrn;
 	}
 
-	public void paint() {
-		System.out.print("flowposX: " + tetrino.getFlowTetrino().getX());
-		System.out.print(" flowposY: " + tetrino.getFlowTetrino().getY());
-		System.out.println();
-		System.out.println("type: " + tetrino.getType());
-		for (Space[] spaces : tetrino.getArea()) {
-			for (Space space : spaces) {
-
-				System.out.print((space.getIsblock() >= 0 ? " " : "") + space.getIsblock());
-			}
-			System.out.println();
+	public void TetrinoBlockDropMove() {
+		boolean sucess = true;
+		while (sucess) {
+			sucess = TetrinoBlockMove(DOWN);
 		}
-		System.out.println();
-		System.out.println();
-	}
-
-	public void mapPaint() {
-		System.out.print("flowposX: " + tetrino.getFlowTetrino().getX());
-		System.out.print(" flowposY: " + tetrino.getFlowTetrino().getY());
-		System.out.println();
-		System.out.println("type: " + tetrino.getType());
-		for (Space[] spaces : realtimemap) {
-			for (Space space : spaces) {
-				System.out.print((space.getIsblock() >= 0 ? " " : "") + space.getIsblock());
-			}
-			System.out.println();
-		}
-		System.out.println();
-		System.out.println();
 	}
 
 	public boolean TetrinoBlockMove(int moveType) {// 테트리노의 이동시 현재 맵의 정보 리프래쉬
@@ -180,11 +199,11 @@ public class TetrisControlManager implements TetrinoType {
 		} // 유동 블럭을 전부 제거
 		if (!tetrino.moveTetrino(moveType)) {// 이동을 실패한 경우
 			// 원상 복귀
-			
+
 			for (int i = 0; i < temp.length; i++) {
 				realtimemap[i] = temp[i].clone();
 			}
-			if (Math.abs(moveType) == 1) {
+			if (moveType == RIGHT || moveType == LEFT || moveType == TURN) {
 				return false;
 			}
 
@@ -201,21 +220,13 @@ public class TetrisControlManager implements TetrinoType {
 		x = tetrino.getFlowTetrino().getX() - 3;
 		y = tetrino.getFlowTetrino().getY() - 1;
 		temp1 = pos(new Point(y, x));
-		
+
 		// 테트리노의 이동 위치 재정의
 		for (int i = 0; i < temp1.getY(); i++) {
 			for (int j = 0; j < temp1.getX(); j++) {
-				try {
-					Space spc = tetrino.getTetrino()[i][j];
+				Space spc = tetrino.getTetrino()[i][j];
 				if (spc.getIsblock() == Space.FLOW) {
 					realtimemap[i + y][j + x] = spc;
-				} 
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.err.println("TetrisControlManager.TetrinoBlockMove()");
-					TetrisControlManager.getTetrisControlManager().mapPaint();
-					System.err.println("temp : "+temp1.toString());
-					System.err.println("오류가 난 위치 : [j="+j+",i="+i+"]");
-					System.err.println("");
 				}
 			}
 		}
@@ -237,14 +248,14 @@ public class TetrisControlManager implements TetrinoType {
 		{
 			cheackmap = getRangeRealTimeMap(0);
 			Space[][] spc = new Space[3][width];
-			spc[0] = cheackmap[0];
-			spc[1] = cheackmap[1];
-			spc[2] = cheackmap[2];
+			spc[0] = cheackmap[0].clone();
+			spc[1] = cheackmap[1].clone();
+			spc[2] = cheackmap[2].clone();
 			cheackmap = spc;
 		}
 		for (Space[] spaces : cheackmap) {
 			for (Space space : spaces) {
-				if (space.toString() == "Block") {
+				if (space.getIsblock() == Space.FIXED) {
 					return true;
 				}
 			}
@@ -253,8 +264,13 @@ public class TetrisControlManager implements TetrinoType {
 	}
 
 	public Space[][] getRangeRealTimeMap(int height) {
-		Space[][] spc = new Space[4][width];
-		for (int i = 0; i < 4; i++) {
+
+		int temp_height = 4;
+		if (height > 17) {
+			temp_height = TetrisControlManager.height - height - 1;
+		}
+		Space[][] spc = new Space[temp_height + 1][width];
+		for (int i = 0; i <= temp_height; i++) {
 			for (int j = 0; j < width; j++) {
 				spc[i][j] = realtimemap[i + height][j];
 			}
@@ -274,9 +290,10 @@ public class TetrisControlManager implements TetrinoType {
 		Space[][] spc = getRangeRealTimeMap(pos.getY() - 1);
 		boolean cheack = false;
 		int returnvalue = 0;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; i < getWidth(); j++) {
-				if (spc[i][j].toString() == "Space") {
+
+		for (int i = 0; i < spc.length; i++) {
+			for (int j = 0; j < spc[i].length; j++) {
+				if (spc[i][j].getIsblock() == Space.SPACE) {
 					cheack = false;
 					break;
 				} else {
@@ -289,4 +306,15 @@ public class TetrisControlManager implements TetrinoType {
 		}
 		return returnvalue;
 	}
+	
+
+	public Tetrino getSave_block() {
+		return save_block;
+	}
+	
+
+	public Tetrino getNext_block() {
+		return next_block;
+	}
+
 }

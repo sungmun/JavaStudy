@@ -1,11 +1,10 @@
 package View;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -13,13 +12,22 @@ import javax.swing.JPanel;
 class TetrisMapPanel extends JPanel{
 	BufferedImage buffer=null;
 	Graphics2D graphics;
+	private TetrinoBlockPanel nowmapblockpanel;
+	
 	private static final long serialVersionUID = 1L;
 	int cellx,celly;
 	public TetrisMapPanel(int width,int height) {
 		super();
+		nowmapblockpanel = TetrinoBlockPanel.createTetrinoBlockPanel(width, height);
 		cellx=width;
 		celly=height;
 		System.out.println("TetrisMapPanel.TetrisMapPanel()");
+		setLayout(null);
+		setLocation(0, 0);
+		setPreferredSize(new Dimension(width*10, height*20));
+		setOpaque(false);
+		
+		add(nowmapblockpanel);
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -27,9 +35,6 @@ class TetrisMapPanel extends JPanel{
 		if(buffer==null){
 			buffer=new BufferedImage(cellx*10, celly*20-1, BufferedImage.TYPE_INT_ARGB);
 			graphics=(Graphics2D)buffer.getGraphics();
-			graphics.setColor(Color.WHITE);
-			graphics.setStroke(new BasicStroke(3,0,BasicStroke.JOIN_MITER));
-			graphics.draw(new Rectangle2D.Double(0,0,cellx*10-1,celly*20-1));
 			
 			float[] bash={5,5,5,5};
 			graphics.setStroke(new BasicStroke(1,0,BasicStroke.JOIN_MITER,1.0f,bash,0));

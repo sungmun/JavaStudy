@@ -6,34 +6,34 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import Control.Point;
 import Control.TetrisControlManager;
-import Model.Block;
-import Model.Map;
 import Model.Space;
 
+@SuppressWarnings("serial")
 public class TetrinoBlockPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
 	private static TetrinoBlockPanel tetrinoblockpanel = null;
 	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 	int width, height;
 	BufferedImage buffer = null;
-	public static BlockView[][] squareList = new BlockView[Map.getMapHeight() - 2][Map.getMapWidth()];
-	Color[] tetrino_type= {
-			new Color(255, 0, 0, 0),
-			new Color(255, 255, 0),
-			new Color(135, 206, 235),
-			new Color(0, 128, 0),
-			new Color(255, 0, 0),
-			new Color(248, 155, 0),
-			new Color(0, 153, 255),
-			new Color(102, 0, 153),
+	static Color[] tetrino_type= {
+			new Color(255, 0, 0, 0), 	//투명 디폴트 값
+			new Color(135, 206, 235),	//하늘색	- I
+			new Color(0, 153, 255),		//파랑	- J
+			new Color(248, 155, 0),		//주황	- L
+			new Color(255, 255, 0),		//노랑색	- O
+			new Color(0, 128, 0),		//초록색	- S	
+			new Color(102, 0, 153),		//보라	- T
+			new Color(255, 0, 0),		//빨강	- Z
 		 };
 	
 	private TetrinoBlockPanel(int width, int height) {
 		this.width = width;
 		this.height = height;
+		setLayout(null);
+		setLocation(0, 0);
+		setSize(width*10, height*20);
+		setOpaque(false);
 	}
 
 	public static TetrinoBlockPanel getTetrinoBlockPanel() {
@@ -47,26 +47,6 @@ public class TetrinoBlockPanel extends JPanel {
 		tetrinoblockpanel.addKeyListener(new KeyBoardEvent());
 		return tetrinoblockpanel;
 	}
-
-	/**
-	 * 
-	 *//*
-	public void blockViewCheck() {
-		for (int y = 2; y < Map.getMapHeight(); y++) {
-			for (int x = 0; x < Map.getMapWidth(); x++) {
-				Space spc = manager.getRealTimeMap()[y][x];
-				Color col = new Color(255, 0, 0, 0);
-				if (y < 2 || spc.getIsblock() == Space.ETC) {
-					break;
-				}
-				if (spc.getIsblock() != Space.SPACE) {
-					col = BlockColor.SetBlockColor(((Block) spc).getType());
-				}
-				squareList[y-2][x].BlockChange(col);
-			}
-		}
-	}*/
-
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -80,16 +60,6 @@ public class TetrinoBlockPanel extends JPanel {
 				indexX++;
 			}
 			indexY++;
-		}/*
-		for (BlockView[] blockViews : squareList) {
-			for (BlockView bV : blockViews) {
-				int width = bV.getDpWidth();
-				int height = bV.getDpHeight();
-				int x = (bV.pos.getX()) * width;
-				int y = (bV.pos.getY()-1) * height;
-				g.setColor(bV.getCol());
-				g.fill3DRect(x, y, width, height, true);
-			}
-		}*/
+		}
 	}
 }
