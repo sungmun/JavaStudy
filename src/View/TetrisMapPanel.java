@@ -1,12 +1,11 @@
 package View;
 
-import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 class TetrisMapPanel extends JPanel{
@@ -21,32 +20,17 @@ class TetrisMapPanel extends JPanel{
 		nowmapblockpanel = TetrinoBlockPanel.createTetrinoBlockPanel(width, height);
 		cellx=width;
 		celly=height;
-		System.out.println("TetrisMapPanel.TetrisMapPanel()");
 		setLayout(null);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(width*10, height*20));
 		setOpaque(false);
+		setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 20));
 		
 		add(nowmapblockpanel);
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(buffer==null){
-			buffer=new BufferedImage(cellx*10, celly*20-1, BufferedImage.TYPE_INT_ARGB);
-			graphics=(Graphics2D)buffer.getGraphics();
-			
-			float[] bash={5,5,5,5};
-			graphics.setStroke(new BasicStroke(1,0,BasicStroke.JOIN_MITER,1.0f,bash,0));
-			for(int i=1;i<11;i++){
-				int k=cellx*i;
-				graphics.draw(new Line2D.Double(k,0,k,celly*20-1));	
-			}
-			for(int j=1;j<22;j++){
-				int k=celly*j;
-				graphics.draw(new Line2D.Double(0,k,cellx*10-1,k));
-			}
-		}
-		g.drawImage(buffer, 0, 0, this);
+		
 	}
 }

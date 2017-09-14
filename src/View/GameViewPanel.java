@@ -1,9 +1,6 @@
 package View;
 
-import java.awt.Color;
-
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class GameViewPanel extends JPanel{
@@ -15,7 +12,7 @@ public class GameViewPanel extends JPanel{
 		this.width=width;
 		this.height=height;
 		setOpaque(false);
-		setBorder(new LineBorder(Color.WHITE,2));
+		
 		add(mappanel);
 	}
 

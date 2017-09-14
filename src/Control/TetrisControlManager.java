@@ -15,6 +15,9 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	private static int height = 23;
 	private static int width = 10;
 
+	private int score = 0;
+	private int level = 1;
+
 	private Tetrino save_block = null;
 	private Tetrino next_block = null;
 
@@ -141,13 +144,17 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		for (int x = 0; x < width; x++) {
 			spc[x] = new Space();
 		}
-
+		int score = 0;
 		for (int i = 0; i <= endpos; i++) {
 			int bit = 0x01 << i;
 			if ((clearline & bit) == bit) {
 				realtimemap[startpos + i] = spc.clone();
+				score += 1 + score;
 			}
 		}
+		this.score += score * 100;
+
+		level = (int) (score / 1000);
 		success = true;
 		while (success) {
 			success = false;
@@ -306,15 +313,29 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		}
 		return returnvalue;
 	}
-	
 
 	public Tetrino getSave_block() {
 		return save_block;
 	}
-	
 
 	public Tetrino getNext_block() {
 		return next_block;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 }

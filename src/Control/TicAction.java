@@ -46,9 +46,13 @@ public class TicAction implements ActionListener, MoveType {
 				int clearline=manager.lineCheack(nowpos);
 				if(clearline>0) {
 					manager.lineClear(clearline, nowpos);
+					
 				}
 				return;
 			}
+		}
+		if(manager.getLevel()<10) {
+			MainFrame.getTime().setDelay(500-manager.getLevel()*50);
 		}
 		MainFrame.getMainviewcopy().blockMoveRePaint();
 	}

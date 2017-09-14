@@ -37,6 +37,7 @@ public class MainFrame extends JFrame implements MoveType {
 
 		time = new Timer(speed, TicAction.ticActionCreate(manager));
 
+		
 		blockMoveRePaint();
 
 		addKeyListener(new KeyBoardEvent());
