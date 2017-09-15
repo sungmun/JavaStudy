@@ -56,9 +56,14 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 				int clearline=manager.lineCheack(nowpos);
 				if(clearline>0) {
 					manager.lineClear(clearline, nowpos);
+					ScorePanel.getScorePanel().setScore(manager.getScore());
+					LevelPanel.getLevelPanel().setLevel(manager.getLevel());
 				}
 				manager.createBlock();
 				return;
+			}
+			if(manager.getLevel()<10) {
+				MainFrame.getTime().setDelay(500-manager.getLevel()*35);
 			}
 			MainFrame.getMainviewcopy().blockMoveRePaint();
 			return;

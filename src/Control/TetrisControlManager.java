@@ -154,7 +154,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		}
 		this.score += score * 100;
 
-		level = (int) (score / 1000);
+		level = (int) (this.score / 1000);
 		success = true;
 		while (success) {
 			success = false;
