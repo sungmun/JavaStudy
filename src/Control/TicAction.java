@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import Model.MoveType;
+import View.LevelPanel;
 import View.MainFrame;
+import View.ScorePanel;
 
 public class TicAction implements ActionListener, MoveType {
 	TetrisControlManager manager;
@@ -46,9 +48,14 @@ public class TicAction implements ActionListener, MoveType {
 				int clearline=manager.lineCheack(nowpos);
 				if(clearline>0) {
 					manager.lineClear(clearline, nowpos);
+					ScorePanel.getScorePanel().setScore(manager.getScore());
+					LevelPanel.getLevelPanel().setLevel(manager.getLevel());
 				}
 				return;
 			}
+		}
+		if(manager.getLevel()<10) {
+			MainFrame.getTime().setDelay(500-manager.getLevel()*35);
 		}
 		MainFrame.getMainviewcopy().blockMoveRePaint();
 	}

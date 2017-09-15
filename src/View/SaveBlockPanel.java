@@ -3,6 +3,8 @@ package View;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -14,6 +16,8 @@ public class SaveBlockPanel extends JPanel {
 	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
 	int width, height;
 	private static SaveBlockPanel save_block_panel = null;
+	BufferedImage buffer = null;
+	Graphics2D graphics;
 
 	private SaveBlockPanel(int width, int height) {
 		this.width = width;
@@ -21,6 +25,7 @@ public class SaveBlockPanel extends JPanel {
 		setOpaque(false);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(width * 5, height * 5));
+		
 	}
 
 	public static SaveBlockPanel createSaveBlockPanel(int width, int height) {
@@ -34,6 +39,7 @@ public class SaveBlockPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
+
 		int indexY = 0;
 		int indexX = 0;
 		try {
@@ -42,7 +48,7 @@ public class SaveBlockPanel extends JPanel {
 				for (Space spc : spcs) {
 					if (spc.getIsblock() == Space.FLOW || spc.getIsblock() == Space.DEFULT) {
 						g.setColor(TetrinoBlockPanel.tetrino_type[spc.getType()]);
-						g.fill3DRect(indexX * width, indexY * height - 6, width, height, true);
+						g.fill3DRect(indexX * width, indexY * height, width, height, true);
 					}
 					indexX++;
 				}
