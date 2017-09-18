@@ -21,14 +21,17 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	private Tetrino save_block = null;
 	private Tetrino next_block = null;
 
-	public Space[][] realtimemap;
+	private Space[][] realtimemap;
+	private Space[][] opponenttetris = null;
 	public Tetrino tetrino;
 
-	static TetrisControlManager tetrismanager = null;
+	static TetrisControlManager mytetrismanager = null;
+
 
 	private TetrisControlManager() {
 		Map tetris = new Map(width, height);
 		realtimemap = tetris.getMap();
+		
 	}
 
 	public void saveBlock() {
@@ -97,14 +100,14 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	}
 
 	public static TetrisControlManager createTetrisControlManager() {
-		if (tetrismanager == null) {
-			tetrismanager = new TetrisControlManager();
+		if (mytetrismanager == null) {
+			mytetrismanager = new TetrisControlManager();
 		}
-		return tetrismanager;
+		return mytetrismanager;
 	}
 
 	public static TetrisControlManager getTetrisControlManager() {
-		return tetrismanager;
+		return mytetrismanager;
 	}
 
 	public static int getWidth() {
