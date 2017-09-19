@@ -5,12 +5,12 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
+import Control.UserTetrisControlManager;
 import Model.Space;
 
 @SuppressWarnings("serial")
 public class NextBlockPanel extends JPanel {
-	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
+	UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
 	int width, height;
 	private static NextBlockPanel next_block_panel = null;
 

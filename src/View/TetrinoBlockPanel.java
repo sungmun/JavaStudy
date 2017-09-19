@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import Control.TetrisControlManager;
+import Control.UserTetrisControlManager;
 import Model.Space;
 
 
@@ -18,7 +18,7 @@ import Model.Space;
 public class TetrinoBlockPanel extends JPanel {
 
 	private static TetrinoBlockPanel tetrinoblockpanel = null;
-	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
+	UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
 	int width, height;
 	BufferedImage buffer = null;
 	Graphics2D graphics;

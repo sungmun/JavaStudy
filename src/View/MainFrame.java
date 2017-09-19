@@ -5,14 +5,14 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-import Control.TetrisControlManager;
 import Control.TicAction;
+import Control.UserTetrisControlManager;
 import Model.MoveType;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements MoveType {
 
-	private TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
+	private UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
 
 	int speed = 500;
 

@@ -2,16 +2,19 @@ package Serversynchronization;
 
 public class User {
 	private String id;
-	private String ip;
+	private IP ip;
 	private String name;
-
+	
+	public User(IP ip) {
+		this.ip=ip;
+	}
 	public User(String id, String name) {
 		// TODO Auto-generated constructor stub
 		this.id = id;
 		this.name = name;
 	}
 
-	public User(String id, String name, String ip) {
+	public User(String id, String name, IP ip) {
 		// TODO Auto-generated constructor stub
 		this.id = id;
 		this.name = name;
@@ -26,11 +29,11 @@ public class User {
 		this.id = id;
 	}
 
-	public String getIP() {
+	public IP getIP() {
 		return ip;
 	}
 
-	public void setIP(String ip) {
+	public void setIP(IP ip) {
 		this.ip = ip;
 	}
 

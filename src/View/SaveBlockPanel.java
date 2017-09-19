@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
+import Control.UserTetrisControlManager;
 import Model.Space;
 
 @SuppressWarnings("serial")
 public class SaveBlockPanel extends JPanel {
-	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
+	UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
 	int width, height;
 	private static SaveBlockPanel save_block_panel = null;
 	BufferedImage buffer = null;
