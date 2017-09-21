@@ -1,4 +1,4 @@
-package View;
+package View.Multe;
 
 import java.awt.Color;
 
@@ -8,32 +8,36 @@ import javax.swing.Timer;
 import Control.TicAction;
 import Control.UserTetrisControlManager;
 import Model.MoveType;
+import View.KeyBoardEvent;
+import View.MainPanel;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame implements MoveType {
+public class MulteFrame extends JFrame implements MoveType {
 
 	private UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
 
 	int speed = 500;
 
 	static private Timer time;
-	static private MainFrame mainviewcopy;
+	static private MulteFrame multeviewcopy=null;
 
-	private MainFrame(int width, int height) {
+	private MulteFrame(int width, int height) {
 		super("Tetris");
-		int cellwidth = width * 10;
+		int cellwidth = width * 20;
 		int cellheight = height * 20;
 
-		setSize(cellwidth + 225, cellheight + 43);
+		setSize(cellwidth + 450, cellheight + 43);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		MainPanel mainpanel = new MainPanel(width, height);
+		MainPanel userpanel = new MainPanel(width, height);
+		MainPanel opponentpanel = new MainPanel(width, height);
 
 		getContentPane().setBackground(Color.BLACK);
 
-		add(mainpanel);
+		add(userpanel);
+		add(opponentpanel);
 
 		time = new Timer(speed, TicAction.ticActionCreate(manager));
 
@@ -45,15 +49,15 @@ public class MainFrame extends JFrame implements MoveType {
 		setVisible(true);
 	}
 
-	public static MainFrame createMainView(int width, int height) {
-		if (mainviewcopy == null) {
-			mainviewcopy = new MainFrame(width, height);
+	public static MulteFrame createMulteFrame(int width, int height) {
+		if (multeviewcopy == null) {
+			multeviewcopy = new MulteFrame(width, height);
 		}
-		return mainviewcopy;
+		return multeviewcopy;
 	}
 
-	public static MainFrame getMainviewcopy() {
-		return mainviewcopy;
+	public static MulteFrame getMulteFrame() {
+		return multeviewcopy;
 	}
 
 	public static Timer getTime() {

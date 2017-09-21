@@ -34,17 +34,21 @@ public class NextBlockPanel extends JPanel {
 		super.paintComponent(g);
 		int indexY=0;
 		int indexX=0;
-		for (Space[] spcs : manager.getNext_block().getTetrino()) {
-			indexX=-1;
-			for (Space spc : spcs) {
-				if(spc.getIsblock()==Space.FLOW||
-						spc.getIsblock()==Space.DEFULT) {
-					g.setColor(TetrinoBlockPanel.tetrino_type[spc.getType()]);
-					g.fill3DRect(indexX*width, indexY*height-6, width, height,true);
+		try {
+			for (Space[] spcs : manager.getNext_block().getTetrino()) {
+				indexX=-1;
+				for (Space spc : spcs) {
+					if(spc.getIsblock()==Space.FLOW||
+							spc.getIsblock()==Space.DEFULT) {
+						g.setColor(TetrinoBlockPanel.tetrino_type[spc.getType()]);
+						g.fill3DRect(indexX*width, indexY*height-6, width, height,true);
+					}
+					indexX++;
 				}
-				indexX++;
+				indexY++;
 			}
-			indexY++;
+		}catch (NullPointerException e) {
+			// TODO: handle exception
 		}
 	}
 	
