@@ -1,6 +1,5 @@
 package Control;
 
-import Serversynchronization.IP;
 import Serversynchronization.User;
 
 public class UserControl {
@@ -8,8 +7,6 @@ public class UserControl {
 	private UserTetrisControlManager manager;
 
 	public UserControl() {
-		IP ip = new IP();
-		user = new User(ip);
 		manager = UserTetrisControlManager.createTetrisControlManager();
 	}
 

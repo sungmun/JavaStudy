@@ -2,17 +2,17 @@ package View;
 
 import javax.swing.JPanel;
 
+import Control.TetrisControlManager;
+
 @SuppressWarnings("serial")
-public class GameViewPanel extends JPanel{
+public class GameViewPanel extends JPanel {
 	TetrisMapPanel mappanel;
-	
-	int width,height;
-	public GameViewPanel(int width, int height) {
-		mappanel=new TetrisMapPanel(width, height);
-		this.width=width;
-		this.height=height;
+
+
+	public GameViewPanel(TetrisControlManager manager) {
+		mappanel = new TetrisMapPanel(manager);
 		setOpaque(false);
-		
+
 		add(mappanel);
 	}
 

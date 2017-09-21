@@ -5,28 +5,19 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import Control.UserTetrisControlManager;
+import Control.TetrisControlManager;
+import Model.CellSize;
 import Model.Space;
 
 @SuppressWarnings("serial")
-public class NextBlockPanel extends JPanel {
-	UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
-	int width, height;
-	private static NextBlockPanel next_block_panel = null;
-
-	private NextBlockPanel(int width, int height) {
-		this.width = width;
-		this.height = height;
+public class NextBlockPanel extends JPanel implements CellSize{
+	TetrisControlManager manager = null;
+	
+	public NextBlockPanel(TetrisControlManager manager) {
+		this.manager=manager;
 		setOpaque(false);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(width*5, height*5));
-	}
-	
-	public static NextBlockPanel createNextBlockPanel(int width, int height) {
-		if (next_block_panel == null) {
-			next_block_panel = new NextBlockPanel(width, height);
-		}
-		return next_block_panel;
 	}
 	@Override
 	protected void paintComponent(Graphics g) {

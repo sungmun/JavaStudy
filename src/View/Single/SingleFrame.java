@@ -7,21 +7,23 @@ import javax.swing.Timer;
 
 import Control.TicAction;
 import Control.UserTetrisControlManager;
+import Model.CellSize;
 import Model.MoveType;
 import View.KeyBoardEvent;
 import View.MainPanel;
 
 @SuppressWarnings("serial")
-public class SingleFrame extends JFrame implements MoveType {
+public class SingleFrame extends JFrame implements MoveType, CellSize {
 
 	private UserTetrisControlManager manager = UserTetrisControlManager.createTetrisControlManager();
 
 	int speed = 500;
 
 	static private Timer time;
-	static private SingleFrame singleviewcopy=null;
+	static private SingleFrame singleviewcopy = null;
+	MainPanel mainpanel;
 
-	public SingleFrame(int width, int height) {
+	public SingleFrame() {
 		super("Tetris");
 		int cellwidth = width * 10;
 		int cellheight = height * 20;
@@ -31,7 +33,7 @@ public class SingleFrame extends JFrame implements MoveType {
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		MainPanel mainpanel = new MainPanel(width, height);
+		mainpanel = new MainPanel(manager);
 
 		getContentPane().setBackground(Color.BLACK);
 
@@ -39,18 +41,17 @@ public class SingleFrame extends JFrame implements MoveType {
 
 		time = new Timer(speed, TicAction.ticActionCreate(manager));
 
-		
 		blockMoveRePaint();
 
 		addKeyListener(new KeyBoardEvent());
-		
+
 		time.start();
 		setVisible(true);
 	}
 
-	public static SingleFrame createSingleFrame(int width, int height) {
+	public static SingleFrame createSingleFrame() {
 		if (singleviewcopy == null) {
-			singleviewcopy = new SingleFrame(width, height);
+			singleviewcopy = new SingleFrame();
 		}
 		return singleviewcopy;
 	}
@@ -65,8 +66,7 @@ public class SingleFrame extends JFrame implements MoveType {
 
 	public void blockMoveRePaint() {
 		// nowmapblockpanel.blockViewCheck();
-		invalidate();
-		repaint();
+		mainpanel.repaint();
 	}
 
 	public void speedUp() {

@@ -5,23 +5,26 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import Control.OpponentTetrisControlManager;
 import Control.TicAction;
 import Control.UserTetrisControlManager;
+import Model.CellSize;
 import Model.MoveType;
 import View.KeyBoardEvent;
 import View.MainPanel;
 
 @SuppressWarnings("serial")
-public class MulteFrame extends JFrame implements MoveType {
+public class MulteFrame extends JFrame implements MoveType,CellSize{
 
-	private UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
+	private UserTetrisControlManager usermanager = UserTetrisControlManager.getTetrisControlManager();
+	private OpponentTetrisControlManager oppmanager = OpponentTetrisControlManager.getTetrisControlManager();
 
 	int speed = 500;
 
 	static private Timer time;
 	static private MulteFrame multeviewcopy=null;
 
-	private MulteFrame(int width, int height) {
+	private MulteFrame() {
 		super("Tetris");
 		int cellwidth = width * 20;
 		int cellheight = height * 20;
@@ -31,15 +34,15 @@ public class MulteFrame extends JFrame implements MoveType {
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		MainPanel userpanel = new MainPanel(width, height);
-		MainPanel opponentpanel = new MainPanel(width, height);
+		MainPanel userpanel = new MainPanel(usermanager);
+		MainPanel opponentpanel = new MainPanel(oppmanager);
 
 		getContentPane().setBackground(Color.BLACK);
 
 		add(userpanel);
 		add(opponentpanel);
 
-		time = new Timer(speed, TicAction.ticActionCreate(manager));
+		time = new Timer(speed, TicAction.ticActionCreate(usermanager));
 
 		
 		blockMoveRePaint();
@@ -49,9 +52,9 @@ public class MulteFrame extends JFrame implements MoveType {
 		setVisible(true);
 	}
 
-	public static MulteFrame createMulteFrame(int width, int height) {
+	public static MulteFrame createMulteFrame() {
 		if (multeviewcopy == null) {
-			multeviewcopy = new MulteFrame(width, height);
+			multeviewcopy = new MulteFrame();
 		}
 		return multeviewcopy;
 	}
@@ -65,8 +68,7 @@ public class MulteFrame extends JFrame implements MoveType {
 	}
 
 	public void blockMoveRePaint() {
-		// nowmapblockpanel.blockViewCheck();
-		invalidate();
+		
 		repaint();
 	}
 

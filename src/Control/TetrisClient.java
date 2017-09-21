@@ -1,58 +1,68 @@
 package Control;
 
-import java.net.URI;
-import java.nio.channels.NotYetConnectedException;
-
-import org.java_websocket.WebSocketImpl;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Vector;
 
 import com.google.gson.Gson;
 
+import Model.CellSize;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
+import Serversynchronization.User;
+import Serversynchronization.UsersList;
+import View.Multe.ListViewFrame;
 
-public class TetrisClient extends WebSocketClient implements MessageType{
-	WebSocketImpl engin = null;
+public class TetrisClient implements MessageType,CellSize {
+	Socket socket;
+	PrintWriter out;
+	BufferedReader in;
+	private static TetrisClient client = null;
 
-	public TetrisClient(URI serverUri) {
-		super(serverUri);
-		// TODO Auto-generated constructor stub
+	private TetrisClient(String host, int port, User user) throws UnknownHostException, IOException {
+		socket = new Socket(host, port);
+		send(new SocketMessage(LOGIN, user));
 	}
 
-	@Override
-	public void onOpen(ServerHandshake handshakedata) {
-		// TODO Auto-generated method stub
-
+	public static TetrisClient createTetrisClient(String host, int port, User user) throws UnknownHostException, IOException {
+		if (client == null) {
+			client = new TetrisClient(host, port, user);
+		}
+		return client;
 	}
 
-	@Override
+	public static TetrisClient getTetrisClient() {
+		return client;
+	}
+
+	@SuppressWarnings("unchecked")
 	public void onMessage(String message) {
-		// TODO Auto-generated method stub
-		SocketMessage socketmsg= new Gson().fromJson(message, SocketMessage.class);
-		switch(socketmsg.getMessageType()) {
+		SocketMessage socketmsg = new Gson().fromJson(message, SocketMessage.class);
+		switch (socketmsg.getMessageType()) {
 		case MAP_MESSAGE:
+;
 			
 		case USER_LIST_MESSAGE:
+			UsersList.setList((Vector<User>)socketmsg.transformJSON());
+			new ListViewFrame();
 		case GAMEOVER_MESSAGE:
 		case BE_CHOSEN:
 		}
 	}
 
-	@Override
-	public void onClose(int code, String reason, boolean remote) {
-		// TODO Auto-generated method stub
-		System.out.println("connect Close code:" + code + "\t reason : " + reason + "\t remote : " + remote);
+	public void send(Object message) {
+		String msg = new Gson().toJson(message);
+		try {
+			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+			out.write(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public void onError(Exception ex) {
-		// TODO Auto-generated method stub
-		System.err.println(ex.getMessage());
-	}
-
-	@Override
-	public void send(String text) throws NotYetConnectedException {
-		
-	}
 }

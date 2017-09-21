@@ -4,23 +4,26 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+import Control.TetrisControlManager;
+import Model.CellSize;
+
 @SuppressWarnings("serial")
-public class ETC_Panel extends JPanel {
+public class ETC_Panel extends JPanel implements CellSize{
 
 	private NextPanel nextpanel;
 	private SavePanel savepanel;
 	private ScorePanel scorepanel;
 	private LevelPanel levelpanel;
 	
-	public ETC_Panel(int width, int height) {
+	public ETC_Panel(TetrisControlManager manager) {
 
 		setOpaque(false);
 		setPreferredSize(new Dimension(width * 5 + 20, height * 20 + 60));
 
-		nextpanel=new NextPanel(width, height);
-		savepanel=new SavePanel(width, height);
-		scorepanel=new ScorePanel(width);
-		levelpanel=new LevelPanel(width);
+		nextpanel=new NextPanel(manager);
+		savepanel=new SavePanel(manager);
+		scorepanel=new ScorePanel();
+		levelpanel=new LevelPanel();
 		
 		add(nextpanel);
 		add(savepanel);

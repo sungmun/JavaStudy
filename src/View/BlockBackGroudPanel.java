@@ -6,16 +6,12 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import Model.CellSize;
+
 @SuppressWarnings("serial")
-public class BlockBackGroudPanel extends JPanel {
+public class BlockBackGroudPanel extends JPanel implements CellSize {
 
-
-	int cellx, celly;
-
-	public BlockBackGroudPanel(int width, int height, JPanel panel) {
-
-		cellx = width;
-		celly = height;
+	public BlockBackGroudPanel(JPanel panel) {
 		setOpaque(false);
 
 		setPreferredSize(new Dimension(width * 5, height * 5));
