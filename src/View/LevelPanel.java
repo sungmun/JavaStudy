@@ -5,8 +5,10 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
+import Model.CellSize;
+
 @SuppressWarnings("serial")
-public class LevelPanel extends JPanel {
+public class LevelPanel extends JPanel implements CellSize{
 	
 	private static LevelPanel levelpanel;
 	
@@ -15,7 +17,7 @@ public class LevelPanel extends JPanel {
 	
 	int height;
 	
-	public LevelPanel(int width) {
+	public LevelPanel() {
 		
 		height=70;
 		

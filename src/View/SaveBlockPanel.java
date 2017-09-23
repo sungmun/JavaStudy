@@ -9,30 +9,21 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import Control.TetrisControlManager;
+import Model.CellSize;
 import Model.Space;
 
 @SuppressWarnings("serial")
-public class SaveBlockPanel extends JPanel {
-	TetrisControlManager manager = TetrisControlManager.createTetrisControlManager();
-	int width, height;
-	private static SaveBlockPanel save_block_panel = null;
+public class SaveBlockPanel extends JPanel implements CellSize{
+	TetrisControlManager manager = null;
 	BufferedImage buffer = null;
 	Graphics2D graphics;
 
-	private SaveBlockPanel(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public SaveBlockPanel(TetrisControlManager manager) {
+		this.manager = manager;
 		setOpaque(false);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(width * 5, height * 5));
-		
-	}
 
-	public static SaveBlockPanel createSaveBlockPanel(int width, int height) {
-		if (save_block_panel == null) {
-			save_block_panel = new SaveBlockPanel(width, height);
-		}
-		return save_block_panel;
 	}
 
 	@Override

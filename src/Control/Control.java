@@ -1,16 +1,16 @@
 package Control;
 
-import View.MainFrame;
+import View.StartFrame;
 
 public class Control {
+	UserControl user = new UserControl();
+	OpponentControl opponent = new OpponentControl();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		TetrisControlManager.createTetrisControlManager();
-		TetrisControlManager.getTetrisControlManager().createBlock();
-		MainFrame.createMainView(36, 36);
-		MainFrame.getTime().start();
+		StartFrame startfr = new StartFrame();
+
 	}
 
 }

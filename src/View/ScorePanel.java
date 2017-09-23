@@ -5,8 +5,10 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
+import Model.CellSize;
+
 @SuppressWarnings("serial")
-public class ScorePanel extends JPanel {
+public class ScorePanel extends JPanel implements CellSize{
 	
 	private static ScorePanel scorepanel;
 	
@@ -15,7 +17,7 @@ public class ScorePanel extends JPanel {
 	
 	int height;
 	
-	public ScorePanel(int width) {
+	public ScorePanel() {
 		
 		height=70;
 		
