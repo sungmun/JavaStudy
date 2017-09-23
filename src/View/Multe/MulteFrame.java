@@ -49,7 +49,6 @@ public class MulteFrame extends JFrame implements MoveType,CellSize{
 
 		addKeyListener(new KeyBoardEvent());
 
-		setVisible(true);
 	}
 
 	public static MulteFrame createMulteFrame() {

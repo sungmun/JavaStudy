@@ -46,7 +46,6 @@ public class SingleFrame extends JFrame implements MoveType, CellSize {
 		addKeyListener(new KeyBoardEvent());
 
 		time.start();
-		setVisible(true);
 	}
 
 	public static SingleFrame createSingleFrame() {

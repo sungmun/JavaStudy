@@ -10,7 +10,7 @@ public class Control {
 		// TODO Auto-generated method stub
 
 		StartFrame startfr = new StartFrame();
-
+		startfr.setVisible(true);
 	}
 
 }

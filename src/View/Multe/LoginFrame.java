@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 
 import javax.swing.JButton;
@@ -16,15 +17,15 @@ import javax.swing.JTextField;
 
 import Control.TetrisClient;
 import Serversynchronization.User;
+import View.FrameMoveAction;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
 public class LoginFrame extends JFrame {
 	public LoginFrame(String host, int port) {
 		super("·Î±×ÀÎ");
-		setVisible(true);
 		setLayout(new FlowLayout());
-		setSize(new Dimension(200, 200));
+		setSize(new Dimension(200, 150));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -33,19 +34,14 @@ public class LoginFrame extends JFrame {
 		JButton login = new JButton("Login");
 		JButton back = new JButton("Back");
 
-		JLabel id_lbl = new JLabel("ID");
-		JTextField id_txt = new JTextField();
+		JLabel id_lbl = new JLabel("    ID     :");
+		JTextField id_txt = new JTextField(12);
 
-		JLabel name_lbl = new JLabel("Name");
-		JTextField name_txt = new JTextField();
+		JLabel name_lbl = new JLabel("Name :");
+		JTextField name_txt = new JTextField(12);
+
 		
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new StartFrame();
-				dispose();
-			}
-		});
+		back.addActionListener(new FrameMoveAction(new StartFrame(), this));
 		login.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -59,12 +55,15 @@ public class LoginFrame extends JFrame {
 				try {
 					TetrisClient.createTetrisClient(host, port, new User(id,name));
 				} catch (UnknownHostException e1) {
-					new StartFrame();
-					e1.printStackTrace();
+					System.err.println(e1.getMessage()+":1");
+					StartFrame fr=new StartFrame();
+					fr.setVisible(true);
 				} catch (IOException e1) {
-					new StartFrame();
-					e1.printStackTrace();
+					System.err.println(e1.getMessage()+":2");
+					StartFrame fr=new StartFrame();
+					fr.setVisible(true);
 				} finally {
+					
 					dispose();
 				}
 			}

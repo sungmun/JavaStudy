@@ -32,7 +32,8 @@ public class StartFrame extends JFrame implements ServerInfomation {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				SingleFrame.createSingleFrame();
+				JFrame fr=SingleFrame.createSingleFrame();
+				fr.setVisible(true);
 				dispose();
 			}
 		});
@@ -42,7 +43,8 @@ public class StartFrame extends JFrame implements ServerInfomation {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				new LoginFrame(IP, PORT);
+				JFrame fr=new LoginFrame(IP, PORT);
+				fr.setVisible(true);
 				dispose();
 			}
 		});
@@ -50,7 +52,7 @@ public class StartFrame extends JFrame implements ServerInfomation {
 		add(single);
 		add(mulite);
 
-		setVisible(true);
+		
 	}
 
 }
