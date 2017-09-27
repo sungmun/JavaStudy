@@ -16,13 +16,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Control.TetrisClient;
+import Control.UserControl;
 import Serversynchronization.User;
 import View.FrameMoveAction;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
 public class LoginFrame extends JFrame {
-	public LoginFrame(String host, int port) {
+	private static LoginFrame loginfr = null;
+
+	public LoginFrame() {
 		super("로그인");
 		setLayout(new FlowLayout());
 		setSize(new Dimension(200, 150));
@@ -40,31 +43,23 @@ public class LoginFrame extends JFrame {
 		JLabel name_lbl = new JLabel("Name :");
 		JTextField name_txt = new JTextField(12);
 
-		
-		back.addActionListener(new FrameMoveAction(new StartFrame(), this));
+		back.addActionListener(new FrameMoveAction(StartFrame.getStartFrame(), this));
 		login.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String id=id_txt.getText();
-				String name=name_txt.getText();
-				
-				if(id==""||name=="") {
+				String id = id_txt.getText();
+				String name = name_txt.getText();
+				if (id == "" || name == "") {
 					JOptionPane.showMessageDialog(null, "ID또는 Name을 입력하지 않으셨습니다.");
 					return;
 				}
+				User user=new User(id, name);
+				UserControl.createUserControl().setUser(user);
 				try {
-					TetrisClient.createTetrisClient(host, port, new User(id,name));
-				} catch (UnknownHostException e1) {
-					System.err.println(e1.getMessage()+":1");
-					StartFrame fr=new StartFrame();
-					fr.setVisible(true);
+					TetrisClient.createTetrisClient();
 				} catch (IOException e1) {
-					System.err.println(e1.getMessage()+":2");
-					StartFrame fr=new StartFrame();
-					fr.setVisible(true);
-				} finally {
-					
-					dispose();
+					System.err.println(e1.getMessage() + ":1");
+					FrameMoveAction.moveActeion(StartFrame.getStartFrame(), LoginFrame.getLoginFrame());
 				}
 			}
 		});
@@ -80,5 +75,16 @@ public class LoginFrame extends JFrame {
 		this.add(login);
 		this.add(back);
 
+	}
+
+	public static LoginFrame createLoginFrame() {
+		if (loginfr == null) {
+			loginfr = new LoginFrame();
+		}
+		return loginfr;
+	}
+
+	public static LoginFrame getLoginFrame() {
+		return loginfr;
 	}
 }

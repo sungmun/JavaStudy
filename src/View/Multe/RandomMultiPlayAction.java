@@ -10,7 +10,7 @@ import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
 
-public class RandomMultiePlayAction implements ActionListener, MessageType {
+public class RandomMultiPlayAction implements ActionListener, MessageType {
 
 	TetrisClient client = TetrisClient.getTetrisClient();
 

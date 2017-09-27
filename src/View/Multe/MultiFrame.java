@@ -14,7 +14,7 @@ import View.KeyBoardEvent;
 import View.MainPanel;
 
 @SuppressWarnings("serial")
-public class MulteFrame extends JFrame implements MoveType,CellSize{
+public class MultiFrame extends JFrame implements MoveType,CellSize{
 
 	private UserTetrisControlManager usermanager = UserTetrisControlManager.getTetrisControlManager();
 	private OpponentTetrisControlManager oppmanager = OpponentTetrisControlManager.getTetrisControlManager();
@@ -22,9 +22,9 @@ public class MulteFrame extends JFrame implements MoveType,CellSize{
 	int speed = 500;
 
 	static private Timer time;
-	static private MulteFrame multeviewcopy=null;
+	static private MultiFrame multeviewcopy=null;
 
-	private MulteFrame() {
+	private MultiFrame() {
 		super("Tetris");
 		int cellwidth = width * 20;
 		int cellheight = height * 20;
@@ -51,14 +51,14 @@ public class MulteFrame extends JFrame implements MoveType,CellSize{
 
 	}
 
-	public static MulteFrame createMulteFrame() {
+	public static MultiFrame createMulteFrame() {
 		if (multeviewcopy == null) {
-			multeviewcopy = new MulteFrame();
+			multeviewcopy = new MultiFrame();
 		}
 		return multeviewcopy;
 	}
 
-	public static MulteFrame getMulteFrame() {
+	public static MultiFrame getMulteFrame() {
 		return multeviewcopy;
 	}
 

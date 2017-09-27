@@ -13,7 +13,9 @@ import View.Single.SingleFrame;
 
 @SuppressWarnings("serial")
 public class StartFrame extends JFrame implements ServerInfomation {
-	public StartFrame() {
+	private static StartFrame startfr = null;
+
+	private StartFrame() {
 		// TODO Auto-generated constructor stub
 		super();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,7 +34,7 @@ public class StartFrame extends JFrame implements ServerInfomation {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFrame fr=SingleFrame.createSingleFrame();
+				JFrame fr = SingleFrame.createSingleFrame();
 				fr.setVisible(true);
 				dispose();
 			}
@@ -43,7 +45,7 @@ public class StartFrame extends JFrame implements ServerInfomation {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFrame fr=new LoginFrame(IP, PORT);
+				JFrame fr = LoginFrame.createLoginFrame();
 				fr.setVisible(true);
 				dispose();
 			}
@@ -52,7 +54,16 @@ public class StartFrame extends JFrame implements ServerInfomation {
 		add(single);
 		add(mulite);
 
-		
 	}
 
+	public static StartFrame createStartFrame() {
+		if (startfr == null) {
+			startfr = new StartFrame();
+		}
+		return startfr;
+	}
+
+	public static StartFrame getStartFrame() {
+		return startfr;
+	}
 }

@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Control.UserControl;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
 
@@ -21,13 +22,27 @@ public class ListView extends JPanel {
 	JTable table;
 	JScrollPane listJs;
 
-	public ListView() {
+	private static ListView listview = null;
+
+	private ListView() {
 		model = new DefaultTableModel(header, 0);
 		table = new JTable(model);
 		setLayout(new BorderLayout());
 		listJs = new JScrollPane(table);
 		add(listJs, BorderLayout.CENTER);
 		setBounds(5, 5, 200, 200);
+		listReFresh();
+	}
+
+	public static ListView createListView() {
+		if (listview == null) {
+			listview = new ListView();
+		}
+		return listview;
+	}
+
+	public static ListView getListview() {
+		return listview;
 	}
 
 	public User getUser() {
@@ -38,27 +53,31 @@ public class ListView extends JPanel {
 	}
 
 	public void listInit() {
-		Vector<User> users = UsersList.getList();
 		Vector<String> str = new Vector<>();
 
-		for (User user : users) {
-			str.add(user.getUserNumber());
+		for (User user : UsersList.getList()) {
+			if(UserControl.getUserControl().getUser().getUserNumber()==user.getUserNumber()) {
+				continue;
+			}
+			str.add(user.getUserNumber().toString());
 			str.add(user.getName());
 			str.add(user.getID());
-			str.add(user.getSocket().getInetAddress().toString());
+			model.addRow(str);
 		}
 	}
-	public void listReFresh(User user) {
+
+	public void listReFresh() {
 		model.setRowCount(0);
 		this.listInit();
 	}
+
 	public void listAdd(User user) {
 		Vector<String> str = new Vector<>();
 
-		str.add(user.getUserNumber());
+		str.add(user.getUserNumber().toString());
 		str.add(user.getName());
 		str.add(user.getID());
-		str.add(user.getSocket().getInetAddress().toString());
+		model.addRow(str);
 	}
 
 }

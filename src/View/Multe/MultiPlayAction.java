@@ -9,12 +9,12 @@ import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
 
-public class MultePlayAction implements ActionListener, MessageType {
+public class MultiPlayAction implements ActionListener, MessageType {
 	ListView list;
 	TetrisClient client = TetrisClient.getTetrisClient();
 
-	public MultePlayAction(ListView list) {
-		this.list = list;
+	public MultiPlayAction() {
+		this.list = ListView.getListview();
 	}
 
 	@Override

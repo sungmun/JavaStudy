@@ -1,7 +1,8 @@
 package Serversynchronization;
 
-import java.util.HashSet;
 import java.util.Vector;
+
+import View.Multe.ListView;
 
 public class UsersList {
 	private static Vector<User> list = new Vector<User>();
@@ -10,7 +11,9 @@ public class UsersList {
 
 	public static boolean add(User user) {
 		synchronized (key) {
-			return list.add(user);
+			boolean temp=list.add(user);
+			ListView.getListview().listReFresh();
+			return temp;
 		}
 
 	}
@@ -18,6 +21,7 @@ public class UsersList {
 	public static void delete(User user) {
 		synchronized (key) {
 			list.remove(user);
+			ListView.getListview().listReFresh();
 		}
 	}
 
