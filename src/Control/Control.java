@@ -3,8 +3,8 @@ package Control;
 import View.StartFrame;
 
 public class Control {
-	UserControl user = new UserControl();
-	OpponentControl opponent = new OpponentControl();
+	UserControl user = UserControl.createUserControl();
+	OpponentControl opponent = OpponentControl.createOpponentControl();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

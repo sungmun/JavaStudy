@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -31,7 +30,6 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 	Socket socket;
 	PrintWriter out;
 	BufferedReader in;
-	public static User multieplayer;
 	private static TetrisClient client = null;
 
 	private TetrisClient() throws UnknownHostException, IOException, ConnectException {
@@ -39,7 +37,10 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		send(new SocketMessage(LOGIN, UserControl.getUserControl().getUser()));
-		this.start();
+	}
+
+	public void deConnect() {
+		client = null;
 	}
 
 	public static TetrisClient createTetrisClient() throws UnknownHostException, IOException, ConnectException {
@@ -60,11 +61,13 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 
 	@Override
 	public void run() {
+
 		while (true) {
 			try {
 				onMessage(socket);
 			} catch (JsonSyntaxException | IOException e) {
-				System.out.println(e.getMessage());
+
+				System.err.println(e.getMessage());
 				close();
 				return;
 			}
@@ -81,10 +84,9 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		UsersList.delete(transObject(msg.getMessage(), User.class));
 	}
 
-	@SuppressWarnings("unchecked")
 	public void userListMessage(SocketMessage msg) {
 		System.out.println("TetrisClient.userListMessage()");
-		UsersList.setList(transObject(msg.getMessage(), Vector.class));
+		UsersList.setList(transObject(msg.getMessage(), User[].class));
 		FrameMoveAction.moveActeion(ListViewFrame.createListViewFrame(), LoginFrame.getLoginFrame());
 	}
 
@@ -103,45 +105,68 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 
 	public void warAccept(SocketMessage msg) {
 		System.out.println("TetrisClient.warAccept()");
-		multieplayer = transObject(msg.getMessage(), User.class);
-		FrameMoveAction.moveActeion(MultiFrame.createMulteFrame(), ListViewFrame.getListViewFrame());
+		send(new SocketMessage(CONNECT, null));
+		send(new SocketMessage(WAR_START, null));
+	}
+
+	public void connect(SocketMessage msg) {
+		System.out.println("TetrisClient.connect()");
+		if(msg.getMessage()==null) {
+			send(new SocketMessage(CONNECT, UserControl.getUserControl()));
+		}else {
+			OpponentControl.setOpponentControl(transObject(msg.getMessage(), ControlBasic.class));
+			FrameMoveAction.moveActeion(MultiFrame.createMulteFrame(), ListViewFrame.getListViewFrame());
+		}
 	}
 
 	public void onMessage(Socket server) throws JsonSyntaxException, IOException {
-//백터나 컬렉션의 정렬화는 지원하나 역정렬화는 지원을 않한다
+		// 백터나 컬렉션의 정렬화는 지원하나 역정렬화는 지원을 않한다
+
 		SocketMessage socketmsg = transObject(in.readLine(), SocketMessage.class);
-		System.out.println("TetrisClient.onMessage()");
-		System.out.println("Type : "+socketmsg.getMessageType()+"\t msg : "+socketmsg.getMessage());
-		switch (socketmsg.getMessageType()) {
-		case USER_SERIAL_NUM:
-			System.out.println("TetrisClient.onMessage().USER_SERIAL_NUM");
-			UserControl.createUserControl().getUser().setUserNumber(transObject(socketmsg.getMessage(), Integer.class));
-			break;
-		case LOGIN:
-			logIn(socketmsg);
-			break;
-		case LOGOUT:
-			logIn(socketmsg);
-			break;
-		case USER_LIST_MESSAGE:
-			userListMessage(socketmsg);
-			break;
-		case GAMEOVER_MESSAGE:
 
-		case BE_CHOSEN:
-			beChoice(socketmsg);
-			break;
-		case WAR_ACCEPT:
-			warAccept(socketmsg);
-			break;
-		case WAR_DENIAL:
-			JOptionPane.showMessageDialog(null, "대전이 거부 당하셨습니다");
+		try {
+			System.out.println("TetrisClient.onMessage()");
+			System.out.println(socketmsg.toString());
+			System.out.print("Type : " + socketmsg.getMessageType() + "\t ");
+			System.out.println("msg : " + socketmsg.getMessage());
+			switch (socketmsg.getMessageType()) {
+			case USER_SERIAL_NUM:
+				System.out.println("TetrisClient.onMessage().USER_SERIAL_NUM");
+				UserControl.createUserControl().getUser()
+						.setUserNumber(transObject(socketmsg.getMessage(), Integer.class));
+				break;
+			case LOGIN:
+				logIn(socketmsg);
+				break;
+			case LOGOUT:
+				logOut(socketmsg);
+				break;
+			case USER_LIST_MESSAGE:
+				userListMessage(socketmsg);
+				break;
+			case GAMEOVER_MESSAGE:
 
+			case BE_CHOSEN:
+				beChoice(socketmsg);
+				break;
+			case WAR_ACCEPT:
+				warAccept(socketmsg);
+				break;
+			case WAR_DENIAL:
+				JOptionPane.showMessageDialog(null, "대전이 거부 당하셨습니다");
+				break;
+			case WAR_START:
+				logOut(socketmsg);
+				break;
+			}
+		} catch (NullPointerException e) {
+			in.reset();
 		}
 	}
 
 	public void send(Object message) {
 		System.out.println("TetrisClient.send()");
+		System.out.println(message.toString());
 		String msg = new GsonBuilder().serializeNulls().create().toJson(message);
 		out.println(msg);
 		out.flush();
@@ -152,6 +177,7 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 			in.close();
 			socket.close();
 			out.close();
+			interrupt();
 		} catch (IOException | ArrayIndexOutOfBoundsException e) {
 			System.err.println("TetrisClient.close()");
 		}

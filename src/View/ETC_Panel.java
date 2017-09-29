@@ -22,8 +22,8 @@ public class ETC_Panel extends JPanel implements CellSize{
 
 		nextpanel=new NextPanel(manager);
 		savepanel=new SavePanel(manager);
-		scorepanel=new ScorePanel();
-		levelpanel=new LevelPanel();
+		scorepanel=new ScorePanel(manager);
+		levelpanel=new LevelPanel(manager);
 		
 		add(nextpanel);
 		add(savepanel);

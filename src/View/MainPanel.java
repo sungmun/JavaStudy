@@ -23,5 +23,6 @@ public class MainPanel extends JPanel {
 		add(gamepanel);
 		add(etc_panel);
 	}
+	
 
 }

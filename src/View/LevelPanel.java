@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
+import Control.TetrisControlManager;
 import Model.CellSize;
 
 @SuppressWarnings("serial")
@@ -12,12 +13,14 @@ public class LevelPanel extends JPanel implements CellSize{
 	
 	private static LevelPanel levelpanel;
 	
+	TetrisControlManager manager;
+	
 	BasicJLabel title;
 	BasicJLabel level;
 	
 	int height;
 	
-	public LevelPanel() {
+	public LevelPanel(TetrisControlManager manager) {
 		
 		height=70;
 		
@@ -36,12 +39,13 @@ public class LevelPanel extends JPanel implements CellSize{
 		levelpanel=this;
 	}
 	
-	public void setLevel(int level) {
-		this.level.setText(Integer.toString(level));
-		repaint();
-	}
 	public static LevelPanel getLevelPanel() {
 		return levelpanel;
+	}
+	@Override
+	public void repaint() {
+		level.setText(Integer.toString(manager.getLevel()));
+		super.repaint();
 	}
 
 }

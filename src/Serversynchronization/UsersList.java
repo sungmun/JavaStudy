@@ -9,6 +9,11 @@ public class UsersList {
 
 	private static Object key = new Object();
 
+	public static User[] getlistarray() {
+		User[] arr=new User[list.size()];
+		arr=list.toArray(arr);
+		return arr;
+	}
 	public static boolean add(User user) {
 		synchronized (key) {
 			boolean temp=list.add(user);
@@ -31,18 +36,16 @@ public class UsersList {
 		}
 	}
 
-	public static void setList(Vector<User> list) {
-		UsersList.list = list;
+	public static void setList(User[] list) {
+		UsersList.list.clear();
+		for (User user : list) {
+			UsersList.list.addElement(user);
+		}
 	}
 
 	public static boolean findList(User user) {
 		synchronized (key) {
-			if (list.add(user)) {
-				UsersList.delete(user);
-				return false;
-			} else {
-				return false;
-			}
+			return (list.indexOf(user)==-1)?false:true;
 		}
 	}
 

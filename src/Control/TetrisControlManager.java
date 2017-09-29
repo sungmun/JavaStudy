@@ -2,6 +2,9 @@ package Control;
 
 import java.util.Arrays;
 
+import javax.swing.JFrame;
+import javax.swing.Timer;
+
 import Model.Block;
 import Model.CreateBlock;
 import Model.Map;
@@ -23,6 +26,9 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 	private Space[][] realtimemap;
 	public Tetrino tetrino;
+
+	protected JFrame fr = null;
+	protected Timer time=null;
 
 	protected TetrisControlManager() {
 		Map tetris = new Map(width, height);
@@ -325,4 +331,25 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		this.level = level;
 	}
 
+	public void rePaint() {
+		fr.repaint();
+	}
+
+	public JFrame getFrame() {
+		return fr;
+	}
+
+	public void setFrame(JFrame fr) {
+		this.fr = fr;
+	}
+
+	public Timer getTime() {
+		return time;
+	}
+
+	public void setTime(Timer time) {
+		this.time = time;
+	}
+	
+	
 }

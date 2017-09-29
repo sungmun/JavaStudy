@@ -1,24 +1,25 @@
 package Control;
 
-import Serversynchronization.User;
-
-public class OpponentControl {
-	private User user;
-	private OpponentTetrisControlManager manager;
-	public OpponentControl() {
-		manager=OpponentTetrisControlManager.createTetrisControlManager();
+public class OpponentControl extends ControlBasic{
+	
+	private static OpponentControl control=null;
+	private OpponentControl() {
+		super(OpponentTetrisControlManager.createTetrisControlManager());
 	}
-	public User getUser() {
-		return user;
+	public static OpponentControl createOpponentControl() {
+		if(control==null) {
+			control=new OpponentControl();
+		}
+		return control;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public static OpponentControl getOpponentControl() {
+		return control;
 	}
-	public OpponentTetrisControlManager getManager() {
-		return manager;
+	
+	public static void setOpponentControl(ControlBasic userControl) {
+		control=(OpponentControl) userControl;
 	}
-	public void setManager(OpponentTetrisControlManager manager) {
-		this.manager = manager;
-	}
+	
+		
 	
 }

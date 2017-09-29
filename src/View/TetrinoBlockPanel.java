@@ -1,5 +1,6 @@
 package View;
 
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -48,7 +49,6 @@ public class TetrinoBlockPanel extends JPanel implements CellSize {
 		if (tetrinoblockpanel == null) {
 			tetrinoblockpanel = new TetrinoBlockPanel(manager);
 		}
-		tetrinoblockpanel.addKeyListener(new KeyBoardEvent());
 		return tetrinoblockpanel;
 	}
 

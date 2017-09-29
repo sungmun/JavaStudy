@@ -1,53 +1,58 @@
 package View.Multe;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.awt.Panel;
 
-import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import Control.OpponentControl;
 import Control.OpponentTetrisControlManager;
 import Control.TicAction;
+import Control.UserControl;
 import Control.UserTetrisControlManager;
 import Model.CellSize;
 import Model.MoveType;
+import View.GameBasicFrame;
 import View.KeyBoardEvent;
 import View.MainPanel;
 
 @SuppressWarnings("serial")
-public class MultiFrame extends JFrame implements MoveType,CellSize{
+public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 
-	private UserTetrisControlManager usermanager = UserTetrisControlManager.getTetrisControlManager();
-	private OpponentTetrisControlManager oppmanager = OpponentTetrisControlManager.getTetrisControlManager();
-
-	int speed = 500;
-
-	static private Timer time;
-	static private MultiFrame multeviewcopy=null;
+	static private MultiFrame multeviewcopy = null;
+	static private OpponentTetrisControlManager oppmanager = null;
 
 	private MultiFrame() {
-		super("Tetris");
+		super(UserTetrisControlManager.getTetrisControlManager());
+		oppmanager = OpponentTetrisControlManager.getTetrisControlManager();
 		int cellwidth = width * 20;
 		int cellheight = height * 20;
 
 		setSize(cellwidth + 450, cellheight + 43);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setResizable(false);
+		setLayout(new GridLayout(1, 2));
 
-		MainPanel userpanel = new MainPanel(usermanager);
+		Panel user = new Panel(new BorderLayout());
+		Panel opponent = new Panel(new BorderLayout());
+
+		MainPanel userpanel = new MainPanel(manager);
 		MainPanel opponentpanel = new MainPanel(oppmanager);
 
-		getContentPane().setBackground(Color.BLACK);
+		user.add(new Label(UserControl.getUserControl().getUser().getName()), BorderLayout.NORTH);
+		opponent.add(new Label(OpponentControl.getOpponentControl().getUser().getName()), BorderLayout.NORTH);
 
-		add(userpanel);
-		add(opponentpanel);
-
-		time = new Timer(speed, TicAction.ticActionCreate(usermanager));
-
+		user.add(userpanel, BorderLayout.CENTER);
+		opponent.add(opponentpanel, BorderLayout.CENTER);
 		
-		blockMoveRePaint();
+		add(user);
+		add(opponent);
+		
+		time = new Timer(speed, TicAction.ticActionCreate(manager));
 
-		addKeyListener(new KeyBoardEvent());
+		manager.rePaint();
+
+		addKeyListener(new KeyBoardEvent(manager));
 
 	}
 
@@ -60,18 +65,5 @@ public class MultiFrame extends JFrame implements MoveType,CellSize{
 
 	public static MultiFrame getMulteFrame() {
 		return multeviewcopy;
-	}
-
-	public static Timer getTime() {
-		return time;
-	}
-
-	public void blockMoveRePaint() {
-		
-		repaint();
-	}
-
-	public void speedUp() {
-		speed += 0.1;
 	}
 }

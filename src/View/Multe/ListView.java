@@ -14,7 +14,7 @@ import Serversynchronization.UsersList;
 
 @SuppressWarnings("serial")
 public class ListView extends JPanel {
-	String header[] = { "번호", "이름", "ID", "IP" };
+	String header[] = { "번호", "이름", "ID" };
 	String data[][];
 
 	DefaultTableModel model;
@@ -30,7 +30,7 @@ public class ListView extends JPanel {
 		setLayout(new BorderLayout());
 		listJs = new JScrollPane(table);
 		add(listJs, BorderLayout.CENTER);
-		setBounds(5, 5, 200, 200);
+		setBounds(5, 5, 400, 490);
 		listReFresh();
 	}
 
@@ -47,22 +47,25 @@ public class ListView extends JPanel {
 
 	public User getUser() {
 		int row = table.getSelectedColumn();
-		String num = (String) model.getValueAt(row, 0);
+		Integer num = new Integer((String) model.getValueAt(row, 0));
+		String name = (String) model.getValueAt(row, 1);
 		String id = (String) model.getValueAt(row, 2);
-		return new User(num, id);
+		return new User(id, name, num);
 	}
 
 	public void listInit() {
-		Vector<String> str = new Vector<>();
+		String[] str;
 
 		for (User user : UsersList.getList()) {
-			if(UserControl.getUserControl().getUser().getUserNumber()==user.getUserNumber()) {
+			str = new String[3];
+			if (UserControl.getUserControl().getUser().getUserNumber() == user.getUserNumber()) {
 				continue;
 			}
-			str.add(user.getUserNumber().toString());
-			str.add(user.getName());
-			str.add(user.getID());
+			str[0] = user.getUserNumber().toString();
+			str[1] = user.getName();
+			str[2] = user.getID();
 			model.addRow(str);
+
 		}
 	}
 

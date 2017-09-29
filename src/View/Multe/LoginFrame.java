@@ -2,11 +2,7 @@ package View.Multe;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +14,6 @@ import javax.swing.JTextField;
 import Control.TetrisClient;
 import Control.UserControl;
 import Serversynchronization.User;
-import View.FrameMoveAction;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
@@ -42,25 +37,22 @@ public class LoginFrame extends JFrame {
 
 		JLabel name_lbl = new JLabel("Name :");
 		JTextField name_txt = new JTextField(12);
-
-		back.addActionListener(new FrameMoveAction(StartFrame.getStartFrame(), this));
-		login.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String id = id_txt.getText();
-				String name = name_txt.getText();
-				if (id == "" || name == "") {
-					JOptionPane.showMessageDialog(null, "ID또는 Name을 입력하지 않으셨습니다.");
-					return;
-				}
-				User user=new User(id, name);
-				UserControl.createUserControl().setUser(user);
-				try {
-					TetrisClient.createTetrisClient();
-				} catch (IOException e1) {
-					System.err.println(e1.getMessage() + ":1");
-					FrameMoveAction.moveActeion(StartFrame.getStartFrame(), LoginFrame.getLoginFrame());
-				}
+		back.addActionListener((e) -> {
+			StartFrame.getStartFrame().setVisible(true);
+			dispose();
+		});
+		login.addActionListener((e) -> {
+			if (id_txt.getText() == "" || name_txt.getText() == "") {
+				JOptionPane.showMessageDialog(null, "ID또는 Name을 입력하지 않으셨습니다.");
+				return;
+			}
+			UserControl.createUserControl().setUser(new User(id_txt.getText(), name_txt.getText()));
+			try {
+				TetrisClient client=TetrisClient.createTetrisClient();
+				client.start();
+			} catch (IOException e1) {
+				StartFrame.getStartFrame().setVisible(true);
+				dispose();
 			}
 		});
 

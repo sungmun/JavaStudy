@@ -5,15 +5,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import Control.Point;
+import Control.TetrisControlManager;
 import Control.TicAction;
-import Control.UserTetrisControlManager;
 import Model.MoveType;
-import View.Single.SingleFrame;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
-	UserTetrisControlManager manager = UserTetrisControlManager.createTetrisControlManager();
+	TetrisControlManager manager = null;
 	TetrinoBlockPanel panel = TetrinoBlockPanel.getTetrinoBlockPanel();
-
+	public KeyBoardEvent(TetrisControlManager manager) {
+		this.manager=manager;
+	}
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
@@ -23,21 +24,21 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 				return;
 			}
 			manager.TetrinoBlockMove(RIGHT);
-			SingleFrame.getMainviewcopy().blockMoveRePaint();
+			manager.rePaint();
 			break;
 		case KeyEvent.VK_LEFT:
 			if (manager.getNowTetrino() == null) {
 				return;
 			}
 			manager.TetrinoBlockMove(LEFT);
-			SingleFrame.getMainviewcopy().blockMoveRePaint();
+			manager.rePaint();
 			break;
 		case KeyEvent.VK_UP:
 			if (manager.getNowTetrino() == null) {
 				return;
 			}
 			manager.TetrinoBlockMove(TURN);
-			SingleFrame.getMainviewcopy().blockMoveRePaint();
+			manager.rePaint();
 			break;
 		case KeyEvent.VK_DOWN:
 			TicAction.getTic().ticActions();
@@ -50,27 +51,26 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 			if (!success) {
 				Point nowpos = manager.tetrino.getFlowTetrino();
 				if (manager.gameOverCheack(nowpos)) {
-					SingleFrame.getTime().stop();
+					manager.getTime().stop();
 					return;
 				}
 				manager.setNowTetrino(null);
 				int clearline = manager.lineCheack(nowpos);
 				if (clearline > 0) {
 					manager.lineClear(clearline, nowpos);
-					ScorePanel.getScorePanel().setScore(manager.getScore());
-					LevelPanel.getLevelPanel().setLevel(manager.getLevel());
+					manager.rePaint();
 				}
 				manager.createBlock();
 				return;
 			}
 			if (manager.getLevel() < 10) {
-				SingleFrame.getTime().setDelay(500 - manager.getLevel() * 35);
+				manager.getTime().setDelay(500 - manager.getLevel() * 35);
 			}
-			SingleFrame.getMainviewcopy().blockMoveRePaint();
+			manager.rePaint();
 			return;
 		case KeyEvent.VK_Z: // 현재 테트리스 저장및 불러오기
 			manager.saveBlock();
-			SingleFrame.getMainviewcopy().blockMoveRePaint();
+			manager.rePaint();
 			break;
 		}
 
