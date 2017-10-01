@@ -18,7 +18,6 @@ import Model.Space;
 @SuppressWarnings("serial")
 public class TetrinoBlockPanel extends JPanel implements CellSize {
 
-	private static TetrinoBlockPanel tetrinoblockpanel = null;
 	TetrisControlManager manager = null;
 	BufferedImage buffer = null;
 	Graphics2D graphics;
@@ -32,24 +31,13 @@ public class TetrinoBlockPanel extends JPanel implements CellSize {
 			new Color(255, 0, 0), // »¡°­ - Z
 	};
 
-	private TetrinoBlockPanel(TetrisControlManager manager) {
+	public TetrinoBlockPanel(TetrisControlManager manager) {
 		this.manager = manager;
 		setLayout(null);
 		setLocation(0, 0);
 		setSize(width * 10, height * 20);
 		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));
-	}
-
-	public static TetrinoBlockPanel getTetrinoBlockPanel() {
-		return tetrinoblockpanel;
-	}
-
-	public static TetrinoBlockPanel createTetrinoBlockPanel(TetrisControlManager manager) {
-		if (tetrinoblockpanel == null) {
-			tetrinoblockpanel = new TetrinoBlockPanel(manager);
-		}
-		return tetrinoblockpanel;
 	}
 
 	@Override

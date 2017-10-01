@@ -31,6 +31,13 @@ public class ETC_Panel extends JPanel implements CellSize{
 		add(levelpanel);
 		add(new RankButton(width));
 		add(new ExitButton(width));
-		
+	}
+	@Override
+	public void repaint() {
+		super.repaint();
+		try {
+			scorepanel.repaint();
+			levelpanel.repaint();
+		} catch (NullPointerException e) {		}
 	}
 }

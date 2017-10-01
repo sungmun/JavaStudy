@@ -1,8 +1,6 @@
 package View;
 
-
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -13,14 +11,14 @@ import Control.TetrisControlManager;
 import Model.CellSize;
 
 @SuppressWarnings("serial")
-class TetrisMapPanel extends JPanel implements CellSize{
+class TetrisMapPanel extends JPanel implements CellSize {
 	BufferedImage buffer = null;
 	Graphics2D graphics;
 	private TetrinoBlockPanel nowmapblockpanel;
 
 	public TetrisMapPanel(TetrisControlManager manager) {
 		super();
-		nowmapblockpanel = TetrinoBlockPanel.createTetrinoBlockPanel(manager);
+		nowmapblockpanel = new TetrinoBlockPanel(manager);
 		setLayout(null);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(width * 10, height * 20));
@@ -31,8 +29,10 @@ class TetrisMapPanel extends JPanel implements CellSize{
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
+	public void repaint() {
+		super.repaint();
+		try {
+			nowmapblockpanel.repaint();
+		} catch (NullPointerException e) {}
 	}
 }

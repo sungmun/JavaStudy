@@ -1,5 +1,8 @@
 package Control;
 
+import Model.Space;
+import Model.Tetrino;
+
 public class OpponentTetrisControlManager extends TetrisControlManager {
 	private static OpponentTetrisControlManager tetrismanager = null;
 
@@ -19,5 +22,27 @@ public class OpponentTetrisControlManager extends TetrisControlManager {
 	}
 	public static void setTetrisControlManager(OpponentTetrisControlManager tetrismanager) {
 		OpponentTetrisControlManager.tetrismanager=tetrismanager;
+	}
+	@Override
+	public void setLevel(int level) {
+		super.setLevel(level);
+		rePaint();
+	}
+	@Override
+	public void setScore(int score) {
+		super.setScore(score);
+	}
+	@Override
+	public void setNext_block(Tetrino next_block) {
+		super.setNext_block(next_block);
+	}
+	@Override
+	public void setRealtimemap(Space[][] realtimemap) {
+		super.setRealtimemap(realtimemap);
+		rePaint();
+	}
+	@Override
+	public void setSave_block(Tetrino save_block) {
+		super.setSave_block(save_block);
 	}
 }

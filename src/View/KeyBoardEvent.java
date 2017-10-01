@@ -11,7 +11,6 @@ import Model.MoveType;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 	TetrisControlManager manager = null;
-	TetrinoBlockPanel panel = TetrinoBlockPanel.getTetrinoBlockPanel();
 	public KeyBoardEvent(TetrisControlManager manager) {
 		this.manager=manager;
 	}

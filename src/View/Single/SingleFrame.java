@@ -24,12 +24,13 @@ public class SingleFrame extends GameBasicFrame implements MoveType, CellSize {
 		setSize(cellwidth + 225, cellheight + 43);
 
 		MainPanel mainpanel = new MainPanel(manager);
-
+		
 		add(mainpanel);
+		
+		manager.setPanel(mainpanel);
 
-		time = new Timer(speed, TicAction.ticActionCreate(manager));
-
-		addKeyListener(new KeyBoardEvent(UserTetrisControlManager.getTetrisControlManager()));
+		manager.setTime(new Timer(speed, TicAction.ticActionCreate(manager)));
+		addKeyListener(new KeyBoardEvent(manager));
 	}
 
 	public static SingleFrame createSingleFrame() {

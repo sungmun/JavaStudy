@@ -8,12 +8,17 @@ import Control.TetrisControlManager;
 public class GameViewPanel extends JPanel {
 	TetrisMapPanel mappanel;
 
-
 	public GameViewPanel(TetrisControlManager manager) {
 		mappanel = new TetrisMapPanel(manager);
 		setOpaque(false);
-
 		add(mappanel);
 	}
-
+	
+	@Override
+	public void repaint() {
+		super.repaint();
+		try {
+			mappanel.repaint();
+		}catch (NullPointerException e) {}
+	}
 }

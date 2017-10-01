@@ -23,6 +23,13 @@ public class MainPanel extends JPanel {
 		add(gamepanel);
 		add(etc_panel);
 	}
-	
+	@Override
+	public void repaint() {
+		super.repaint();
+		try {
+			etc_panel.repaint();
+			gamepanel.repaint();
+		} catch (NullPointerException e) {}
+	}
 
 }

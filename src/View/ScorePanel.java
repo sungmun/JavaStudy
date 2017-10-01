@@ -23,7 +23,9 @@ public class ScorePanel extends JPanel implements CellSize {
 	public ScorePanel(TetrisControlManager manager) {
 
 		height = 70;
-
+		
+		this.manager=manager;
+		
 		setOpaque(false);
 		setPreferredSize(new Dimension(width * 5, height));
 
@@ -46,6 +48,9 @@ public class ScorePanel extends JPanel implements CellSize {
 	@Override
 	public void repaint() {
 		super.repaint();
+		if (manager == null) {
+			return;
+		}
 		score.setText(Integer.toString(manager.getScore()));
 	}
 }

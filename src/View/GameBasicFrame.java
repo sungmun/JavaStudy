@@ -11,13 +11,10 @@ import Control.TetrisControlManager;
 public class GameBasicFrame extends JFrame {
 	protected TetrisControlManager manager;
 	protected int speed = 500;
-	protected Timer time;
 
 	public GameBasicFrame(TetrisControlManager manager) {
 		super("Tetris");
 		this.manager = manager;
-		manager.setFrame(this);
-		manager.setTime(time);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);

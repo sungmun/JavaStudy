@@ -37,23 +37,21 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 		Panel opponent = new Panel(new BorderLayout());
 
 		MainPanel userpanel = new MainPanel(manager);
-		MainPanel opponentpanel = new MainPanel(oppmanager);
-
 		user.add(new Label(UserControl.getUserControl().getUser().getName()), BorderLayout.NORTH);
-		opponent.add(new Label(OpponentControl.getOpponentControl().getUser().getName()), BorderLayout.NORTH);
-
 		user.add(userpanel, BorderLayout.CENTER);
-		opponent.add(opponentpanel, BorderLayout.CENTER);
-		
 		add(user);
-		add(opponent);
-		
-		time = new Timer(speed, TicAction.ticActionCreate(manager));
+		manager.setPanel(userpanel);
 
-		manager.rePaint();
+		MainPanel opponentpanel = new MainPanel(oppmanager);
+		opponent.add(new Label(OpponentControl.getOpponentControl().getUser().getName()), BorderLayout.NORTH);
+		opponent.add(opponentpanel, BorderLayout.CENTER);
+		add(opponent);
+		oppmanager.setPanel(opponentpanel);
+
+		
+		manager.setTime(new Timer(speed, TicAction.ticActionCreate(manager)));
 
 		addKeyListener(new KeyBoardEvent(manager));
-
 	}
 
 	public static MultiFrame createMulteFrame() {

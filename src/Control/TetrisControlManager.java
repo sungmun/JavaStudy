@@ -2,7 +2,7 @@ package Control;
 
 import java.util.Arrays;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import Model.Block;
@@ -18,17 +18,17 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	private static int height = 23;
 	private static int width = 10;
 
-	private int score = 0;
-	private int level = 1;
+	protected int score = 0;
+	protected int level = 1;
 
-	private Tetrino save_block = null;
-	private Tetrino next_block = null;
+	protected Tetrino save_block = null;
+	protected Tetrino next_block = null;
 
-	private Space[][] realtimemap;
+	protected Space[][] realtimemap;
 	public Tetrino tetrino;
 
-	protected JFrame fr = null;
-	protected Timer time=null;
+	protected JPanel panel = null;
+	protected Timer time = null;
 
 	protected TetrisControlManager() {
 		Map tetris = new Map(width, height);
@@ -332,15 +332,15 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	}
 
 	public void rePaint() {
-		fr.repaint();
+		panel.repaint();
 	}
 
-	public JFrame getFrame() {
-		return fr;
+	public JPanel getPanel() {
+		return panel;
 	}
 
-	public void setFrame(JFrame fr) {
-		this.fr = fr;
+	public void setPanel(JPanel pa) {
+		this.panel = pa;
 	}
 
 	public Timer getTime() {
@@ -349,7 +349,19 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 	public void setTime(Timer time) {
 		this.time = time;
+		time.start();
 	}
-	
-	
+
+	public void setRealtimemap(Space[][] realtimemap) {
+		this.realtimemap = realtimemap;
+	}
+
+	public void setSave_block(Tetrino save_block) {
+		this.save_block = save_block;
+	}
+
+	public void setNext_block(Tetrino next_block) {
+		this.next_block = next_block;
+	}
+
 }
