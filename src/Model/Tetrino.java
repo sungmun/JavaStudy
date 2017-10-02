@@ -15,7 +15,7 @@ public class Tetrino implements MoveType, TetrinoType {
 		for (int y = 0; y < 4; y++) {
 			area[y][0] = new Space();
 			for (int x = 1; x < 5; x++) {
-				area[y][x] = (tetrino[y][x - 1] != 1) ? new Space() : new Block(type);
+				area[y][x] = (tetrino[y][x - 1] != 1) ? new Space() : new Space(Space.FLOW,type);
 			}
 			area[y][5] = new Space();
 		}
@@ -33,7 +33,7 @@ public class Tetrino implements MoveType, TetrinoType {
 				}
 				Space spc1 = area[y][x];
 				Space spc2 = area[y][x + direction];
-				if (spc1.getIsblock() == Block.ETC) {
+				if (spc1.getIsblock() == Space.ETC) {
 					continue;
 				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
 				if (spc1.getIsblock() == Space.FLOW) {
@@ -54,7 +54,7 @@ public class Tetrino implements MoveType, TetrinoType {
 				Space spc1 = area[y][x];
 				Space spc2 = area[y + 1][x];
 
-				if (spc1.getIsblock() == Block.ETC) {
+				if (spc1.getIsblock() == Space.ETC) {
 					continue;
 				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
 				if (spc1.getIsblock() == Space.FLOW) {

@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,8 +20,7 @@ public class StartFrame extends JFrame implements ServerInfomation {
 		// TODO Auto-generated constructor stub
 		super();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(10, 10, 100, 100);
-		setLocationRelativeTo(null);
+		
 		setResizable(false);
 		setLayout(new FlowLayout());
 
@@ -29,31 +29,24 @@ public class StartFrame extends JFrame implements ServerInfomation {
 
 		single.setBounds(10, 10, 100, 80);
 
-		single.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				JFrame fr = SingleFrame.createSingleFrame();
-				fr.setVisible(true);
-				dispose();
-			}
+		single.addActionListener((e) -> {
+			JFrame fr = SingleFrame.createSingleFrame();
+			fr.setVisible(true);
+			dispose();
 		});
 
-		mulite.addActionListener(new ActionListener() {
+		mulite.addActionListener((e) -> {
+			JFrame fr = LoginFrame.createLoginFrame();
+			fr.setVisible(true);
+			dispose();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				JFrame fr = LoginFrame.createLoginFrame();
-				fr.setVisible(true);
-				dispose();
-			}
 		});
 
 		add(single);
 		add(mulite);
-
+		
+		this.pack();
+		setLocationRelativeTo(null);
 	}
 
 	public static StartFrame createStartFrame() {

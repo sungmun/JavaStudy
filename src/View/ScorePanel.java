@@ -21,7 +21,7 @@ public class ScorePanel extends JPanel implements CellSize {
 	int height;
 
 	public ScorePanel(TetrisControlManager manager) {
-
+		super(true);
 		height = 70;
 		
 		this.manager=manager;

@@ -1,10 +1,11 @@
 package View.Multe;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Label;
-import java.awt.Panel;
 
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import Control.OpponentControl;
@@ -27,15 +28,15 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 	private MultiFrame() {
 		super(UserTetrisControlManager.getTetrisControlManager());
 		oppmanager = OpponentTetrisControlManager.getTetrisControlManager();
-		int cellwidth = width * 20;
-		int cellheight = height * 20;
 
-		setSize(cellwidth + 450, cellheight + 43);
 		setLayout(new GridLayout(1, 2));
-
-		Panel user = new Panel(new BorderLayout());
-		Panel opponent = new Panel(new BorderLayout());
-
+		
+		JPanel user = new JPanel(new BorderLayout(), true);
+		JPanel opponent = new JPanel(new BorderLayout(), true);
+		
+		user.setOpaque(false);
+		opponent.setOpaque(false);
+		
 		MainPanel userpanel = new MainPanel(manager);
 		user.add(new Label(UserControl.getUserControl().getUser().getName()), BorderLayout.NORTH);
 		user.add(userpanel, BorderLayout.CENTER);
@@ -48,10 +49,18 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 		add(opponent);
 		oppmanager.setPanel(opponentpanel);
 
-		
+		this.pack();
+		this.setLocationRelativeTo(null);
+		//pack로 화면의 크기롤 고정 시칸다음 화면의 위치를 정해 주어야 한다
+
 		manager.setTime(new Timer(speed, TicAction.ticActionCreate(manager)));
 
 		addKeyListener(new KeyBoardEvent(manager));
+	}
+
+	@Override
+	public void update(Graphics g) {
+		paintComponents(g);
 	}
 
 	public static MultiFrame createMulteFrame() {

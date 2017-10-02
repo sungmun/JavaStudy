@@ -1,5 +1,7 @@
 package View;
 
+import java.awt.Graphics;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -13,6 +15,7 @@ public class MainPanel extends JPanel {
 	private ETC_Panel etc_panel;
 
 	public MainPanel(TetrisControlManager manager) {
+		super(true);
 		etc_panel = new ETC_Panel(manager);
 		gamepanel = new GameViewPanel(manager);
 
@@ -22,6 +25,10 @@ public class MainPanel extends JPanel {
 		etc_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		add(gamepanel);
 		add(etc_panel);
+	}
+	@Override
+	public void update(Graphics g) {
+		paintComponent(g);
 	}
 	@Override
 	public void repaint() {

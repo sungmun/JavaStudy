@@ -2,6 +2,7 @@ package View;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -18,5 +19,7 @@ public class BlockBackGroudPanel extends JPanel implements CellSize {
 		setBorder(new LineBorder(Color.WHITE, 2));
 		add(panel);
 	}
-
+	public void update(Graphics g) {
+		paintComponent(g);
+	}
 }

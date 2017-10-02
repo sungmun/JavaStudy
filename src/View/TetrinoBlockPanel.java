@@ -1,6 +1,5 @@
 package View;
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -32,12 +31,19 @@ public class TetrinoBlockPanel extends JPanel implements CellSize {
 	};
 
 	public TetrinoBlockPanel(TetrisControlManager manager) {
+		super(true);
 		this.manager = manager;
 		setLayout(null);
 		setLocation(0, 0);
 		setSize(width * 10, height * 20);
 		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));
+
+	}
+
+	@Override
+	public void update(Graphics g) {
+		paintComponent(g);
 	}
 
 	@Override

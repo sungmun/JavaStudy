@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
@@ -16,9 +17,10 @@ public class ETC_Panel extends JPanel implements CellSize{
 	private LevelPanel levelpanel;
 	
 	public ETC_Panel(TetrisControlManager manager) {
-
+		
+		super(true);
 		setOpaque(false);
-		setPreferredSize(new Dimension(width * 5 + 20, height * 20 + 60));
+		setPreferredSize(new Dimension(width * 5 + 20, height * 20 ));
 
 		nextpanel=new NextPanel(manager);
 		savepanel=new SavePanel(manager);
@@ -31,6 +33,9 @@ public class ETC_Panel extends JPanel implements CellSize{
 		add(levelpanel);
 		add(new RankButton(width));
 		add(new ExitButton(width));
+	}
+	public void update(Graphics g) {
+		paintComponent(g);
 	}
 	@Override
 	public void repaint() {

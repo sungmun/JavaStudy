@@ -14,7 +14,7 @@ public class SavePanel extends JPanel implements CellSize{
 	private BlockBackGroudPanel saveblockbackground;
 	private BasicJLabel title;
 	public SavePanel(TetrisControlManager manager) {
-		// TODO Auto-generated constructor stub
+		super(true);
 		setOpaque(false);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setPreferredSize(new Dimension(width*5, height*5+18));

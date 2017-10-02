@@ -57,8 +57,7 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 	}
 
 	public <T> T transObject(String msg, Class<T> cla) {
-		Gson gson = new Gson();
-		return gson.fromJson(msg, cla);
+		return new Gson().fromJson(msg, cla);
 	}
 
 	@Override
@@ -172,6 +171,7 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 	public void send(SocketMessage message) {
 		out.println(new Gson().toJson(message));
 		out.flush();
+		System.gc();
 	}
 
 	private void close() {

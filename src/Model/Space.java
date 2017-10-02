@@ -3,7 +3,14 @@ package Model;
 public class Space implements SpaceSize, BlockType, TetrinoType {
 	private int isblock = SPACE;
 	private int type = 0;
-
+	public Space() {}
+	public Space(int isblock) {
+		this.isblock = isblock;
+	}
+	public Space(int isblock,int type) {
+		this.isblock = isblock;
+		this.type=type;
+	}
 	public int getIsblock() {
 		return isblock;
 	}

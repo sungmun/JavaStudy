@@ -21,7 +21,7 @@ public class LevelPanel extends JPanel implements CellSize {
 	int height;
 
 	public LevelPanel(TetrisControlManager manager) {
-
+		super(true);
 		height = 70;
 
 		this.manager = manager;

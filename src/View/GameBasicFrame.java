@@ -3,7 +3,6 @@ package View;
 import java.awt.Color;
 
 import javax.swing.JFrame;
-import javax.swing.Timer;
 
 import Control.TetrisControlManager;
 
@@ -16,11 +15,11 @@ public class GameBasicFrame extends JFrame {
 		super("Tetris");
 		this.manager = manager;
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
 		
-		getContentPane().setBackground(Color.BLACK);
+		this.getContentPane().setBackground(Color.BLACK);
+		this.setLocationRelativeTo(null);
 	}
 	
 }

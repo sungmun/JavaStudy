@@ -18,11 +18,6 @@ public class Map {
 		}
 	}
 
-	public void changeMap(int width,int height){
-		Map.width=width;
-		Map.height=height;
-		this.map=new Space[width][height];
-	}
 	public static int getMapWidth(){
 		return Map.width;
 	}
