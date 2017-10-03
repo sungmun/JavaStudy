@@ -4,10 +4,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Control.Point;
 import Control.TetrisControlManager;
 import Control.TicAction;
 import Model.MoveType;
+import Model.Point;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 	TetrisControlManager manager = null;
@@ -62,8 +62,8 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 				manager.createBlock();
 				return;
 			}
-			if (manager.getLevel() < 10) {
-				manager.getTime().setDelay(500 - manager.getLevel() * 35);
+			if (manager.getTime().getDelay() > 1) {
+				manager.getTime().setDelay(500 -(int)(Math.pow(1.001, manager.getLevel())));
 			}
 			manager.rePaint();
 			return;

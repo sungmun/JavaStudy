@@ -22,13 +22,7 @@ public class ExitButton extends JButton {
 		setForeground(Color.white);
 		setFocusable(false);
 		
-		addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		addActionListener(e-> System.exit(0));
 	}
 
 }

@@ -20,9 +20,6 @@ public class OpponentTetrisControlManager extends TetrisControlManager {
 	public static OpponentTetrisControlManager getTetrisControlManager() {
 		return tetrismanager;
 	}
-	public static void setTetrisControlManager(OpponentTetrisControlManager tetrismanager) {
-		OpponentTetrisControlManager.tetrismanager=tetrismanager;
-	}
 	@Override
 	public void setLevel(int level) {
 		super.setLevel(level);

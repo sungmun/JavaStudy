@@ -42,7 +42,7 @@ public class LoginFrame extends JFrame {
 			dispose();
 		});
 		login.addActionListener((e) -> {
-			if (id_txt.getText() == "" || name_txt.getText() == "") {
+			if (id_txt.getText().equals("") || name_txt.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "ID또는 Name을 입력하지 않으셨습니다.");
 				return;
 			}

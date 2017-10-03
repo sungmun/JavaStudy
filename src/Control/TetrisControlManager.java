@@ -8,6 +8,7 @@ import javax.swing.Timer;
 import Model.CreateBlock;
 import Model.Map;
 import Model.MoveType;
+import Model.Point;
 import Model.Space;
 import Model.Tetrino;
 import Model.TetrinoType;
@@ -34,8 +35,9 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	}
 
 	public void saveBlock() {
-		int y = 0, x = 0;
+		int y = 0;
 		for (Space[] spaces : realtimemap) {
+			int x=0;
 			for (Space space : spaces) {
 				if (space.getIsblock() == Space.FLOW) {
 					realtimemap[y][x] = new Space();
@@ -43,15 +45,14 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 				x++;
 			}
 			y++;
-			x = 0;
 		}
 		if (this.save_block == null) {
-			save_block = tetrino;
+			setSave_block(tetrino);
 			createBlock();
 		} else {
 			Tetrino temp_block = tetrino;
 			tetrino = save_block;
-			save_block = temp_block;
+			setSave_block(temp_block);
 		}
 	}
 
@@ -97,7 +98,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	public void createBlock() {
 		int createposition = width / 3;
 		tetrino = (next_block == null) ? CreateBlock.tetrinoRandomCreate() : next_block;
-		next_block = CreateBlock.tetrinoRandomCreate();
+		setNext_block(CreateBlock.tetrinoRandomCreate());
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
 				realtimemap[y][x + createposition] = tetrino.getTetrino()[y][x];
@@ -126,9 +127,10 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 				score += 1 + score;
 			}
 		}
-		this.score += score * 100;
-
-		level = (int) (this.score / 1000);
+		
+		setScore(getScore()+score*100);
+		setLevel((int) (this.score / 1000));
+		
 		success = true;
 		while (success) {
 			success = false;

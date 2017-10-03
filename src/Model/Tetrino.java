@@ -1,7 +1,5 @@
 package Model;
 
-import Control.Point;
-
 public class Tetrino implements MoveType, TetrinoType {
 
 	int mode = 1;// 1부터 4까지 있다

@@ -17,8 +17,4 @@ public class ControlBasic {
 	public TetrisControlManager getManager() {
 		return manager;
 	}
-	public void setManager(TetrisControlManager manager) {
-		this.manager = manager;
-	}
-
 }

@@ -9,11 +9,6 @@ public class UsersList {
 
 	private static Object key = new Object();
 
-	public static User[] getlistarray() {
-		User[] arr=new User[list.size()];
-		arr=list.toArray(arr);
-		return arr;
-	}
 	public static boolean add(User user) {
 		synchronized (key) {
 			boolean temp=list.add(user);

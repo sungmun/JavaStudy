@@ -22,7 +22,6 @@ import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
-import View.FrameMoveAction;
 import View.Multe.ListViewFrame;
 import View.Multe.LoginFrame;
 import View.Multe.MultiFrame;
@@ -84,7 +83,9 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 
 	public void userListMessage(SocketMessage msg) {
 		UsersList.setList(transObject(msg.getMessage(), User[].class));
-		FrameMoveAction.moveActeion(ListViewFrame.createListViewFrame(), LoginFrame.getLoginFrame());
+		JFrame fr = ListViewFrame.createListViewFrame();
+		fr.setVisible(true);
+		LoginFrame.getLoginFrame().dispose();
 	}
 
 	public void beChoice(SocketMessage msg) {
@@ -159,7 +160,8 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 				JFrame fr1 = MultiFrame.createMulteFrame();
 				JFrame fr2 = ListViewFrame.createListViewFrame();
 				if (fr1 != null || fr2 == null) {
-					FrameMoveAction.moveActeion(fr1, fr2);
+					fr1.setVisible(true);
+					fr2.dispose();
 				}
 				break;
 			}

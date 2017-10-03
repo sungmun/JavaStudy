@@ -6,9 +6,9 @@ public class User {
 	private String name;
 
 	public User(String id, String name, Integer num) {
-		this.usernumber = num.intValue();
 		this.id = id;
 		this.name = name;
+		this.usernumber = num.intValue();
 	}
 
 	public User(String id, String name) {

@@ -46,7 +46,7 @@ public class ListView extends JPanel {
 	}
 
 	public User getUser() {
-		int row = table.getSelectedColumn();
+		int row = table.getSelectedRow();
 		Integer num = new Integer((String) model.getValueAt(row, 0));
 		String name = (String) model.getValueAt(row, 1);
 		String id = (String) model.getValueAt(row, 2);
