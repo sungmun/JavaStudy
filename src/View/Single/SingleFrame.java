@@ -4,9 +4,9 @@ package View.Single;
 import javax.swing.Timer;
 
 import Control.TicAction;
-import Control.UserTetrisControlManager;
 import Model.CellSize;
 import Model.MoveType;
+import Model.UserTetrisControlManager;
 import View.GameBasicFrame;
 import View.KeyBoardEvent;
 import View.MainPanel;

@@ -1,5 +1,7 @@
 package Control;
 
+import Model.OpponentControl;
+import Model.UserControl;
 import View.StartFrame;
 
 public class Control {

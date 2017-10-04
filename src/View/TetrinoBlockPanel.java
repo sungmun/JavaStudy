@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
 import Model.Space;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class TetrinoBlockPanel extends JPanel implements CellSize {

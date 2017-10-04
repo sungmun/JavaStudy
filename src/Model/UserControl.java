@@ -1,4 +1,4 @@
-package Control;
+package Model;
 
 public class UserControl extends ControlBasic {
 	private static UserControl usercontrol = null;

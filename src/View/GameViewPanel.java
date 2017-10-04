@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class GameViewPanel extends JPanel {

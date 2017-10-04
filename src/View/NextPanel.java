@@ -6,8 +6,8 @@ import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class NextPanel extends JPanel implements CellSize{

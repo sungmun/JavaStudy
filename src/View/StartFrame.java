@@ -8,8 +8,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import Model.ServerInfomation;
 import View.Multe.LoginFrame;
-import View.Multe.ServerInfomation;
 import View.Single.SingleFrame;
 
 @SuppressWarnings("serial")

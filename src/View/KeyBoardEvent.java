@@ -4,10 +4,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Control.TetrisControlManager;
 import Control.TicAction;
 import Model.MoveType;
 import Model.Point;
+import Model.TetrisControlManager;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 	TetrisControlManager manager = null;

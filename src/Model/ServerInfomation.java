@@ -1,4 +1,4 @@
-package View.Multe;
+package Model;
 
 public interface ServerInfomation {
 	String IP="localhost";

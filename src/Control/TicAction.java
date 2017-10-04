@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import Model.MoveType;
 import Model.Point;
+import Model.TetrisControlManager;
 
 public class TicAction implements ActionListener, MoveType {
 	TetrisControlManager manager;

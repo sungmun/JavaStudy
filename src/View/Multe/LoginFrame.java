@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Control.TetrisClient;
-import Control.UserControl;
+import Model.UserControl;
 import Serversynchronization.User;
 import View.StartFrame;
 

@@ -1,4 +1,4 @@
-package Control;
+package Model;
 
 public class OpponentControl extends ControlBasic {
 

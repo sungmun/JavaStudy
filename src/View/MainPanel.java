@@ -6,7 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {

@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import Control.UserControl;
+import Model.UserControl;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
 

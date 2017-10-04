@@ -5,8 +5,8 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class ETC_Panel extends JPanel implements CellSize{

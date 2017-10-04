@@ -16,8 +16,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import Model.CellSize;
+import Model.OpponentControl;
+import Model.ServerInfomation;
 import Model.Space;
 import Model.Tetrino;
+import Model.UserControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
@@ -25,7 +28,6 @@ import Serversynchronization.UsersList;
 import View.Multe.ListViewFrame;
 import View.Multe.LoginFrame;
 import View.Multe.MultiFrame;
-import View.Multe.ServerInfomation;
 
 public class TetrisClient extends Thread implements MessageType, CellSize, ServerInfomation {
 	Socket socket;

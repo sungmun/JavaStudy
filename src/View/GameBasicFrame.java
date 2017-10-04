@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import Control.TetrisControlManager;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class GameBasicFrame extends JFrame {

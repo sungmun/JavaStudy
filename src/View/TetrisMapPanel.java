@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 class TetrisMapPanel extends JPanel implements CellSize {

@@ -1,17 +1,9 @@
-package Control;
+package Model;
 
 import java.util.Arrays;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-import Model.CreateBlock;
-import Model.Map;
-import Model.MoveType;
-import Model.Point;
-import Model.Space;
-import Model.Tetrino;
-import Model.TetrinoType;
 
 public class TetrisControlManager implements TetrinoType, MoveType {
 

@@ -1,7 +1,4 @@
-package Control;
-
-import Model.Space;
-import Model.Tetrino;
+package Model;
 
 public class OpponentTetrisControlManager extends TetrisControlManager {
 	private static OpponentTetrisControlManager tetrismanager = null;

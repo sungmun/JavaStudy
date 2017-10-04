@@ -8,13 +8,13 @@ import java.awt.Label;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Control.OpponentControl;
-import Control.OpponentTetrisControlManager;
 import Control.TicAction;
-import Control.UserControl;
-import Control.UserTetrisControlManager;
 import Model.CellSize;
 import Model.MoveType;
+import Model.OpponentControl;
+import Model.OpponentTetrisControlManager;
+import Model.UserControl;
+import Model.UserTetrisControlManager;
 import View.GameBasicFrame;
 import View.KeyBoardEvent;
 import View.MainPanel;

@@ -8,9 +8,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
 import Model.Space;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class SaveBlockPanel extends JPanel implements CellSize{

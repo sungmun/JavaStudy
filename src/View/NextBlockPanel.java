@@ -5,9 +5,9 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
 import Model.Space;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class NextBlockPanel extends JPanel implements CellSize{

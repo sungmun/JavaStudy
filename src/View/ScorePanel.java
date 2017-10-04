@@ -5,8 +5,8 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
-import Control.TetrisControlManager;
 import Model.CellSize;
+import Model.TetrisControlManager;
 
 @SuppressWarnings("serial")
 public class ScorePanel extends JPanel implements CellSize {
