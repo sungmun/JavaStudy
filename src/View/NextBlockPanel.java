@@ -10,7 +10,7 @@ import Model.TetrisControlManager;
 import Model.ValueObject.Space;
 
 @SuppressWarnings("serial")
-public class NextBlockPanel extends JPanel implements CellSize{
+public class NextBlockPanel extends JPanel implements CellSize,TetrisBlockColor{
 	TetrisControlManager manager = null;
 	
 	public NextBlockPanel(TetrisControlManager manager) {
@@ -31,7 +31,7 @@ public class NextBlockPanel extends JPanel implements CellSize{
 				for (Space spc : spcs) {
 					if(spc.getIsblock()==Space.FLOW||
 							spc.getIsblock()==Space.DEFULT) {
-						g.setColor(TetrinoBlockPanel.tetrino_type[spc.getType()]);
+						g.setColor(TETRINO_COLOR[spc.getType()]);
 						g.fill3DRect(indexX*width, indexY*height-6, width, height,true);
 					}
 					indexX++;

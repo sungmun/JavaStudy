@@ -8,6 +8,7 @@ import java.awt.Label;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import Control.KeyBoardEvent;
 import Control.TicAction;
 import Model.CellSize;
 import Model.MoveType;
@@ -16,7 +17,6 @@ import Model.OpponentTetrisControlManager;
 import Model.UserControl;
 import Model.UserTetrisControlManager;
 import View.GameBasicFrame;
-import View.KeyBoardEvent;
 import View.MainPanel;
 
 @SuppressWarnings("serial")

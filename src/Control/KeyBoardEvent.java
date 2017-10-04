@@ -1,10 +1,9 @@
-package View;
+package Control;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Control.TicAction;
 import Model.MoveType;
 import Model.TetrisControlManager;
 import Model.ValueObject.Point;
