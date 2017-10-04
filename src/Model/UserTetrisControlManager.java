@@ -1,6 +1,6 @@
 package Model;
 
-import Control.TetrisClient;
+import Client.TetrisClient;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 

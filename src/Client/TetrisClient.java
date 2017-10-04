@@ -1,4 +1,4 @@
-package Control;
+package Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import Control.ServerMessageEvent;
 import Model.CellSize;
 import Model.OpponentControl;
 import Model.ServerInfomation;
@@ -57,10 +58,6 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		return client;
 	}
 
-	public <T> T transObject(String msg, Class<T> cla) {
-		return new Gson().fromJson(msg, cla);
-	}
-
 	@Override
 	public void run() {
 
@@ -75,42 +72,13 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		}
 	}
 
-	public void logIn(SocketMessage msg) {
-		UsersList.add(transObject(msg.getMessage(), User.class));
-	}
-
-	public void logOut(SocketMessage msg) {
-		UsersList.delete(transObject(msg.getMessage(), User.class));
-	}
-
-	public void userListMessage(SocketMessage msg) {
-		UsersList.setList(transObject(msg.getMessage(), User[].class));
-		JFrame fr = ListViewFrame.createListViewFrame();
-		fr.setVisible(true);
-		LoginFrame.getLoginFrame().dispose();
-	}
-
-	public void beChoice(SocketMessage msg) {
-		User player = transObject(msg.getMessage(), User.class);
-		int val = JOptionPane.showOptionDialog(null, player.getName() + "님이 대전을 요청하셨습니다", "대전 요청",
-				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-		if (val == JOptionPane.YES_OPTION) {
-			send(new SocketMessage(WAR_ACCEPT, null));
-			warAccept(msg);
-		} else {
-			send(new SocketMessage(WAR_DENIAL, null));
-		}
-	}
-
-	public void warAccept(SocketMessage msg) {
-		System.out.println("TetrisClient.warAccept()");
-		send(new SocketMessage(USER_MESSAGE, UserControl.getUserControl().getUser()));
-		send(new SocketMessage(WAR_START, null));
+	public <T> T transObject(String msg, Class<T> cla) {
+		return new Gson().fromJson(msg, cla);
 	}
 
 	public void onMessage(Socket server) throws JsonSyntaxException, IOException {
 		// 백터나 컬렉션의 정렬화는 지원하나 역정렬화는 지원을 않한다
-
+		ServerMessageEvent event = new ServerMessageEvent();
 		SocketMessage socketmsg = transObject(in.readLine(), SocketMessage.class);
 		OpponentControl opcontrol = OpponentControl.createOpponentControl();
 		try {
@@ -120,27 +88,27 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 						.setUserNumber(transObject(socketmsg.getMessage(), Integer.class));
 				break;
 			case LOGIN:
-				logIn(socketmsg);
+				event.logIn(socketmsg);
 				break;
 			case LOGOUT:
-				logOut(socketmsg);
+				event.logOut(socketmsg);
 				break;
 			case USER_LIST_MESSAGE:
-				userListMessage(socketmsg);
+				event.userListMessage(socketmsg);
 				break;
 			case GAMEOVER_MESSAGE:
 
 			case BE_CHOSEN:
-				beChoice(socketmsg);
+				event.beChoice(socketmsg);
 				break;
 			case WAR_ACCEPT:
-				warAccept(socketmsg);
+				event.warAccept(socketmsg);
 				break;
 			case WAR_DENIAL:
 				JOptionPane.showMessageDialog(null, "대전이 거부 당하셨습니다");
 				break;
 			case WAR_START:
-				logOut(socketmsg);
+				event.logOut(socketmsg);
 				break;
 			case SCORE_MESSAGE:
 				opcontrol.getManager().setScore(transObject(socketmsg.getMessage(), int.class));

@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import Control.TetrisClient;
+import Client.TetrisClient;
 import Model.UserControl;
 import Serversynchronization.User;
 import View.StartFrame;
