@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import Model.CellSize;
-import Model.Space;
 import Model.TetrisControlManager;
+import Model.ValueObject.Space;
 
 @SuppressWarnings("serial")
 public class TetrinoBlockPanel extends JPanel implements CellSize {

@@ -1,4 +1,4 @@
-package Model;
+package Model.ValueObject;
 
 public class Point {
 	private int x;

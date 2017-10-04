@@ -1,4 +1,8 @@
-package Model;
+package Model.ValueObject;
+
+import Model.BlockType;
+import Model.SpaceSize;
+import Model.TetrinoType;
 
 public class Space implements SpaceSize, BlockType, TetrinoType {
 	private int isblock = SPACE;

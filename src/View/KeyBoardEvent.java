@@ -6,8 +6,8 @@ import java.awt.event.KeyListener;
 
 import Control.TicAction;
 import Model.MoveType;
-import Model.Point;
 import Model.TetrisControlManager;
+import Model.ValueObject.Point;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 	TetrisControlManager manager = null;

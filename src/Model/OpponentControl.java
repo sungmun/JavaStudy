@@ -1,5 +1,7 @@
 package Model;
 
+import Model.ValueObject.ControlBasic;
+
 public class OpponentControl extends ControlBasic {
 
 	private static OpponentControl control = null;

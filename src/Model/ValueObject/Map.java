@@ -1,4 +1,5 @@
-package Model;
+package Model.ValueObject;
+
 public class Map {
 	
 	private static int width,height;

@@ -1,5 +1,6 @@
-package Model;
+package Model.ValueObject;
 
+import Model.TetrisControlManager;
 import Serversynchronization.User;
 
 public class ControlBasic {

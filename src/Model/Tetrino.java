@@ -1,5 +1,8 @@
 package Model;
 
+import Model.ValueObject.Point;
+import Model.ValueObject.Space;
+
 public class Tetrino implements MoveType, TetrinoType {
 
 	int mode = 1;// 1부터 4까지 있다

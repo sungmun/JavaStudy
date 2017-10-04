@@ -1,5 +1,7 @@
 package Model;
 
+import Model.ValueObject.Space;
+
 public class OpponentTetrisControlManager extends TetrisControlManager {
 	private static OpponentTetrisControlManager tetrismanager = null;
 

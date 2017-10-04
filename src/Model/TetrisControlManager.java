@@ -5,6 +5,10 @@ import java.util.Arrays;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import Model.ValueObject.Map;
+import Model.ValueObject.Point;
+import Model.ValueObject.Space;
+
 public class TetrisControlManager implements TetrinoType, MoveType {
 
 	private static int height = 23;
