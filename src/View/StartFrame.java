@@ -1,10 +1,6 @@
 package View;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -24,8 +20,8 @@ public class StartFrame extends JFrame implements ServerInfomation {
 		setResizable(false);
 		setLayout(new FlowLayout());
 
-		JButton single = new JButton("È¥ÀÚÇÏ±â");
-		JButton mulite = new JButton("°°ÀÌÇÏ±â");
+		JButton single = new JButton("í˜¼ìí•˜ê¸°");
+		JButton mulite = new JButton("ê°™ì´í•˜ê¸°");
 
 		single.setBounds(10, 10, 100, 80);
 

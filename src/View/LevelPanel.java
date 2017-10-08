@@ -5,31 +5,25 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
-import Model.CellSize;
-import Model.TetrisControlManager;
+import Control.Observer;
+import Control.PlayerInformation;
 
 @SuppressWarnings("serial")
-public class LevelPanel extends JPanel implements CellSize {
-
-	private static LevelPanel levelpanel;
-
-	TetrisControlManager manager;
+public class LevelPanel extends JPanel implements CellSize, Observer {
 
 	BasicJLabel title;
 	BasicJLabel level;
 
 	int height;
 
-	public LevelPanel(TetrisControlManager manager) {
+	public LevelPanel() {
 		super(true);
 		height = 70;
-
-		this.manager = manager;
 
 		setOpaque(false);
 		setPreferredSize(new Dimension(width * 5, height + 10));
 
-		title = new BasicJLabel("·¹º§", Font.BOLD, 23);
+		title = new BasicJLabel("Level", Font.BOLD, 23);
 		level = new BasicJLabel("1", Font.BOLD, 23);
 
 		title.setPreferredSize(new Dimension(width * 5, height / 2));
@@ -38,20 +32,15 @@ public class LevelPanel extends JPanel implements CellSize {
 		add(title);
 		add(level);
 
-		levelpanel = this;
 	}
 
-	public static LevelPanel getLevelPanel() {
-		return levelpanel;
-	}
 
 	@Override
-	public void repaint() {
-		super.repaint();
-		if (manager == null) {
-			return;
+	public void update(String title, String source) {
+		if (title.equals("level")) {
+			level.setText(source);
+			repaint();
 		}
-		level.setText(Integer.toString(manager.getLevel()));
 	}
 
 }

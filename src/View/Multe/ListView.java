@@ -14,7 +14,7 @@ import Serversynchronization.UsersList;
 
 @SuppressWarnings("serial")
 public class ListView extends JPanel {
-	String header[] = { "¹øÈ£", "ÀÌ¸§", "ID" };
+	String header[] = { "ë²ˆí˜¸", "ì´ë¦„", "ID" };
 	String data[][];
 
 	DefaultTableModel model;

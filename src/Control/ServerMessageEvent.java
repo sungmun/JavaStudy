@@ -32,7 +32,7 @@ public class ServerMessageEvent implements MessageType {
 
 	public void beChoice(SocketMessage msg) {
 		User player = transObject(msg.getMessage(), User.class);
-		int val = JOptionPane.showOptionDialog(null, player.getName() + "´ÔÀÌ ´ëÀüÀ» ¿äÃ»ÇÏ¼Ì½À´Ï´Ù", "´ëÀü ¿äÃ»",
+		int val = JOptionPane.showOptionDialog(null, player.getName() + "ë‹˜ì´ ëŒ€ì „ì„ ìš”ì²­í•˜ì…¨ìŠµë‹ˆë‹¤", "ëŒ€ì „ ìš”ì²­",
 				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 		if (val == JOptionPane.YES_OPTION) {
 			TetrisClient.getTetrisClient().send(new SocketMessage(WAR_ACCEPT, null));

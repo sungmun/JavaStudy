@@ -6,22 +6,20 @@ import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import Model.CellSize;
-import Model.TetrisControlManager;
-
 @SuppressWarnings("serial")
-public class SavePanel extends JPanel implements CellSize{
+public class SavePanel extends JPanel implements CellSize {
 	private BlockBackGroudPanel saveblockbackground;
 	private BasicJLabel title;
-	public SavePanel(TetrisControlManager manager) {
+
+	public SavePanel() {
 		super(true);
 		setOpaque(false);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(width*5, height*5+18));
-		
-		title=new BasicJLabel("¿˙¿Âµ» ∫Ì∑∞", Font.BOLD, 18);
-		saveblockbackground=new BlockBackGroudPanel(new SaveBlockPanel(manager));
-		
+		setPreferredSize(new Dimension(width * 5, height * 5 + 18));
+
+		title = new BasicJLabel("Ï†ÄÏû•Îêú Î∏îÎü≠", Font.BOLD, 18);
+		saveblockbackground = new BlockBackGroudPanel(new SaveBlockPanel());
+
 		add(title);
 		add(saveblockbackground);
 	}

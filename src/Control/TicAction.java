@@ -3,58 +3,54 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import Client.TetrisClient;
 import Model.MoveType;
 import Model.TetrisControlManager;
+import Model.UserTetrisControlManager;
 import Model.ValueObject.Point;
+import Serversynchronization.MessageType;
+import Serversynchronization.SocketMessage;
 
-public class TicAction implements ActionListener, MoveType {
-	TetrisControlManager manager;
-	private static TicAction tic = null;
-
-	private TicAction(TetrisControlManager manager) {
-		this.manager = manager;
-	}
-
-	public static TicAction ticActionCreate(TetrisControlManager manager) {
-		if (tic == null) {
-			tic = new TicAction(manager);
-		}
-		return tic;
-	}
-
-	public static TicAction getTic() {
-		return tic;
+public abstract class TicAction implements ActionListener, MoveType,MessageType {
+	protected TetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
+	ImagePrint mainprint;
+	
+	public TicAction(ImagePrint mainprint) {
+		super();
+		this.mainprint = mainprint;
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		ticActions();
-	}
-
-	public void ticActions() {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
 		if (manager.getNowTetrino() == null) {
 			manager.createBlock();
-		} else {
-			if (!manager.TetrinoBlockMove(DOWN)) {
-				Point nowpos = manager.tetrino.getFlowTetrino();
-				if (manager.gameOverCheack(nowpos)) {
-					manager.rePaint();
-					manager.getTime().stop();
-					return;
-				}
-				manager.setNowTetrino(null);
-				int clearline=manager.lineCheack(nowpos);
-				if(clearline>0) {
-					manager.lineClear(clearline, nowpos);
-					manager.rePaint();
-				}
-				return;
-			}
+			mainprint.NextBlockPaint(manager);
+		} else if (!manager.TetrinoBlockMove(DOWN)) {
+			check();
 		}
-		if(manager.getLevel()<10) {
-			manager.getTime().setDelay(500-manager.getLevel()*35);
+		mainprint.TetrinoBlockPaint(manager);
+		speedChange();
+		TetrisClient client=TetrisClient.getTetrisClient();
+		if(client!=null) {
+			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
 		}
-		manager.rePaint();
 	}
+
+	public boolean check() {
+		Point nowpos = manager.tetrino.getFlowTetrino();
+		if (manager.gameOverCheack(nowpos)) {
+			timeStop();
+			return false;
+		}
+		manager.setNowTetrino(null);
+		int clearline = manager.lineCheack(nowpos);
+		if (clearline > 0) {
+			manager.lineClear(clearline, nowpos);
+		}
+		return true;
+	}
+
+	public abstract void timeStop();
+
+	public abstract void speedChange();
 }

@@ -8,18 +8,15 @@ import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import Model.CellSize;
-import Model.TetrisControlManager;
-
 @SuppressWarnings("serial")
 class TetrisMapPanel extends JPanel implements CellSize {
 	BufferedImage buffer = null;
 	Graphics2D graphics;
 	private TetrinoBlockPanel nowmapblockpanel;
 
-	public TetrisMapPanel(TetrisControlManager manager) {
+	public TetrisMapPanel( ) {
 		super(true);
-		nowmapblockpanel = new TetrinoBlockPanel(manager);
+		nowmapblockpanel = new TetrinoBlockPanel();
 		setLayout(null);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(width * 10, height * 20));
@@ -35,6 +32,7 @@ class TetrisMapPanel extends JPanel implements CellSize {
 			nowmapblockpanel.repaint();
 		} catch (NullPointerException e) {}
 	}
+	@Override
 	public void update(Graphics g) {
 		paintComponents(g);
 	}

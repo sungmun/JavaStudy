@@ -23,6 +23,26 @@ public class CreateBlock implements TetrinoType{
 			return tetrinoZType();
 		}
 	}
+	public static Tetrino tetrinoChoiceCreate(int type){
+		switch(type){
+		case OTYPE:
+			return tetrinoOType();
+		case ITYPE:
+			return tetrinoIType();
+		case STYPE:
+			return tetrinoSType();
+		case ZTYPE:
+			return tetrinoZType();
+		case LTYPE:
+	 		return tetrinoLType();
+		case JTYPE:
+			return tetrinoJType();
+		case TTYPE:
+			return tetrinoTType();
+		default:
+			return tetrinoZType();
+		}
+	}
 	private static Tetrino tetrinoOType(){
 		int[][] type={
 				{0,0,0,0},

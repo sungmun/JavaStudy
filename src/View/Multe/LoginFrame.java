@@ -21,7 +21,7 @@ public class LoginFrame extends JFrame {
 	private static LoginFrame loginfr = null;
 
 	public LoginFrame() {
-		super("·Î±×ÀÎ");
+		super("ë¡œê·¸ì¸");
 		setLayout(new FlowLayout());
 		setSize(new Dimension(200, 150));
 		setLocationRelativeTo(null);
@@ -43,7 +43,7 @@ public class LoginFrame extends JFrame {
 		});
 		login.addActionListener((e) -> {
 			if (id_txt.getText().equals("") || name_txt.getText().equals("")) {
-				JOptionPane.showMessageDialog(null, "ID¶Ç´Â NameÀ» ÀÔ·ÂÇÏÁö ¾ÊÀ¸¼Ì½À´Ï´Ù.");
+				JOptionPane.showMessageDialog(null, "IDë‚˜ Nameì„ ì…ë ¥í•˜ì§€ ì•Šìœ¼ì…¨ìŠµë‹ˆë‹¤.");
 				return;
 			}
 			UserControl.createUserControl().setUser(new User(id_txt.getText(), name_txt.getText()));

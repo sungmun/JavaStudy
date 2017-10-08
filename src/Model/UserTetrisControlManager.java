@@ -1,6 +1,7 @@
 package Model;
 
 import Client.TetrisClient;
+import Control.PlayUserInformation;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 
@@ -8,6 +9,7 @@ public class UserTetrisControlManager extends TetrisControlManager implements Me
 	private static UserTetrisControlManager tetrismanager = null;
 	public UserTetrisControlManager() {
 		super();
+		info=new PlayUserInformation();
 	}
 	public static UserTetrisControlManager createTetrisControlManager() {
 		if (tetrismanager == null) {
@@ -19,23 +21,7 @@ public class UserTetrisControlManager extends TetrisControlManager implements Me
 		return tetrismanager;
 	}
 	@Override
-	public void setLevel(int level) {
-		super.setLevel(level);
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(LEVEL_MESSAGE, this.level));
-		}
-	}
-	@Override
-	public void setScore(int score) {
-		super.setScore(score);
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(SCORE_MESSAGE, this.score));
-		}
-	}
-	@Override
-	public void setNext_block(Tetrino next_block) {
+	public void setNext_block(int next_block) {
 		super.setNext_block(next_block);
 		TetrisClient client=TetrisClient.getTetrisClient();
 		if(client!=null) {
@@ -43,19 +29,12 @@ public class UserTetrisControlManager extends TetrisControlManager implements Me
 		}
 	}
 	@Override
-	public void setSave_block(Tetrino save_block) {
-		super.setSave_block(save_block);
+	public void setSave_block(int tetrino) {
+		super.setSave_block(tetrino);
 		TetrisClient client=TetrisClient.getTetrisClient();
 		if(client!=null) {
 			client.send(new SocketMessage(SAVE_BLOCK_MESSAGE, this.save_block));
 		}
 	}
-	@Override
-	public void rePaint() {
-		super.rePaint();
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(MAP_MESSAGE, this.realtimemap));
-		}
-	}
+	
 }

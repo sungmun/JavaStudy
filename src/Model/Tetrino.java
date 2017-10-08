@@ -5,18 +5,16 @@ import Model.ValueObject.Space;
 
 public class Tetrino implements MoveType, TetrinoType {
 
-	int mode = 1;// 1부터 4까지 있다
+	int mode = 1;
 	private int type;
-	private Point flowtetrino; // 테트리노의 현재 위치
-	// 테트리노의 현재 위치는 area를 기준으로 보면 [4][1]의 위치로 표시하며
-	// 이 위치는 배열 0까지 포함한 위치이다.
+	private Point flowtetrino; 
 	private Space[][] area = new Space[5][6];
 
 	public Tetrino(int[][] tetrino, int type) {
 		for (int y = 0; y < 4; y++) {
 			area[y][0] = new Space();
 			for (int x = 1; x < 5; x++) {
-				area[y][x] = (tetrino[y][x - 1] != 1) ? new Space() : new Space(Space.FLOW,type);
+				area[y][x] = (tetrino[y][x - 1] != 1) ? new Space() : new Space(BlockType.FLOW,type);
 			}
 			area[y][5] = new Space();
 		}
@@ -26,7 +24,7 @@ public class Tetrino implements MoveType, TetrinoType {
 		this.type = type;
 	}
 
-	private boolean sideMoveTetrino(int direction) { // 오른쪽은 +1 왼쪽은 -1
+	private boolean sideMoveTetrino(int direction) { 
 		for (int y = 0; y < 5; y++) {
 			for (int x = 0; x < 6; x++) {
 				if (x + direction < 0 || x + direction >= 6) {
@@ -34,12 +32,12 @@ public class Tetrino implements MoveType, TetrinoType {
 				}
 				Space spc1 = area[y][x];
 				Space spc2 = area[y][x + direction];
-				if (spc1.getIsblock() == Space.ETC) {
+				if (spc1.getIsblock() == BlockType.ETC) {
 					continue;
-				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
-				if (spc1.getIsblock() == Space.FLOW) {
-					if (spc2.getIsblock() == Space.FIXED || (spc2.getIsblock() == Space.ETC)) {
-						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
+				} 
+				if (spc1.getIsblock() == BlockType.FLOW) {
+					if (spc2.getIsblock() == BlockType.FIXED || (spc2.getIsblock() == BlockType.ETC)) {
+						return false;
 					}
 				}
 			}
@@ -55,12 +53,12 @@ public class Tetrino implements MoveType, TetrinoType {
 				Space spc1 = area[y][x];
 				Space spc2 = area[y + 1][x];
 
-				if (spc1.getIsblock() == Space.ETC) {
+				if (spc1.getIsblock() == BlockType.ETC) {
 					continue;
-				} // 확인하는 공간이 예외적인 공간이면 체크를 그만두고 다음 공간을 확인한다.
-				if (spc1.getIsblock() == Space.FLOW) {
-					if (spc2.getIsblock() == Space.FIXED || (spc2.getIsblock() == Space.ETC)) {
-						return false;// 확인하는 공간에 유동블록이 있으면서 그아래 공간은 고정블록이면 이동을 정지
+				} 
+				if (spc1.getIsblock() == BlockType.FLOW) {
+					if (spc2.getIsblock() == BlockType.FIXED || (spc2.getIsblock() == BlockType.ETC)) {
+						return false;
 					}
 				}
 			}
@@ -90,7 +88,7 @@ public class Tetrino implements MoveType, TetrinoType {
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
 				temp[y][x] = new Space();
-				temp1[y][x] = (area[y][x].getIsblock() != Space.FLOW) ? area[y][x] : new Space();
+				temp1[y][x] = (area[y][x].getIsblock() != BlockType.FLOW) ? area[y][x] : new Space();
 
 			}
 		}
@@ -107,10 +105,10 @@ public class Tetrino implements MoveType, TetrinoType {
 		temp[3][3] = area[1][1];
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
-				if (temp[y][x].getIsblock() != Space.FLOW) {
+				if (temp[y][x].getIsblock() != BlockType.FLOW) {
 					continue;
 				}
-				if (area[y][x].getIsblock() == Space.FIXED || area[y][x].getIsblock() == Space.ETC) {
+				if (area[y][x].getIsblock() == BlockType.FIXED || area[y][x].getIsblock() == BlockType.ETC) {
 					return false;
 				}
 				temp1[y][x] = temp[y][x];

@@ -24,16 +24,16 @@ public class ListViewFrame extends JFrame implements MessageType {
 	private static ListViewFrame listframe;
 
 	private ListViewFrame() {
-		super("À¯Àú ¸ñ·Ï");
+		super("ì ‘ì†ì ëª©ë¡");
 		setLayout(new BorderLayout());
 		setSize(new Dimension(637, 200));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		list = ListView.createListView();
 		JPanel etc = new JPanel(new GridLayout(3, 1));
 
-		mulite_play_btn = new JButton("ÁöÁ¤ÇÑ »ó´ë¿Í °°ÀÌÇÏ±â");
-		random_multie_play_btn = new JButton("·£´ıÇÑ »ó´ë¿Í °°ÀÌÇÏ±â");
-		back_frame_btn = new JButton("ÀÌÀüÈ­¸éÀ¸·Î °¡±â");
+		mulite_play_btn = new JButton("ì§€ì •í•œ ì‚¬ëŒê³¼ ê°™ì´í•˜ê¸°");
+		random_multie_play_btn = new JButton("ëœë¤ìœ¼ë¡œ ê°™ì´í•˜ê¸°");
+		back_frame_btn = new JButton("ë’¤ë¡œê°€ê¸°");
 
 		TetrisClient client = TetrisClient.getTetrisClient();
 

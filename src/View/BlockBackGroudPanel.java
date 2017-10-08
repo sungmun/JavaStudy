@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import Model.CellSize;
-
 @SuppressWarnings("serial")
 public class BlockBackGroudPanel extends JPanel implements CellSize {
 
@@ -19,6 +17,7 @@ public class BlockBackGroudPanel extends JPanel implements CellSize {
 		setBorder(new LineBorder(Color.WHITE, 2));
 		add(panel);
 	}
+	@Override
 	public void update(Graphics g) {
 		paintComponent(g);
 	}

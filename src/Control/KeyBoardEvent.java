@@ -4,73 +4,71 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import Client.TetrisClient;
 import Model.MoveType;
-import Model.TetrisControlManager;
+import Model.UserTetrisControlManager;
 import Model.ValueObject.Point;
+import Serversynchronization.MessageType;
+import Serversynchronization.SocketMessage;
+import View.GameBasicFrame;
 
-public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
-	TetrisControlManager manager = null;
-	public KeyBoardEvent(TetrisControlManager manager) {
-		this.manager=manager;
+public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType,MessageType {
+	UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
+	ImagePrint mainprint;
+	public KeyBoardEvent(ImagePrint mainprint) {
+		this.mainprint=mainprint;
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (manager.getNowTetrino() == null) {
+			return;
+		}
 		int key = e.getKeyCode();
 		switch (key) {
 		case KeyEvent.VK_RIGHT:
-			if (manager.getNowTetrino() == null) {
-				return;
-			}
 			manager.TetrinoBlockMove(RIGHT);
-			manager.rePaint();
 			break;
 		case KeyEvent.VK_LEFT:
-			if (manager.getNowTetrino() == null) {
-				return;
-			}
 			manager.TetrinoBlockMove(LEFT);
-			manager.rePaint();
 			break;
 		case KeyEvent.VK_UP:
-			if (manager.getNowTetrino() == null) {
-				return;
-			}
 			manager.TetrinoBlockMove(TURN);
-			manager.rePaint();
 			break;
 		case KeyEvent.VK_DOWN:
-			TicAction.getTic().ticActions();
+			if(!manager.TetrinoBlockMove(DOWN)) {
+				cheack();
+			}
 			break;
 		case KeyEvent.VK_SPACE:
 			boolean success = true;
 			while (success) {
 				success = manager.TetrinoBlockMove(DOWN);
 			}
-			if (!success) {
-				Point nowpos = manager.tetrino.getFlowTetrino();
-				if (manager.gameOverCheack(nowpos)) {
-					manager.getTime().stop();
-					return;
-				}
-				manager.setNowTetrino(null);
-				int clearline = manager.lineCheack(nowpos);
-				if (clearline > 0) {
-					manager.lineClear(clearline, nowpos);
-					manager.rePaint();
-				}
-				manager.createBlock();
-				return;
-			}
-			if (manager.getTime().getDelay() > 1) {
-				manager.getTime().setDelay(500 -(int)(Math.pow(1.001, manager.getLevel())));
-			}
-			manager.rePaint();
-			return;
-		case KeyEvent.VK_Z: // 현재 테트리스 저장및 불러오기
+			cheack();
+			break;
+		case KeyEvent.VK_Z:
 			manager.saveBlock();
-			manager.rePaint();
+			mainprint.SaveBlockPaint(manager);
 			break;
 		}
-
+		mapSend();
+		mainprint.TetrinoBlockPaint(manager);
+	}
+	public void mapSend() {
+		TetrisClient client=TetrisClient.getTetrisClient();
+		if(client!=null) {
+			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
+		}
+	}
+	public void cheack() {
+		Point nowpos = manager.tetrino.getFlowTetrino();
+		if (manager.gameOverCheack(nowpos)) {
+			GameBasicFrame.time.stop();
+		}
+		manager.setNowTetrino(null);
+		int clearline = manager.lineCheack(nowpos);
+		if (clearline > 0) {
+			manager.lineClear(clearline, nowpos);
+		}
 	}
 }

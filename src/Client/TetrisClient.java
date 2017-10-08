@@ -15,19 +15,17 @@ import javax.swing.JOptionPane;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import Control.OpponentEvent;
 import Control.ServerMessageEvent;
-import Model.CellSize;
 import Model.OpponentControl;
 import Model.ServerInfomation;
-import Model.Tetrino;
 import Model.UserControl;
 import Model.ValueObject.Space;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
-import Serversynchronization.UsersList;
+import View.CellSize;
 import View.Multe.ListViewFrame;
-import View.Multe.LoginFrame;
 import View.Multe.MultiFrame;
 
 public class TetrisClient extends Thread implements MessageType, CellSize, ServerInfomation {
@@ -77,7 +75,6 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 	}
 
 	public void onMessage(Socket server) throws JsonSyntaxException, IOException {
-		// ¹éÅÍ³ª ÄÃ·º¼ÇÀÇ Á¤·ÄÈ­´Â Áö¿øÇÏ³ª ¿ªÁ¤·ÄÈ­´Â Áö¿øÀ» ¾ÊÇÑ´Ù
 		ServerMessageEvent event = new ServerMessageEvent();
 		SocketMessage socketmsg = transObject(in.readLine(), SocketMessage.class);
 		OpponentControl opcontrol = OpponentControl.createOpponentControl();
@@ -105,25 +102,25 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 				event.warAccept(socketmsg);
 				break;
 			case WAR_DENIAL:
-				JOptionPane.showMessageDialog(null, "´ëÀüÀÌ °ÅºÎ ´çÇÏ¼Ì½À´Ï´Ù");
+				JOptionPane.showMessageDialog(null, "ìƒëŒ€ë°©ì´ ê±°ë¶€í•˜ì˜€ìŠµë‹ˆë‹¤");
 				break;
 			case WAR_START:
 				event.logOut(socketmsg);
 				break;
 			case SCORE_MESSAGE:
-				opcontrol.getManager().setScore(transObject(socketmsg.getMessage(), int.class));
+				OpponentEvent.getOpponentEvent().managerSetScore(transObject(socketmsg.getMessage(), int.class));
 				break;
 			case LEVEL_MESSAGE:
-				opcontrol.getManager().setLevel(transObject(socketmsg.getMessage(), int.class));
+				OpponentEvent.getOpponentEvent().managerSetLevel(transObject(socketmsg.getMessage(), int.class));
 				break;
 			case SAVE_BLOCK_MESSAGE:
-				opcontrol.getManager().setSave_block(transObject(socketmsg.getMessage(), Tetrino.class));
+				OpponentEvent.getOpponentEvent().managerSetSaveBlock(transObject(socketmsg.getMessage(),int.class));
 				break;
 			case NEXT_BLOCK_MESSAGE:
-				opcontrol.getManager().setNext_block(transObject(socketmsg.getMessage(), Tetrino.class));
+				OpponentEvent.getOpponentEvent().managerSetNextBlock(transObject(socketmsg.getMessage(),int.class));
 				break;
 			case MAP_MESSAGE:
-				opcontrol.getManager().setRealtimemap(transObject(socketmsg.getMessage(), Space[][].class));
+				OpponentEvent.getOpponentEvent().managerSetRealtimemap(transObject(socketmsg.getMessage(),Space[][].class));
 				break;
 			case USER_MESSAGE:
 				opcontrol.setUser(transObject(socketmsg.getMessage(), User.class));

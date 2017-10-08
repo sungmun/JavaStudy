@@ -5,31 +5,25 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
-import Model.CellSize;
-import Model.TetrisControlManager;
+import Control.Observer;
 
 @SuppressWarnings("serial")
-public class ScorePanel extends JPanel implements CellSize {
+public class ScorePanel extends JPanel implements CellSize, Observer {
 
-	private static ScorePanel scorepanel;
-
-	TetrisControlManager manager;
 
 	BasicJLabel title;
 	BasicJLabel score;
 
 	int height;
 
-	public ScorePanel(TetrisControlManager manager) {
+	public ScorePanel() {
 		super(true);
 		height = 70;
-		
-		this.manager=manager;
-		
+
 		setOpaque(false);
 		setPreferredSize(new Dimension(width * 5, height));
 
-		title = new BasicJLabel("¡°ºˆ", Font.BOLD, 23);
+		title = new BasicJLabel("Ï†êÏàò", Font.BOLD, 23);
 		score = new BasicJLabel("0", Font.BOLD, 23);
 
 		title.setPreferredSize(new Dimension(width * 5, height / 2));
@@ -38,19 +32,13 @@ public class ScorePanel extends JPanel implements CellSize {
 		add(title);
 		add(score);
 
-		scorepanel = this;
-	}
-
-	public static ScorePanel getScorePanel() {
-		return scorepanel;
 	}
 
 	@Override
-	public void repaint() {
-		super.repaint();
-		if (manager == null) {
-			return;
+	public void update(String title, String source) {
+		if (title.equals("score")) {
+			score.setText(source);
+			repaint();
 		}
-		score.setText(Integer.toString(manager.getScore()));
 	}
 }

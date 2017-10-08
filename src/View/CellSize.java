@@ -1,4 +1,4 @@
-package Model;
+package View;
 
 public interface CellSize {
 	int width=36;

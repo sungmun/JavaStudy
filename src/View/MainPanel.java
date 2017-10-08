@@ -6,18 +6,16 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import Model.TetrisControlManager;
-
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {
 
 	private GameViewPanel gamepanel;
 	private ETC_Panel etc_panel;
 
-	public MainPanel(TetrisControlManager manager) {
+	public MainPanel() {
 		super(true);
-		etc_panel = new ETC_Panel(manager);
-		gamepanel = new GameViewPanel(manager);
+		etc_panel = new ETC_Panel();
+		gamepanel = new GameViewPanel();
 
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setOpaque(false);
