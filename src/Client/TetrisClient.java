@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import Control.OpponentEvent;
-import Control.ServerMessageEvent;
 import Model.OpponentControl;
 import Model.ServerInfomation;
 import Model.UserControl;

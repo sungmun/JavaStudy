@@ -1,11 +1,10 @@
-package Control;
+package Client;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
-import Client.TetrisClient;
 import Model.UserControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
