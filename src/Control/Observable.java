@@ -1,6 +1,4 @@
-package Model;
-
-import Control.Observer;
+package Control;
 
 public interface Observable {
 	public void add(Observer observer) ;

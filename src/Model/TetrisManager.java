@@ -3,11 +3,11 @@ package Model;
 import java.util.Arrays;
 
 import Control.PlayerInformation;
-import Model.ValueObject.Map;
-import Model.ValueObject.Point;
-import Model.ValueObject.Space;
+import ValueObject.Map;
+import ValueObject.Point;
+import ValueObject.Space;
 
-public class TetrisControlManager implements TetrinoType, MoveType {
+public class TetrisManager implements TetrinoType, MoveType {
 
 	private static int height = 23;
 	private static int width = 10;
@@ -20,7 +20,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 	protected Space[][] realtimemap;
 	public Tetrino tetrino;
 
-	protected TetrisControlManager() {
+	protected TetrisManager() {
 		realtimemap = new Map(width, height).getMap();
 	}
 
@@ -68,8 +68,8 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
-				Space spc = (tetrino.getFlowTetrino().getY() + i > TetrisControlManager.getHeight() || x + j < 0
-						|| x + j > TetrisControlManager.getWidth() - 1) ? new Space(BlockType.ETC)
+				Space spc = (tetrino.getFlowTetrino().getY() + i > TetrisManager.getHeight() || x + j < 0
+						|| x + j > TetrisManager.getWidth() - 1) ? new Space(BlockType.ETC)
 								: realtimemap[y + i][x + j];
 				if (!tetrino.getArea()[i][j].equals(spc)) {
 					tetrino.setArea(i, j, spc);
@@ -116,7 +116,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 		boolean success;
 
 		if (startpos > 17) {
-			endpos = TetrisControlManager.height - startpos - 1;
+			endpos = TetrisManager.height - startpos - 1;
 		}
 		for (int x = 0; x < width; x++) {
 			spc[x] = new Space();
@@ -234,7 +234,7 @@ public class TetrisControlManager implements TetrinoType, MoveType {
 
 		int temp_height = 4;
 		if (height > 17) {
-			temp_height = TetrisControlManager.height - height - 1;
+			temp_height = TetrisManager.height - height - 1;
 		}
 		Space[][] spc = new Space[temp_height + 1][width];
 		for (int i = 0; i <= temp_height; i++) {

@@ -12,7 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Client.TetrisClient;
-import Model.UserControl;
+import Control.LoginEvent;
+import Model.UserManager;
 import Serversynchronization.User;
 import View.StartFrame;
 
@@ -41,18 +42,14 @@ public class LoginFrame extends JFrame {
 			StartFrame.getStartFrame().setVisible(true);
 			dispose();
 		});
-		login.addActionListener((e) -> {
-			if (id_txt.getText().equals("") || name_txt.getText().equals("")) {
-				JOptionPane.showMessageDialog(null, "ID나 Name을 입력하지 않으셨습니다.");
-				return;
+		login.addActionListener(new LoginEvent() {
+			@Override
+			public String setName() {
+				return name_txt.getText();
 			}
-			UserControl.createUserControl().setUser(new User(id_txt.getText(), name_txt.getText()));
-			try {
-				TetrisClient client=TetrisClient.createTetrisClient();
-				client.start();
-			} catch (IOException e1) {
-				StartFrame.getStartFrame().setVisible(true);
-				dispose();
+			@Override
+			public String setId() {
+				return id_txt.getText();
 			}
 		});
 

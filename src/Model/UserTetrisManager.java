@@ -5,19 +5,19 @@ import Control.PlayUserInformation;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 
-public class UserTetrisControlManager extends TetrisControlManager implements MessageType{
-	private static UserTetrisControlManager tetrismanager = null;
-	public UserTetrisControlManager() {
+public class UserTetrisManager extends TetrisManager implements MessageType{
+	private static UserTetrisManager tetrismanager = null;
+	public UserTetrisManager() {
 		super();
 		info=new PlayUserInformation();
 	}
-	public static UserTetrisControlManager createTetrisControlManager() {
+	public static UserTetrisManager createTetrisManager() {
 		if (tetrismanager == null) {
-			tetrismanager = new UserTetrisControlManager();
+			tetrismanager = new UserTetrisManager();
 		}
 		return tetrismanager;
 	}
-	public static UserTetrisControlManager getTetrisControlManager() {
+	public static UserTetrisManager getTetrisManager() {
 		return tetrismanager;
 	}
 	@Override

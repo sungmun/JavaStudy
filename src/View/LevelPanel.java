@@ -1,12 +1,13 @@
 package View;
 
+import static View.CellSize.width;
+
 import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JPanel;
 
 import Control.Observer;
-import Control.PlayerInformation;
 
 @SuppressWarnings("serial")
 public class LevelPanel extends JPanel implements CellSize, Observer {
@@ -33,7 +34,6 @@ public class LevelPanel extends JPanel implements CellSize, Observer {
 		add(level);
 
 	}
-
 
 	@Override
 	public void update(String title, String source) {

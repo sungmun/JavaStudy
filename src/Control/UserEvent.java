@@ -2,8 +2,6 @@ package Control;
 
 import java.util.ArrayList;
 
-import Model.Observable;
-
 public class UserEvent implements Observable {
 	private static ArrayList<Observer> observers=new ArrayList<>();
 	

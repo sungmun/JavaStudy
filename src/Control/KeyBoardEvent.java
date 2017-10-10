@@ -6,14 +6,14 @@ import java.awt.event.KeyListener;
 
 import Client.TetrisClient;
 import Model.MoveType;
-import Model.UserTetrisControlManager;
-import Model.ValueObject.Point;
+import Model.UserTetrisManager;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
+import ValueObject.Point;
 import View.GameBasicFrame;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType,MessageType {
-	UserTetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
+	UserTetrisManager manager = UserTetrisManager.getTetrisManager();
 	ImagePrint mainprint;
 	public KeyBoardEvent(ImagePrint mainprint) {
 		this.mainprint=mainprint;

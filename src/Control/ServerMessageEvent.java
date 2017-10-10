@@ -1,17 +1,20 @@
-package Client;
+package Control;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
-import Model.UserControl;
+import Client.TetrisClient;
+import Model.OpponentManager;
+import Model.UserManager;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
 import View.Multe.ListViewFrame;
 import View.Multe.LoginFrame;
+import View.Multe.MultiFrame;
 
 public class ServerMessageEvent implements MessageType {
 	public void logIn(SocketMessage msg) {
@@ -28,7 +31,17 @@ public class ServerMessageEvent implements MessageType {
 		fr.setVisible(true);
 		LoginFrame.getLoginFrame().dispose();
 	}
-
+	public void UserMessage(SocketMessage msg) {
+		OpponentManager opmanager = OpponentManager.createOpponentManager();
+		UserManager usermanager = UserManager.createUserManager();
+		opmanager.setUser(transObject(msg.getMessage(), User.class));
+		JFrame fr1 = MultiFrame.createMulteFrame(usermanager.getUser(), opmanager.getUser());
+		JFrame fr2 = ListViewFrame.createListViewFrame();
+		if (fr1 != null || fr2 == null) {
+			fr1.setVisible(true);
+			fr2.dispose();
+		}
+	}
 	public void beChoice(SocketMessage msg) {
 		User player = transObject(msg.getMessage(), User.class);
 		int val = JOptionPane.showOptionDialog(null, player.getName() + "님이 대전을 요청하셨습니다", "대전 요청",
@@ -43,7 +56,7 @@ public class ServerMessageEvent implements MessageType {
 
 	public void warAccept(SocketMessage msg) {
 		System.out.println("TetrisClient.warAccept()");
-		TetrisClient.getTetrisClient().send(new SocketMessage(USER_MESSAGE, UserControl.getUserControl().getUser()));
+		TetrisClient.getTetrisClient().send(new SocketMessage(USER_MESSAGE, UserManager.getUserManager().getUser()));
 		TetrisClient.getTetrisClient().send(new SocketMessage(WAR_START, null));
 	}
 

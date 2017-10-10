@@ -28,13 +28,5 @@ public class MainPanel extends JPanel {
 	public void update(Graphics g) {
 		paintComponent(g);
 	}
-	@Override
-	public void repaint() {
-		super.repaint();
-		try {
-			etc_panel.repaint();
-			gamepanel.repaint();
-		} catch (NullPointerException e) {}
-	}
 
 }

@@ -1,7 +1,7 @@
 package Model;
 
-import Model.ValueObject.Point;
-import Model.ValueObject.Space;
+import ValueObject.Point;
+import ValueObject.Space;
 
 public class Tetrino implements MoveType, TetrinoType {
 

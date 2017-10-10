@@ -5,14 +5,14 @@ import java.awt.event.ActionListener;
 
 import Client.TetrisClient;
 import Model.MoveType;
-import Model.TetrisControlManager;
-import Model.UserTetrisControlManager;
-import Model.ValueObject.Point;
+import Model.TetrisManager;
+import Model.UserTetrisManager;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
+import ValueObject.Point;
 
 public abstract class TicAction implements ActionListener, MoveType,MessageType {
-	protected TetrisControlManager manager = UserTetrisControlManager.getTetrisControlManager();
+	protected TetrisManager manager = UserTetrisManager.getTetrisManager();
 	ImagePrint mainprint;
 	
 	public TicAction(ImagePrint mainprint) {
@@ -22,6 +22,7 @@ public abstract class TicAction implements ActionListener, MoveType,MessageType 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.gc();
 		if (manager.getNowTetrino() == null) {
 			manager.createBlock();
 			mainprint.NextBlockPaint(manager);

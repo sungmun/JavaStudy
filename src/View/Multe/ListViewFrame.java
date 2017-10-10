@@ -38,7 +38,7 @@ public class ListViewFrame extends JFrame implements MessageType {
 		TetrisClient client = TetrisClient.getTetrisClient();
 
 		mulite_play_btn.addActionListener((e) -> {
-			User us = list.getUser();
+			Object us = list.getData();
 			if (UsersList.findList(us)) {
 				int index=UsersList.getList().indexOf(us);
 				us = UsersList.getList().get(index);

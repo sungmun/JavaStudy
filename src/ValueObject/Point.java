@@ -1,4 +1,4 @@
-package Model.ValueObject;
+package ValueObject;
 
 public class Point {
 	private int x;
@@ -14,13 +14,6 @@ public class Point {
 	}
 	public int getY(){
 		return y;
-	}
-	public boolean equals(Point pos) {
-		return (pos.getX()==x&&pos.getY()==y)?true:false; 
-	}
-	@Override
-	public String toString() {
-		return "Point [x=" + x + ", y=" + y + "]";
 	}
 	
 }

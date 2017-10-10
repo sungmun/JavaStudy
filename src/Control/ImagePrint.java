@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 import Model.BlockType;
 import Model.CreateBlock;
-import Model.TetrisControlManager;
-import Model.ValueObject.Space;
+import Model.TetrisManager;
+import ValueObject.Space;
 import View.CellSize;
 import View.NextBlockPanel;
 import View.SaveBlockPanel;
@@ -53,13 +53,13 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 			setContainer(cont);
 		}
 	}
-	public BufferedImage TetrinoBlockBackPaint(TetrisControlManager manager) {
+	public BufferedImage TetrinoBlockBackPaint(TetrisManager manager) {
 		if (background == null) {
 			background = paint(10,20);
 		}
 		return background;
 	}
-	public void TetrinoBlockPaint(TetrisControlManager manager) {
+	public void TetrinoBlockPaint(TetrisManager manager) {
 		TetrinoBlockPanel panel = (TetrinoBlockPanel) getContmap().get(TetrinoBlockPanel.class);
 
 		BufferedImage buffer = new BufferedImage(width * 10, height * 20 - 1, BufferedImage.TYPE_INT_ARGB);
@@ -81,7 +81,7 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 		panel.repaint();
 	}
 
-	public void NextBlockPaint(TetrisControlManager manager) {
+	public void NextBlockPaint(TetrisManager manager) {
 		NextBlockPanel panel = (NextBlockPanel) getContmap().get(NextBlockPanel.class);
 		BufferedImage buffer = tetrinoimg.get(new Integer(manager.getNext_block()));
 		if (buffer == null) {
@@ -114,7 +114,7 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 		return buffer;
 	}
 
-	public void SaveBlockPaint(TetrisControlManager manager) {
+	public void SaveBlockPaint(TetrisManager manager) {
 		SaveBlockPanel panel = (SaveBlockPanel) getContmap().get(SaveBlockPanel.class);
 		BufferedImage buffer = tetrinoimg.get(new Integer(manager.getSave_block()));
 		if (buffer == null) {

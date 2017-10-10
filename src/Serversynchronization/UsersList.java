@@ -9,18 +9,16 @@ public class UsersList {
 
 	private static Object key = new Object();
 
-	public static boolean add(User user) {
-		synchronized (key) {
-			boolean temp=list.add(user);
-			ListView.getListview().listReFresh();
-			return temp;
-		}
-
+	public static boolean add(Object data) {
+		boolean temp = list.add((User) data);
+		ListView.getListview().listReFresh();
+		System.gc();
+		return temp;
 	}
 
-	public static void delete(User user) {
+	public static void delete(Object data) {
 		synchronized (key) {
-			list.remove(user);
+			list.remove(data);
 			ListView.getListview().listReFresh();
 		}
 	}
@@ -31,16 +29,16 @@ public class UsersList {
 		}
 	}
 
-	public static void setList(User[] list) {
+	public static void setList(Object[] list) {
 		UsersList.list.clear();
-		for (User user : list) {
-			UsersList.list.addElement(user);
+		for (Object user : list) {
+			UsersList.list.addElement((User) user);
 		}
 	}
 
-	public static boolean findList(User user) {
+	public static boolean findList(Object user) {
 		synchronized (key) {
-			return (list.indexOf(user)==-1)?false:true;
+			return (list.indexOf(user) == -1) ? false : true;
 		}
 	}
 

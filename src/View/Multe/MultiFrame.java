@@ -1,6 +1,7 @@
 package View.Multe;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Label;
@@ -14,8 +15,10 @@ import Control.OpponentEvent;
 import Control.TicAction;
 import Control.UserEvent;
 import Model.MoveType;
-import Model.OpponentControl;
-import Model.UserControl;
+import Model.OpponentManager;
+import Model.UserManager;
+import Serversynchronization.User;
+import View.BasicJLabel;
 import View.CellSize;
 import View.GameBasicFrame;
 import View.LevelPanel;
@@ -27,24 +30,26 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 
 	static private MultiFrame multeviewcopy = null;
 
-	private MultiFrame() {
+	private MultiFrame(User user,User opponet) {
 		setLayout(new GridLayout(1, 2));
 
-		JPanel user = new JPanel(new BorderLayout(), true);
-		JPanel opponent = new JPanel(new BorderLayout(), true);
+		JPanel userp = new JPanel(new BorderLayout(), true);
+		JPanel opponentp = new JPanel(new BorderLayout(), true);
 
-		user.setOpaque(false);
-		opponent.setOpaque(false);
+		userp.setOpaque(false);
+		opponentp.setOpaque(false);
 
 		MainPanel userpanel = new MainPanel();
-		user.add(new Label(UserControl.getUserControl().getUser().getName()), BorderLayout.NORTH);
-		user.add(userpanel, BorderLayout.CENTER);
-		add(user);
+		BasicJLabel userlabel = new BasicJLabel(user.getName(), Font.BOLD, 16);
+		userp.add(userlabel, BorderLayout.NORTH);
+		userp.add(userpanel, BorderLayout.CENTER);
+		add(userp);
 
 		MainPanel opponentpanel = new MainPanel();
-		opponent.add(new Label(OpponentControl.getOpponentControl().getUser().getName()), BorderLayout.NORTH);
-		opponent.add(opponentpanel, BorderLayout.CENTER);
-		add(opponent);
+		BasicJLabel opponentlabel = new BasicJLabel(user.getName(), Font.BOLD, 16);
+		opponentp.add(opponentlabel, BorderLayout.NORTH);
+		opponentp.add(opponentpanel, BorderLayout.CENTER);
+		add(opponentp);
 
 		ImagePrint userprint = new ImagePrint(userpanel);
 		ImagePrint opponentprint = new ImagePrint(opponentpanel);
@@ -52,14 +57,14 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 		this.pack();
 		this.setLocationRelativeTo(null);
 
-		time=new Timer(speed, new TicAction(userprint) {
-			
+		time = new Timer(speed, new TicAction(userprint) {
+
 			@Override
 			public void timeStop() {
 				// TODO Auto-generated method stub
 				time.stop();
 			}
-			
+
 			@Override
 			public void speedChange() {
 				int delay = (int) (500 * Math.pow(1.005, manager.info.getLevel() - 1));
@@ -69,14 +74,14 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 			}
 		});
 		time.start();
-		UserEvent usevent=new UserEvent();
-		usevent.add((ScorePanel)userprint.getContmap().get(ScorePanel.class));
-		usevent.add((LevelPanel)userprint.getContmap().get(LevelPanel.class));
-		
-		OpponentEvent opevent=OpponentEvent.createOpponentEvent();
+		UserEvent usevent = new UserEvent();
+		usevent.add((ScorePanel) userprint.getContmap().get(ScorePanel.class));
+		usevent.add((LevelPanel) userprint.getContmap().get(LevelPanel.class));
+
+		OpponentEvent opevent = OpponentEvent.createOpponentEvent();
 		opevent.setPrint(opponentprint);
-		opevent.add((ScorePanel)opponentprint.getContmap().get(ScorePanel.class));
-		opevent.add((LevelPanel)opponentprint.getContmap().get(LevelPanel.class));
+		opevent.add((ScorePanel) opponentprint.getContmap().get(ScorePanel.class));
+		opevent.add((LevelPanel) opponentprint.getContmap().get(LevelPanel.class));
 		this.addKeyListener(new KeyBoardEvent(userprint));
 	}
 
@@ -85,9 +90,9 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 		paintComponents(g);
 	}
 
-	public static MultiFrame createMulteFrame() {
+	public static MultiFrame createMulteFrame(User user,User opponet) {
 		if (multeviewcopy == null) {
-			multeviewcopy = new MultiFrame();
+			multeviewcopy = new MultiFrame(user, opponet);
 		}
 		return multeviewcopy;
 	}

@@ -14,7 +14,7 @@ public class StartFrame extends JFrame implements ServerInfomation {
 
 	private StartFrame() {
 		// TODO Auto-generated constructor stub
-		super();
+		super("모드");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setResizable(false);

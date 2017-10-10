@@ -1,4 +1,4 @@
-package Model.ValueObject;
+package ValueObject;
 
 public class Map {
 	

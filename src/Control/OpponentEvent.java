@@ -2,14 +2,13 @@ package Control;
 
 import java.util.ArrayList;
 
-import Model.Observable;
-import Model.OpponentTetrisControlManager;
-import Model.ValueObject.Space;
+import Model.OpponentTetrisManager;
+import ValueObject.Space;
 
 public class OpponentEvent implements Observable {
 	private static ArrayList<Observer> observers = new ArrayList<>();
 	private static OpponentEvent opponentevent=null;
-	OpponentTetrisControlManager manager=OpponentTetrisControlManager.getTetrisControlManager();
+	OpponentTetrisManager manager=OpponentTetrisManager.createTetrisManager();
 	ImagePrint print;
 	
 	public static OpponentEvent getOpponentEvent() {
