@@ -1,4 +1,4 @@
-package Control;
+package Serversynchronization;
 
 public class PlayerInformation {
 	

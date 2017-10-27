@@ -91,7 +91,11 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 				event.userListMessage(socketmsg);
 				break;
 			case GAMEOVER_MESSAGE:
-
+				event.gameOverEvent();
+				break;
+			case RANK:
+				event.rankEvent(socketmsg);
+				break;
 			case BE_CHOSEN:
 				event.beChoice(socketmsg);
 				break;

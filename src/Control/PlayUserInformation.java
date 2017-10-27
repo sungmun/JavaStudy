@@ -2,6 +2,7 @@ package Control;
 
 import Client.TetrisClient;
 import Serversynchronization.MessageType;
+import Serversynchronization.PlayerInformation;
 import Serversynchronization.SocketMessage;
 
 public class PlayUserInformation extends PlayerInformation implements MessageType {

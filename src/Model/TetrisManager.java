@@ -2,7 +2,7 @@ package Model;
 
 import java.util.Arrays;
 
-import Control.PlayerInformation;
+import Serversynchronization.PlayerInformation;
 import ValueObject.Map;
 import ValueObject.Point;
 import ValueObject.Space;

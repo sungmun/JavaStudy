@@ -63,5 +63,10 @@ public class ServerMessageEvent implements MessageType {
 	public <T> T transObject(String msg, Class<T> cla) {
 		return new Gson().fromJson(msg, cla);
 	}
-
+	public void gameOverEvent() {
+		
+	}
+	public void rankEvent(SocketMessage msg) {
+		
+	}
 }
