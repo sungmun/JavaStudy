@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Label;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -15,8 +14,6 @@ import Control.OpponentEvent;
 import Control.TicAction;
 import Control.UserEvent;
 import Model.MoveType;
-import Model.OpponentManager;
-import Model.UserManager;
 import Serversynchronization.User;
 import View.BasicJLabel;
 import View.CellSize;

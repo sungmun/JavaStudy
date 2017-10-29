@@ -125,10 +125,12 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 		panel.repaint();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public HashMap<Class, Component> getContmap() {
 		return contmap;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setContmap(HashMap<Class, Component> contmap) {
 		this.contmap = contmap;
 	}

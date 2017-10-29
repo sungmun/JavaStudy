@@ -2,19 +2,14 @@ package View.Multe;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import Client.TetrisClient;
 import Control.LoginEvent;
-import Model.UserManager;
-import Serversynchronization.User;
 import View.StartFrame;
 
 @SuppressWarnings("serial")

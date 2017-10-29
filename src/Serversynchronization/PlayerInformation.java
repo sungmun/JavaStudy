@@ -4,7 +4,13 @@ public class PlayerInformation {
 	
 	private int level;
 	private int score;
-	
+	public PlayerInformation() {
+	}
+	public PlayerInformation(int level, int score) {
+		setLevel(level);
+		setScore(score);
+	}
+
 	public int getLevel() {
 		return level;
 	}

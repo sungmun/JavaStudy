@@ -1,7 +1,5 @@
 package View;
 
-import static View.CellSize.width;
-
 import java.awt.Dimension;
 import java.awt.Font;
 

@@ -4,11 +4,16 @@ public class User {
 	private int usernumber;
 	private String id;
 	private String name;
-
+	private PlayerInformation info;
+	public User(String id, String name,int level,int score) {
+		this.id=id;
+		this.name=name;
+		info=new PlayerInformation(level, score);
+	}
 	public User(String id, String name, Integer num) {
+		this.usernumber = num.intValue();
 		this.id = id;
 		this.name = name;
-		this.usernumber = num.intValue();
 	}
 
 	public User(String id, String name) {
@@ -16,6 +21,8 @@ public class User {
 		this.name = name;
 	}
 
+	public User() {
+	}
 	public void setUserNumber(Integer num) {
 		usernumber = num.intValue();
 	}
@@ -36,9 +43,7 @@ public class User {
 		return name;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		User user = (User) obj;
+	public boolean equals(User user) {
 		if (this.usernumber == user.usernumber) {
 			return true;
 		}
@@ -47,6 +52,14 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public PlayerInformation getInfo() {
+		return info;
+	}
+
+	public void setInfo(PlayerInformation info) {
+		this.info = info;
 	}
 
 }

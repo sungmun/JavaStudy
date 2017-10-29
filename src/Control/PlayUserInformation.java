@@ -6,8 +6,13 @@ import Serversynchronization.PlayerInformation;
 import Serversynchronization.SocketMessage;
 
 public class PlayUserInformation extends PlayerInformation implements MessageType {
+	
 	UserEvent event = new UserEvent();
-
+	public PlayUserInformation(int level, int score) {
+		super(level, score);
+	}
+	public PlayUserInformation() {
+	}
 	@Override
 	public void setLevel(int level) {
 		super.setLevel(level);

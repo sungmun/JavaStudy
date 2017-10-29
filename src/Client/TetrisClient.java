@@ -9,7 +9,6 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
@@ -17,7 +16,6 @@ import com.google.gson.JsonSyntaxException;
 
 import Control.OpponentEvent;
 import Control.ServerMessageEvent;
-import Model.OpponentManager;
 import Model.ServerInfomation;
 import Model.UserManager;
 import Serversynchronization.MessageType;
@@ -25,8 +23,6 @@ import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import ValueObject.Space;
 import View.CellSize;
-import View.Multe.ListViewFrame;
-import View.Multe.MultiFrame;
 
 public class TetrisClient extends Thread implements MessageType, CellSize, ServerInfomation {
 	Socket socket;
