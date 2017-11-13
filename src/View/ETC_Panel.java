@@ -3,6 +3,7 @@ package View;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -18,7 +19,8 @@ public class ETC_Panel extends JPanel implements CellSize {
 		super(true);
 		setOpaque(false);
 		setPreferredSize(new Dimension(width * 5 + 20, height * 20));
-
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		nextpanel = new NextPanel();
 		savepanel = new SavePanel();
 		scorepanel = new ScorePanel();
@@ -28,7 +30,6 @@ public class ETC_Panel extends JPanel implements CellSize {
 		add(savepanel);
 		add(scorepanel);
 		add(levelpanel);
-		add(new RankButton(width));
 		add(new ExitButton(width));
 	}
 

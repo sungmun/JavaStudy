@@ -219,14 +219,15 @@ public class TetrisManager implements TetrinoType, MoveType {
 		if (getNowTetrino().getFlowTetrino().getY() >= 5) {
 			return false;
 		}
-
-		for (Space[] spaces : getRangeRealTimeMap(0)) {
-			for (Space space : spaces) {
+		Space[][] spaces=getRangeRealTimeMap(0);
+		for(int i=0;i<3;i++) {
+			for (Space space : spaces[i]) {
 				if (space.getIsblock() == BlockType.FIXED) {
 					return true;
 				}
 			}
 		}
+			
 		return false;
 	}
 

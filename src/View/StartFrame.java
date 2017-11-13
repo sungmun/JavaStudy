@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,36 +14,35 @@ public class StartFrame extends JFrame implements ServerInfomation {
 	private static StartFrame startfr = null;
 
 	private StartFrame() {
-		// TODO Auto-generated constructor stub
-		super("모드");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		setResizable(false);
-		setLayout(new FlowLayout());
-
-		JButton single = new JButton("혼자하기");
-		JButton mulite = new JButton("같이하기");
-
-		single.setBounds(10, 10, 100, 80);
-
+		BasicButton single = new BasicButton("혼자하기");
 		single.addActionListener((e) -> {
 			JFrame fr = SingleFrame.createSingleFrame();
 			fr.setVisible(true);
 			dispose();
 		});
 
+		BasicButton mulite = new BasicButton("같이하기");
 		mulite.addActionListener((e) -> {
 			JFrame fr = LoginFrame.createLoginFrame();
 			fr.setVisible(true);
 			dispose();
-
 		});
-
+		
+		BasicButton exit=new BasicButton("Exit");
+		exit.addActionListener((e)->System.exit(0));
+		exit.setPreferredSize(single.getPreferredSize());
+		
 		add(single);
 		add(mulite);
+		add(exit);
 		
+		this.getContentPane().setBackground(Color.BLACK);
+		this.setUndecorated(true);
+		this.setResizable(false);
+		this.setLayout(new FlowLayout());
 		this.pack();
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 	}
 
 	public static StartFrame createStartFrame() {

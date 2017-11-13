@@ -1,11 +1,11 @@
 package View.Multe;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Random;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -14,26 +14,27 @@ import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
+import View.BasicButton;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
 public class ListViewFrame extends JFrame implements MessageType {
 	ListView list;
-	JButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
+	BasicButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
 
 	private static ListViewFrame listframe;
 
 	private ListViewFrame() {
 		super("접속자 목록");
 		setLayout(new BorderLayout());
-		setSize(new Dimension(637, 200));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		list = ListView.createListView();
+		
 		JPanel etc = new JPanel(new GridLayout(3, 1));
-
-		mulite_play_btn = new JButton("지정한 사람과 같이하기");
-		random_multie_play_btn = new JButton("랜덤으로 같이하기");
-		back_frame_btn = new JButton("뒤로가기");
+		etc.setBackground(Color.BLACK);
+		
+		mulite_play_btn = new BasicButton("지정한 사람과 같이하기");
+		random_multie_play_btn = new BasicButton("랜덤으로 같이하기");
+		back_frame_btn = new BasicButton("뒤로가기");
 
 		TetrisClient client = TetrisClient.getTetrisClient();
 
@@ -66,6 +67,12 @@ public class ListViewFrame extends JFrame implements MessageType {
 
 		add(list, BorderLayout.WEST);
 		add(etc, BorderLayout.EAST);
+		
+		this.getContentPane().setBackground(Color.BLACK);
+		this.setUndecorated(true);
+		this.setResizable(false);
+		this.pack();
+		this.setLocationRelativeTo(null);
 	}
 
 	public static ListViewFrame createListViewFrame() {

@@ -31,6 +31,7 @@ public class ServerMessageEvent implements MessageType {
 		fr.setVisible(true);
 		LoginFrame.getLoginFrame().dispose();
 	}
+
 	public void UserMessage(SocketMessage msg) {
 		OpponentManager opmanager = OpponentManager.createOpponentManager();
 		UserManager usermanager = UserManager.createUserManager();
@@ -42,6 +43,7 @@ public class ServerMessageEvent implements MessageType {
 			fr2.dispose();
 		}
 	}
+
 	public void beChoice(SocketMessage msg) {
 		User player = transObject(msg.getMessage(), User.class);
 		int val = JOptionPane.showOptionDialog(null, player.getName() + "님이 대전을 요청하셨습니다", "대전 요청",
@@ -63,10 +65,12 @@ public class ServerMessageEvent implements MessageType {
 	public <T> T transObject(String msg, Class<T> cla) {
 		return new Gson().fromJson(msg, cla);
 	}
+
 	public void gameOverEvent() {
-		
+		OpponentEvent.getOpponentEvent().gameOver();
 	}
+
 	public void rankEvent(SocketMessage msg) {
-		
+
 	}
 }

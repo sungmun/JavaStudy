@@ -60,15 +60,17 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType,M
 			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
 		}
 	}
-	public void cheack() {
+	public boolean cheack() {
 		Point nowpos = manager.tetrino.getFlowTetrino();
 		if (manager.gameOverCheack(nowpos)) {
 			GameBasicFrame.time.stop();
+			return false;
 		}
 		manager.setNowTetrino(null);
 		int clearline = manager.lineCheack(nowpos);
 		if (clearline > 0) {
 			manager.lineClear(clearline, nowpos);
 		}
+		return true;
 	}
 }

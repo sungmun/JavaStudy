@@ -28,6 +28,7 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 	Socket socket;
 	PrintWriter out;
 	BufferedReader in;
+
 	private static TetrisClient client = null;
 
 	private TetrisClient(User user) throws UnknownHostException, IOException, ConnectException {
@@ -52,6 +53,7 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 	public static TetrisClient getTetrisClient() {
 		return client;
 	}
+
 
 	@Override
 	public void run() {
@@ -145,4 +147,5 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 			System.err.println("TetrisClient.close()");
 		}
 	}
+
 }

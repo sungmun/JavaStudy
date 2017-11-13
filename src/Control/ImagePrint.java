@@ -25,7 +25,8 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 	@SuppressWarnings("rawtypes")
 	private HashMap<Class, Component> contmap = new HashMap<>();
 	public static HashMap<Integer, BufferedImage> tetrinoimg = new HashMap<>();
-	BufferedImage background=null;
+	BufferedImage background = null;
+
 	public ImagePrint(JPanel panel) {
 		setContainer(panel);
 	}
@@ -53,12 +54,14 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 			setContainer(cont);
 		}
 	}
+
 	public BufferedImage TetrinoBlockBackPaint(TetrisManager manager) {
 		if (background == null) {
-			background = paint(10,20);
+			background = paint(10, 20);
 		}
 		return background;
 	}
+
 	public void TetrinoBlockPaint(TetrisManager manager) {
 		TetrinoBlockPanel panel = (TetrinoBlockPanel) getContmap().get(TetrinoBlockPanel.class);
 
@@ -101,8 +104,9 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 			int x = -1;
 			for (Space space : spcs) {
 				x++;
-				if (x == 0) continue;
-				
+				if (x == 0)
+					continue;
+
 				if (space.getIsblock() == BlockType.FLOW) {
 					g.setColor(TETRINO_COLOR[space.getType()]);
 					g.fill3DRect(x * width - width, y * height, width, height, true);

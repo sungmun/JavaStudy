@@ -1,6 +1,7 @@
 package View.Multe;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,11 +24,20 @@ public class ListView extends JPanel {
 
 	private ListView() {
 		model = new UserListModel(header, 0);
+		
 		table = new JTable(model);
-		setLayout(new BorderLayout());
+		table.getTableHeader().setBackground(Color.BLACK);
+		table.getTableHeader().setForeground(Color.WHITE);
+		table.setBackground(Color.BLACK);
+		table.setOpaque(false);
+		table.setForeground(Color.WHITE);
+
 		listJs = new JScrollPane(table);
-		add(listJs, BorderLayout.CENTER);
-		setBounds(5, 5, 400, 490);
+		listJs.setOpaque(false);
+		listJs.getViewport().setOpaque(false);
+		add(listJs);
+
+		setOpaque(false);
 		listReFresh();
 	}
 

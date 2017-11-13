@@ -3,12 +3,13 @@ package View;
 import java.awt.Color;
 
 import javax.swing.JFrame;
-import javax.swing.Timer;
+
+import Control.Tic;
 
 @SuppressWarnings("serial")
 public class GameBasicFrame extends JFrame {
 	protected int speed = 500;
-	public static Timer time;
+	public static Tic time;
 	public GameBasicFrame( ) {
 		super("Tetris");
 
@@ -16,7 +17,6 @@ public class GameBasicFrame extends JFrame {
 		this.setResizable(false);
 		
 		this.getContentPane().setBackground(Color.BLACK);
-		this.setLocationRelativeTo(null);
 	}
 	
 }
