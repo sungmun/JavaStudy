@@ -3,7 +3,7 @@ package Model;
 import ValueObject.Point;
 import ValueObject.Space;
 
-public class Tetrino implements MoveType {
+public class Tetrino {
 
 	int mode = 1;
 	private TetrinoType type;
@@ -24,14 +24,14 @@ public class Tetrino implements MoveType {
 		this.type = type;
 	}
 
-	private boolean sideMoveTetrino(int direction) {
+	private boolean rightMoveTetrino(MoveType direction) {
 		for (int y = 0; y < 5; y++) {
 			for (int x = 0; x < 6; x++) {
-				if (x + direction < 0 || x + direction >= 6) {
+				if (x + 1 < 0 || x + 1 >= 6) {
 					continue;
 				}
 				Space spc1 = area[y][x];
-				Space spc2 = area[y][x + direction];
+				Space spc2 = area[y][x + 1];
 
 				if (spc1 == null || spc1.getIsblock() != BlockType.FLOW) {
 					continue;
@@ -41,7 +41,29 @@ public class Tetrino implements MoveType {
 				}
 			}
 		}
-		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + direction);
+		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + 1);
+
+		return true;
+	}
+
+	private boolean leftMoveTetrino(MoveType direction) {
+		for (int y = 0; y < 5; y++) {
+			for (int x = 0; x < 6; x++) {
+				if (x - 1 < 0 || x - 1 >= 6) {
+					continue;
+				}
+				Space spc1 = area[y][x];
+				Space spc2 = area[y][x - 1];
+
+				if (spc1 == null || spc1.getIsblock() != BlockType.FLOW) {
+					continue;
+				}
+				if (!(spc2 == null || spc2.getIsblock() == BlockType.FLOW)) {
+					return false;
+				}
+			}
+		}
+		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() - 1);
 
 		return true;
 	}
@@ -73,11 +95,12 @@ public class Tetrino implements MoveType {
 		return true;
 	}
 
-	public boolean moveTetrino(int direction) {
+	public boolean moveTetrino(MoveType direction) {
 		switch (direction) {
 		case RIGHT:
+			return rightMoveTetrino(direction);
 		case LEFT:
-			return sideMoveTetrino(direction);
+			return leftMoveTetrino(direction);
 		case DOWN:
 			return downMoveTetrino();
 		case TURN:
@@ -124,7 +147,7 @@ public class Tetrino implements MoveType {
 				temp1[y][x] = temp[y][x];
 			}
 		}
-		
+
 		for (int i = 0; i < temp.length; i++) {
 			area[i] = temp1[i].clone();
 		}

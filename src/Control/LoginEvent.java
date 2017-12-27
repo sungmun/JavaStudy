@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import Client.TetrisClient;
-import Model.UserManager;
 import Serversynchronization.User;
 import View.StartFrame;
 import View.Multe.LoginFrame;
@@ -22,12 +21,12 @@ public abstract class LoginEvent implements ActionListener{
 			JOptionPane.showMessageDialog(null, "ID나 Name을 입력하지 않으셨습니다.");
 			return;
 		}
-		UserManager.createUserManager().setUser(new User(id, name));
+		User user=new User(id, name);
 		try {
-			TetrisClient client=TetrisClient.createTetrisClient(UserManager.createUserManager().getUser());
-			client.start();
+			TetrisClient client=TetrisClient.createTetrisClient(user);
+			
 		} catch (IOException e1) {
-			FrameControl.FrameChange(StartFrame.getStartFrame(), LoginFrame.getLoginFrame());
+			new FrameControl().FrameChange(StartFrame.class, LoginFrame.class);
 		}
 	}
 	

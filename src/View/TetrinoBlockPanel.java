@@ -8,8 +8,15 @@ import java.awt.Image;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import Control.EventListener;
+import Control.ImagePrint;
+
 @SuppressWarnings("serial")
-public class TetrinoBlockPanel extends JPanel implements CellSize {
+public class TetrinoBlockPanel extends JPanel implements  EventListener{
 
 	Image graphics;
 
@@ -17,17 +24,30 @@ public class TetrinoBlockPanel extends JPanel implements CellSize {
 		super(true);
 		setLayout(null);
 		setLocation(0, 0);
-		setPreferredSize(new Dimension(width * 10, height * 20));
+		setPreferredSize(new Dimension(ImagePrint.width * 10, ImagePrint.height * 20));
 		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));
 	}
-	public void setImage(Image g) {
-		graphics=g;
+	public void setImage(Object g) {
+		graphics = (Image)g;
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(graphics, 0, 0, this);
+	}
+	@Override
+	public void onEvent(String event) {
+		try {
+			JSONObject object = (JSONObject) new JSONParser().parse(event);
+			if (object.get("method").toString() == "paintComponent") {
+				setImage(object.get("Image"));
+			}else {
+				System.out.println("NextBlockPanel.onEvent()");
+				System.err.println(object.toJSONString());
+			}
+		} catch (ParseException e) {
+		}
 	}
 }

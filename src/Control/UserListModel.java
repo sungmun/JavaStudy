@@ -4,7 +4,6 @@ import javax.swing.table.DefaultTableModel;
 
 import Model.UserManager;
 import Serversynchronization.User;
-import Serversynchronization.UsersList;
 
 @SuppressWarnings("serial")
 public class UserListModel extends DefaultTableModel {

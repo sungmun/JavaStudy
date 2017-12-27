@@ -1,72 +1,80 @@
 package Control;
 
 import java.awt.BasicStroke;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import javax.swing.JPanel;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import Model.BlockType;
 import Model.CreateBlock;
 import Model.TetrinoType;
-import Model.TetrisManager;
-import Serversynchronization.SocketMessage;
 import ValueObject.Space;
-import View.CellSize;
 import View.NextBlockPanel;
 import View.SaveBlockPanel;
 import View.TetrinoBlockPanel;
 import View.TetrisBlockColor;
 
-public class ImagePrint implements CellSize, BlockType, EventListener {
+public class ImagePrint implements BlockType, EventListener {
+
+	public static final int WIDTH = 36;
+	public static final int HEIGHT = 36;
+
+	public static HashMap<TetrinoType, BufferedImage> tetrinoImg = new HashMap<>();
+
 	BufferedImage background = null;
 
 	public ImagePrint() {
-		ModelToControlConnect.connect.addListener(this);
+		MVC_Connect.ModelToControl.addListener(this);
+		MVC_Connect.ViewToControl.addListener(this);
 	}
 
-	public BufferedImage paint(int x, int y) {
-		BufferedImage buffer = new BufferedImage(width * x, height * y - 1, BufferedImage.TYPE_INT_ARGB);
+	public BufferedImage backgroundImage(int x, int y) {
+		BufferedImage buffer = new BufferedImage(WIDTH * x, HEIGHT * y - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = (Graphics2D) buffer.getGraphics();
 
 		float[] bash = { 5, 5, 5, 5 };
 		graphics.setStroke(new BasicStroke(1, 0, BasicStroke.JOIN_MITER, 1.0f, bash, 0));
 		for (int i = 1; i < x + 1; i++) {
-			int k = width * i;
-			graphics.draw(new Line2D.Double(k, 0, k, height * y - 1));
+			int k = WIDTH * i;
+			graphics.draw(new Line2D.Double(k, 0, k, HEIGHT * y - 1));
 		}
 		for (int j = 1; j < y + 2; j++) {
-			int k = height * j;
-			graphics.draw(new Line2D.Double(0, k, width * x - 1, k));
+			int k = HEIGHT * j;
+			graphics.draw(new Line2D.Double(0, k, WIDTH * x - 1, k));
 		}
+
 		return buffer;
 	}
 
-	public BufferedImage TetrinoBlockBackPaint(TetrisManager manager) {
+	public BufferedImage tetrinoMapBackgroundPaint() {
 		if (background == null) {
-			background = paint(10, 20);
+			background = backgroundImage(10, 20);
 		}
 		return background;
 	}
 
-	public void TetrinoBlockPaint(TetrisManager manager) {
+	private void tetrinoBlockPaint(Object object) {
 
-		BufferedImage buffer = new BufferedImage(width * 10, height * 20 - 1, BufferedImage.TYPE_INT_ARGB);
+		Space[][] realtimeMap=(Space[][])object;
+		
+		BufferedImage buffer = new BufferedImage(WIDTH * 10, HEIGHT * 20 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
-		g.drawImage(TetrinoBlockBackPaint(manager), 0, 0, null);
+		g.drawImage(tetrinoMapBackgroundPaint(), 0, 0, null);
+
 		int indexY = 0;
-		for (Space[] spcs : manager.getRealTimeMap()) {
+		for (Space[] spcs : realtimeMap) {
 			int indexX = 0;
 			for (Space spc : spcs) {
 				try {
 					if (spc.getIsblock() == FLOW || spc.getIsblock() == FIXED) {
 						g.setColor(TetrisBlockColor.getColor(spc.getType()));
-						g.fill3DRect(indexX * width, (indexY - 3) * height, width, height, true);
+						g.fill3DRect(indexX * WIDTH, (indexY - 3) * HEIGHT, WIDTH, HEIGHT, true);
 					}
 				} catch (NullPointerException e) {
 				}
@@ -74,18 +82,33 @@ public class ImagePrint implements CellSize, BlockType, EventListener {
 			}
 			indexY++;
 		}
+		
+		JSONObject imageMessage=new JSONObject();
+		imageMessage.put("method", "paintComponent");
+		imageMessage.put("Image", buffer);
+		MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class.getClass(), imageMessage);
 	}
 
-	public void NextBlockPaint(TetrisManager manager) {
-		BufferedImage buffer = tetrinoimg.get(manager.getNext_block());
+	private void nextBlockPaint(Object object) {
+		
+		TetrinoType nextBlock=(TetrinoType)object;
+		
+		BufferedImage buffer = tetrinoImg.get(nextBlock);
+		
 		if (buffer == null) {
-			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(manager.getNext_block()).getArea());
-			tetrinoimg.put(manager.getNext_block(), buffer);
+			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(nextBlock).getArea());
+			tetrinoImg.put(nextBlock, buffer);
 		}
+		
+		JSONObject imageMessage=new JSONObject();
+		imageMessage.put("method", "paintComponent");
+		imageMessage.put("Image", buffer);
+		MVC_Connect.ControlToView.callEvent(NextBlockPanel.class.getClass(), imageMessage);
+		
 	}
 
-	public BufferedImage blockPaint(Space[][] spaces) {
-		BufferedImage buffer = new BufferedImage(width * 4, height * 4 - 1, BufferedImage.TYPE_INT_ARGB);
+	private BufferedImage blockPaint(Space[][] spaces) {
+		BufferedImage buffer = new BufferedImage(WIDTH * 4, HEIGHT * 4 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
 		int y = 0;
 		for (Space[] spcs : spaces) {
@@ -98,7 +121,7 @@ public class ImagePrint implements CellSize, BlockType, EventListener {
 				try {
 					if (space.getIsblock() == BlockType.FLOW) {
 						g.setColor(TetrisBlockColor.getColor(space.getType()));
-						g.fill3DRect(x * width - width, y * height, width, height, true);
+						g.fill3DRect(x * WIDTH - WIDTH, y * HEIGHT, WIDTH, HEIGHT, true);
 					}
 				} catch (NullPointerException e) {
 				}
@@ -109,18 +132,50 @@ public class ImagePrint implements CellSize, BlockType, EventListener {
 		return buffer;
 	}
 
-	public void SaveBlockPaint(TetrisManager manager) {
-		BufferedImage buffer = tetrinoimg.get(manager.getSave_block());
+	private void saveBlockPaint(Object object) {
+
+		TetrinoType saveBlock=(TetrinoType)object;
+		
+		BufferedImage buffer = tetrinoImg.get(saveBlock);
+		
 		if (buffer == null) {
-			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(manager.getSave_block()).getArea());
-			tetrinoimg.put(manager.getNext_block(), buffer);
+			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(saveBlock).getArea());
+			tetrinoImg.put(saveBlock, buffer);
 		}
+		
+		JSONObject imageMessage=new JSONObject();
+		imageMessage.put("method", "paintComponent");
+		imageMessage.put("Image", buffer);
+		MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class.getClass(), imageMessage);
+		
 	}
 
 	@Override
-	public void onEvent(SocketMessage event) {
-		S
+	public void onEvent(String event) {
+		try {
+			JSONObject object = (JSONObject) new JSONParser().parse(event);
+			if (object.get("method").toString() != null) {
+				methodCatch(object);
+			} else {
+				System.out.println("ImagePrint.onEvent()");
+				System.err.println(object.toJSONString());
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
+	public void methodCatch(JSONObject event) {
+		switch (event.get("method").toString()) {
+		case "saveBlockPaint":
+			saveBlockPaint(event.get("TetrinoType"));
+		case "nextBlockPaint":
+			nextBlockPaint(event.get("TetrinoType"));
+		case "tetrinoBlockPaint":
+			tetrinoBlockPaint(event.get("Space[][]"));
+		}
+	}
 
 }

@@ -9,16 +9,21 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import Control.EventListener;
 import Model.ServerInfomation;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import View.CellSize;
 
-public class TetrisClient extends Thread implements CellSize, ServerInfomation {
+public class TetrisClient extends Thread implements EventListener {
+	public final static String IP = "mydirectory.iptime.org";
+	public final static int PORT = 4160;
+
 	Socket socket;
 	PrintWriter out;
 	BufferedReader in;
@@ -40,6 +45,7 @@ public class TetrisClient extends Thread implements CellSize, ServerInfomation {
 			throws UnknownHostException, IOException, ConnectException {
 		if (client == null) {
 			client = new TetrisClient(user);
+			client.start();
 		}
 		return client;
 	}
@@ -54,22 +60,35 @@ public class TetrisClient extends Thread implements CellSize, ServerInfomation {
 			while (true) {
 				onMessage(socket);
 			}
-		} catch (JsonSyntaxException | IOException e) {
+		} catch (IOException e) {
 			close();
 		}
 	}
 
-	public void onMessage(Socket server) throws JsonSyntaxException, IOException {
-		ServerMessage event = new ServerMessage();
-		SocketMessage socketmsg = SocketMessage.GSONtoObject(in.readLine(), SocketMessage.class);
-		if (!socketmsg.equals(null)) {
-			event.getEvent(socketmsg);
+	public void onMessage(Socket server) throws IOException {
+//		ServerMessage event = new ServerMessage();
+		try {
+			JSONObject object = (JSONObject) new JSONParser().parse(in.readLine());
+			if (object.get("MessageType").toString() != null) {
+				ServerMessage.
+			} else {
+				System.out.println("TetrisClient.onMessage()");
+				System.err.println(object.toJSONString());
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+		// SocketMessage socketmsg = SocketMessage.GSONtoObject(in.readLine(),
+		// SocketMessage.class);
+		// if (!socketmsg.equals(null)) {
+		// event.getEvent(socketmsg);
+		// }
 		in.reset();
 	}
 
-	public void send(SocketMessage message) {
-		out.println(new Gson().toJson(message));
+	public void send(String message) {
+		// out.println(new Gson().toJson(message));
+		out.println(message);
 		out.flush();
 		System.gc();
 	}
@@ -83,6 +102,18 @@ public class TetrisClient extends Thread implements CellSize, ServerInfomation {
 		} catch (IOException | ArrayIndexOutOfBoundsException e) {
 			System.err.println("TetrisClient.close()");
 		}
+	}
+
+	@Override
+	public void onEvent(String event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void methodCatch(JSONObject event) {
+		
+
 	}
 
 }

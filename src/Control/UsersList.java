@@ -1,7 +1,8 @@
-package Serversynchronization;
+package Control;
 
 import java.util.Vector;
 
+import Serversynchronization.User;
 import View.Multe.ListView;
 
 public class UsersList {

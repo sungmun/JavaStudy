@@ -15,7 +15,7 @@ public class EventHandler {
 
 	private List<EventListener> listeners = new CopyOnWriteArrayList<EventListener>();
 
-	private synchronized List<EventListener> getListeners() {
+	public synchronized List<EventListener> getListeners() {
 		return listeners;
 	}
 
@@ -31,23 +31,36 @@ public class EventHandler {
 		}
 	}
 
-	public synchronized void callEvent(final Class<?> caller, SocketMessage event) {
+	public synchronized void callEvent(final Class<?> caller, Object event) {
 		callEvent(caller, event);
 	}
 
-	private synchronized void callEventByAsynch(final Class<?> caller, final SocketMessage event) {
+	@SuppressWarnings("unused")
+	private synchronized void callEventByAsynch(final Class<?> caller, final Object event) {
 		ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREAD_POOL);
 
 		for (final EventListener listener : listeners) {
 			executorService.execute(new Runnable() {
 				public void run() {
-					if (!listener.getClass().getName().equals(caller.getName())) 
-						listener.onEvent(new Gson().toJson(event)));
+					if (!listener.getClass().getName().equals(caller.getName()))
+						listener.onEvent((String) event);
 				}
 			});
 		}
 
 		executorService.shutdown();
+	}
+
+	public void broadCast(final Object event) {
+		ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREAD_POOL);
+
+		for (final EventListener listener : listeners) {
+			executorService.execute(new Runnable() {
+				public void run() {
+					listener.onEvent((String) event);
+				}
+			});
+		}
 	}
 
 }

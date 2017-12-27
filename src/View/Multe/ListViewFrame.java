@@ -10,10 +10,10 @@ import javax.swing.JPanel;
 
 import Client.TetrisClient;
 import Control.FrameControl;
+import Control.UsersList;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
-import Serversynchronization.UsersList;
 import View.BasicButton;
 import View.StartFrame;
 
