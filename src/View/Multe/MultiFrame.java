@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 import Client.TetrisClient;
 import Control.ImagePrint;
@@ -20,8 +19,6 @@ import Control.Tic;
 import Control.TicAction;
 import Control.UserEvent;
 import Model.MoveType;
-import Model.UserManager;
-import Serversynchronization.PlayerInformation;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
 import View.BasicJLabel;
@@ -148,7 +145,6 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 		time = new Tic(speed, action) {
 			@Override
 			public void timerstop() {
-				TetrisClient.getTetrisClient().send(new SocketMessage(TetrisClient.GAMEOVER_MESSAGE,null));
 				usergameoverview.initInfo();
 				usergameover.setBackground(new Color(0, 0, 0, 122));
 				userlayer.moveToFront(usergameover);
@@ -158,10 +154,6 @@ public class MultiFrame extends GameBasicFrame implements MoveType, CellSize {
 		};
 		time.start();
 
-		System.out.println(opplayer.getPosition(opppanel));
-		System.out.println(opplayer.getPosition(oppgameover));
-		System.out.println(opplayer.getPosition(oppgameoverview));
-		
 		this.addKeyListener(new KeyBoardEvent(userprint));
 	}
 

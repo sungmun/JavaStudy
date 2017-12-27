@@ -3,10 +3,10 @@ package Serversynchronization;
 import com.google.gson.Gson;
 
 public class SocketMessage {
-	private int messagetype;
+	private MessageType messagetype;
 	private String message;
 
-	public SocketMessage(int msg, Object obj) {
+	public SocketMessage(MessageType msg, Object obj) {
 		messagetype = msg;
 		setMessage(obj);
 	}
@@ -19,12 +19,17 @@ public class SocketMessage {
 		this.message = new Gson().toJson(message);
 	}
 
-	public int getMessageType() {
+	public MessageType getMessageType() {
 		return messagetype;
 	}
 
-	public void setMessageType(int messagetype) {
+	public void setMessageType(MessageType messagetype) {
 		this.messagetype = messagetype;
 	}
+	
+	public static <T> T GSONtoObject(String msg, Class<T> type) {
+		return new Gson().fromJson(msg, type);
+	}
+	
 
 }

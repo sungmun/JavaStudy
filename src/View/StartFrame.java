@@ -2,7 +2,7 @@ package View;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
-import javax.swing.JButton;
+
 import javax.swing.JFrame;
 
 import Model.ServerInfomation;

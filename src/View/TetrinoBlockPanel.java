@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
-public class TetrinoBlockPanel extends JPanel implements CellSize, TetrisBlockColor {
+public class TetrinoBlockPanel extends JPanel implements CellSize {
 
 	Image graphics;
 

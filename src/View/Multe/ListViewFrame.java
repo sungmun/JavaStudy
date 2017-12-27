@@ -2,7 +2,6 @@ package View.Multe;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Random;
 
@@ -10,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Client.TetrisClient;
+import Control.FrameControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
@@ -18,7 +18,7 @@ import View.BasicButton;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
-public class ListViewFrame extends JFrame implements MessageType {
+public class ListViewFrame extends JFrame {
 	ListView list;
 	BasicButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
 
@@ -43,7 +43,7 @@ public class ListViewFrame extends JFrame implements MessageType {
 			if (UsersList.findList(us)) {
 				int index=UsersList.getList().indexOf(us);
 				us = UsersList.getList().get(index);
-				client.send(new SocketMessage(USER_SELECTING, us));
+				client.send(new SocketMessage(MessageType.USER_SELECTING, us));
 			}
 		});
 		random_multie_play_btn.addActionListener((e) -> {
@@ -52,13 +52,12 @@ public class ListViewFrame extends JFrame implements MessageType {
 			}
 			int random = new Random().nextInt(UsersList.getList().size());
 			User us = UsersList.getList().get(random);
-			client.send(new SocketMessage(USER_SELECTING, us));
+			client.send(new SocketMessage(MessageType.USER_SELECTING, us));
 		});
 		back_frame_btn.addActionListener((e) -> {
-			client.send(new SocketMessage(LOGOUT, null));
+			client.send(new SocketMessage(MessageType.LOGOUT, null));
 			client.deConnect();
-			StartFrame.getStartFrame().setVisible(true);
-			dispose();
+			FrameControl.FrameChange(StartFrame.getStartFrame(), this);
 		});
 
 		etc.add(mulite_play_btn);

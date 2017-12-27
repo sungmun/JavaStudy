@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
-public class SaveBlockPanel extends JPanel implements CellSize, TetrisBlockColor {
+public class SaveBlockPanel extends JPanel implements CellSize {
 	Image graphics;
 
 	public SaveBlockPanel() {

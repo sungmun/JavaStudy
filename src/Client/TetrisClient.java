@@ -9,22 +9,16 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.swing.JOptionPane;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import Control.OpponentEvent;
-import Control.ServerMessageEvent;
 import Model.ServerInfomation;
-import Model.UserManager;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import Serversynchronization.User;
-import ValueObject.Space;
 import View.CellSize;
 
-public class TetrisClient extends Thread implements MessageType, CellSize, ServerInfomation {
+public class TetrisClient extends Thread implements CellSize, ServerInfomation {
 	Socket socket;
 	PrintWriter out;
 	BufferedReader in;
@@ -35,7 +29,7 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		socket = new Socket(IP, PORT);
 		out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		send(new SocketMessage(LOGIN, user));
+		send(new SocketMessage(MessageType.LOGIN, user));
 	}
 
 	public void deConnect() {
@@ -54,7 +48,6 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		return client;
 	}
 
-
 	@Override
 	public void run() {
 		try {
@@ -66,69 +59,13 @@ public class TetrisClient extends Thread implements MessageType, CellSize, Serve
 		}
 	}
 
-	public <T> T transObject(String msg, Class<T> cla) {
-		return new Gson().fromJson(msg, cla);
-	}
-
 	public void onMessage(Socket server) throws JsonSyntaxException, IOException {
-		ServerMessageEvent event = new ServerMessageEvent();
-		SocketMessage socketmsg = transObject(in.readLine(), SocketMessage.class);
-		try {
-			switch (socketmsg.getMessageType()) {
-			case USER_SERIAL_NUM:
-				UserManager.createUserManager().getUser()
-						.setUserNumber(transObject(socketmsg.getMessage(), Integer.class));
-				break;
-			case LOGIN:
-				event.logIn(socketmsg);
-				break;
-			case LOGOUT:
-				event.logOut(socketmsg);
-				break;
-			case USER_LIST_MESSAGE:
-				event.userListMessage(socketmsg);
-				break;
-			case GAMEOVER_MESSAGE:
-				event.gameOverEvent();
-				break;
-			case RANK:
-				event.rankEvent(socketmsg);
-				break;
-			case BE_CHOSEN:
-				event.beChoice(socketmsg);
-				break;
-			case WAR_ACCEPT:
-				event.warAccept(socketmsg);
-				break;
-			case WAR_DENIAL:
-				JOptionPane.showMessageDialog(null, "상대방이 거부하였습니다");
-				break;
-			case WAR_START:
-				event.logOut(socketmsg);
-				break;
-			case SCORE_MESSAGE:
-				OpponentEvent.getOpponentEvent().managerSetScore(transObject(socketmsg.getMessage(), int.class));
-				break;
-			case LEVEL_MESSAGE:
-				OpponentEvent.getOpponentEvent().managerSetLevel(transObject(socketmsg.getMessage(), int.class));
-				break;
-			case SAVE_BLOCK_MESSAGE:
-				OpponentEvent.getOpponentEvent().managerSetSaveBlock(transObject(socketmsg.getMessage(), int.class));
-				break;
-			case NEXT_BLOCK_MESSAGE:
-				OpponentEvent.getOpponentEvent().managerSetNextBlock(transObject(socketmsg.getMessage(), int.class));
-				break;
-			case MAP_MESSAGE:
-				OpponentEvent.getOpponentEvent()
-						.managerSetRealtimemap(transObject(socketmsg.getMessage(), Space[][].class));
-				break;
-			case USER_MESSAGE:
-				event.UserMessage(socketmsg);
-				break;
-			}
-		} catch (NullPointerException e) {
-			in.reset();
+		ServerMessage event = new ServerMessage();
+		SocketMessage socketmsg = SocketMessage.GSONtoObject(in.readLine(), SocketMessage.class);
+		if (!socketmsg.equals(null)) {
+			event.getEvent(socketmsg);
 		}
+		in.reset();
 	}
 
 	public void send(SocketMessage message) {

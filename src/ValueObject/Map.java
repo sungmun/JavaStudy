@@ -12,11 +12,6 @@ public class Map {
 		Map.width=width;
 		Map.height=height;
 		this.map=new Space[height][width];
-		for(int y=0;y<height;y++){
-			for(int x=0;x<width;x++){
-				map[y][x]=new Space();
-			}
-		}
 	}
 
 	public static int getMapWidth(){

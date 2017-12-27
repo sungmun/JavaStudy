@@ -1,18 +1,17 @@
 package Control;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.Timer;
 
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 @SuppressWarnings("serial")
 public abstract class Tic extends Timer {
+	String str;
+	Thread sound;
 	Player playMp3;
-	FileInputStream fls;
 
 	public Tic(int delay, TicAction listener) {
 		super(delay, listener);
@@ -23,27 +22,29 @@ public abstract class Tic extends Timer {
 		super.stop();
 		timerstop();
 		playMp3.close();
+		str = "";
+		sound.interrupt();
 	}
 
 	@Override
 	public void start() {
 		super.start();
 		try {
+			str = "Tetris_BGM.mp3";
+			sound = new Thread(new Runnable() {
 
-			
-
-			Thread sound = new Thread(new Runnable() {
-				@Override
 				public void run() {
 					try {
 						while (true) {
-							fls = new FileInputStream("Tetris_BGM.mp3");
+							FileInputStream fls = new FileInputStream(str);
 							playMp3 = new Player(fls);
 							playMp3.play();
+							fls.close();
 						}
 					} catch (Exception e) {
 					}
 				}
+
 			});
 			sound.start();
 		} catch (Exception e) {

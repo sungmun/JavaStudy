@@ -4,17 +4,19 @@ import Model.BlockType;
 import Model.SpaceSize;
 import Model.TetrinoType;
 
-public class Space implements SpaceSize, BlockType, TetrinoType {
-	private int isblock = SPACE;
-	private int type = 0;
-	public Space() {}
+public class Space implements SpaceSize, BlockType {
+	private int isblock = FLOW;
+	private TetrinoType type = TetrinoType.DEFULT;
+
+	public Space(int isblock, TetrinoType type) {
+		this.isblock = isblock;
+		this.type = type;
+	}
+
 	public Space(int isblock) {
 		this.isblock = isblock;
 	}
-	public Space(int isblock,int type) {
-		this.isblock = isblock;
-		this.type=type;
-	}
+
 	public int getIsblock() {
 		return isblock;
 	}
@@ -27,11 +29,11 @@ public class Space implements SpaceSize, BlockType, TetrinoType {
 		return isblock;
 	}
 
-	public int getType() {
+	public TetrinoType getType() {
 		return type;
 	}
 
-	protected void setType(int type) {
+	public void setType(TetrinoType type) {
 		this.type = type;
 	}
 
@@ -41,6 +43,8 @@ public class Space implements SpaceSize, BlockType, TetrinoType {
 	}
 
 	public boolean equals(Space spc) {
+		if (spc == null)
+			return false;
 		return (isblock == spc.isblock) ? true : false;
 	}
 }

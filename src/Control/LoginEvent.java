@@ -13,11 +13,11 @@ import View.StartFrame;
 import View.Multe.LoginFrame;
 
 public abstract class LoginEvent implements ActionListener{
-
+	String id=null;
+	String name=null;
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String id=setId();
-		String name=setName();
+		
 		if (id.equals("") || name.equals("")) {
 			JOptionPane.showMessageDialog(null, "ID나 Name을 입력하지 않으셨습니다.");
 			return;
@@ -27,11 +27,8 @@ public abstract class LoginEvent implements ActionListener{
 			TetrisClient client=TetrisClient.createTetrisClient(UserManager.createUserManager().getUser());
 			client.start();
 		} catch (IOException e1) {
-			StartFrame.getStartFrame().setVisible(true);
-			LoginFrame.getLoginFrame().dispose();
+			FrameControl.FrameChange(StartFrame.getStartFrame(), LoginFrame.getLoginFrame());
 		}
 	}
-	public abstract String setId();
-	public abstract String setName();
 	
 }

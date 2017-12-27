@@ -3,6 +3,7 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import Client.ClientMessage;
 import Client.TetrisClient;
 import Model.MoveType;
 import Model.TetrisManager;
@@ -11,7 +12,7 @@ import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
 import ValueObject.Point;
 
-public abstract class TicAction implements ActionListener, MoveType,MessageType {
+public abstract class TicAction implements ActionListener, MoveType {
 	protected TetrisManager manager = UserTetrisManager.getTetrisManager();
 	ImagePrint mainprint;
 	
@@ -31,10 +32,7 @@ public abstract class TicAction implements ActionListener, MoveType,MessageType 
 		}
 		mainprint.TetrinoBlockPaint(manager);
 		speedChange();
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
-		}
+		new ClientMessage().mapSend(manager.getRealTimeMap());
 	}
 
 	public boolean check() {

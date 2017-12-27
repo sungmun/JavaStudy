@@ -13,7 +13,9 @@ import javax.swing.JPanel;
 
 import Model.BlockType;
 import Model.CreateBlock;
+import Model.TetrinoType;
 import Model.TetrisManager;
+import Serversynchronization.SocketMessage;
 import ValueObject.Space;
 import View.CellSize;
 import View.NextBlockPanel;
@@ -21,14 +23,11 @@ import View.SaveBlockPanel;
 import View.TetrinoBlockPanel;
 import View.TetrisBlockColor;
 
-public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
-	@SuppressWarnings("rawtypes")
-	private HashMap<Class, Component> contmap = new HashMap<>();
-	public static HashMap<Integer, BufferedImage> tetrinoimg = new HashMap<>();
+public class ImagePrint implements CellSize, BlockType, EventListener {
 	BufferedImage background = null;
 
-	public ImagePrint(JPanel panel) {
-		setContainer(panel);
+	public ImagePrint() {
+		ModelToControlConnect.connect.addListener(this);
 	}
 
 	public BufferedImage paint(int x, int y) {
@@ -48,13 +47,6 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 		return buffer;
 	}
 
-	public void setContainer(Component con) {
-		for (Component cont : ((Container) con).getComponents()) {
-			getContmap().put(cont.getClass(), cont);
-			setContainer(cont);
-		}
-	}
-
 	public BufferedImage TetrinoBlockBackPaint(TetrisManager manager) {
 		if (background == null) {
 			background = paint(10, 20);
@@ -63,7 +55,6 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 	}
 
 	public void TetrinoBlockPaint(TetrisManager manager) {
-		TetrinoBlockPanel panel = (TetrinoBlockPanel) getContmap().get(TetrinoBlockPanel.class);
 
 		BufferedImage buffer = new BufferedImage(width * 10, height * 20 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
@@ -72,28 +63,25 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 		for (Space[] spcs : manager.getRealTimeMap()) {
 			int indexX = 0;
 			for (Space spc : spcs) {
-				if (spc.getIsblock() == FLOW || spc.getIsblock() == FIXED) {
-					g.setColor(TETRINO_COLOR[spc.getType()]);
-					g.fill3DRect(indexX * width, (indexY - 3) * height, width, height, true);
+				try {
+					if (spc.getIsblock() == FLOW || spc.getIsblock() == FIXED) {
+						g.setColor(TetrisBlockColor.getColor(spc.getType()));
+						g.fill3DRect(indexX * width, (indexY - 3) * height, width, height, true);
+					}
+				} catch (NullPointerException e) {
 				}
 				indexX++;
 			}
 			indexY++;
 		}
-		panel.setImage(buffer);
-		panel.repaint();
 	}
 
 	public void NextBlockPaint(TetrisManager manager) {
-		NextBlockPanel panel = (NextBlockPanel) getContmap().get(NextBlockPanel.class);
-		BufferedImage buffer = tetrinoimg.get(new Integer(manager.getNext_block()));
+		BufferedImage buffer = tetrinoimg.get(manager.getNext_block());
 		if (buffer == null) {
-			buffer = blockPaint(CreateBlock.tetrinoChoiceCreate(manager.getNext_block()).getArea());
+			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(manager.getNext_block()).getArea());
 			tetrinoimg.put(manager.getNext_block(), buffer);
 		}
-		panel.setImage(buffer);
-		panel.repaint();
-
 	}
 
 	public BufferedImage blockPaint(Space[][] spaces) {
@@ -107,9 +95,12 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 				if (x == 0)
 					continue;
 
-				if (space.getIsblock() == BlockType.FLOW) {
-					g.setColor(TETRINO_COLOR[space.getType()]);
-					g.fill3DRect(x * width - width, y * height, width, height, true);
+				try {
+					if (space.getIsblock() == BlockType.FLOW) {
+						g.setColor(TetrisBlockColor.getColor(space.getType()));
+						g.fill3DRect(x * width - width, y * height, width, height, true);
+					}
+				} catch (NullPointerException e) {
 				}
 
 			}
@@ -119,24 +110,17 @@ public class ImagePrint implements TetrisBlockColor, CellSize, BlockType {
 	}
 
 	public void SaveBlockPaint(TetrisManager manager) {
-		SaveBlockPanel panel = (SaveBlockPanel) getContmap().get(SaveBlockPanel.class);
-		BufferedImage buffer = tetrinoimg.get(new Integer(manager.getSave_block()));
+		BufferedImage buffer = tetrinoimg.get(manager.getSave_block());
 		if (buffer == null) {
-			buffer = blockPaint(CreateBlock.tetrinoChoiceCreate(manager.getSave_block()).getArea());
+			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(manager.getSave_block()).getArea());
 			tetrinoimg.put(manager.getNext_block(), buffer);
 		}
-		panel.setImage(buffer);
-		panel.repaint();
 	}
 
-	@SuppressWarnings("rawtypes")
-	public HashMap<Class, Component> getContmap() {
-		return contmap;
+	@Override
+	public void onEvent(SocketMessage event) {
+		S
 	}
 
-	@SuppressWarnings("rawtypes")
-	public void setContmap(HashMap<Class, Component> contmap) {
-		this.contmap = contmap;
-	}
 
 }

@@ -4,15 +4,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Client.TetrisClient;
+import Client.ClientMessage;
 import Model.MoveType;
 import Model.UserTetrisManager;
-import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
 import ValueObject.Point;
 import View.GameBasicFrame;
 
-public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType,MessageType {
+public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType {
 	UserTetrisManager manager = UserTetrisManager.getTetrisManager();
 	ImagePrint mainprint;
 	public KeyBoardEvent(ImagePrint mainprint) {
@@ -51,14 +49,8 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType,M
 			mainprint.SaveBlockPaint(manager);
 			break;
 		}
-		mapSend();
+		new ClientMessage().mapSend(manager.getRealTimeMap());
 		mainprint.TetrinoBlockPaint(manager);
-	}
-	public void mapSend() {
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
-		}
 	}
 	public boolean cheack() {
 		Point nowpos = manager.tetrino.getFlowTetrino();

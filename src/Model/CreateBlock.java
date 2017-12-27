@@ -1,10 +1,13 @@
 package Model;
-public class CreateBlock implements TetrinoType{
-	static int type;
-	public static Tetrino tetrinoRandomCreate(){
-		type=(int)(Math.random()*10)%7+1;
 
-		switch(type){
+public class CreateBlock  {
+
+	public Tetrino tetrinoRandomCreate() {
+		return tetrinoChoiceCreate(TetrinoType.getRandomTetrino());
+	}
+
+	public Tetrino tetrinoChoiceCreate(TetrinoType type) {
+		switch (type) {
 		case OTYPE:
 			return tetrinoOType();
 		case ITYPE:
@@ -14,7 +17,7 @@ public class CreateBlock implements TetrinoType{
 		case ZTYPE:
 			return tetrinoZType();
 		case LTYPE:
-	 		return tetrinoLType();
+			return tetrinoLType();
 		case JTYPE:
 			return tetrinoJType();
 		case TTYPE:
@@ -23,88 +26,69 @@ public class CreateBlock implements TetrinoType{
 			return tetrinoZType();
 		}
 	}
-	public static Tetrino tetrinoChoiceCreate(int type){
-		switch(type){
-		case OTYPE:
-			return tetrinoOType();
-		case ITYPE:
-			return tetrinoIType();
-		case STYPE:
-			return tetrinoSType();
-		case ZTYPE:
-			return tetrinoZType();
-		case LTYPE:
-	 		return tetrinoLType();
-		case JTYPE:
-			return tetrinoJType();
-		case TTYPE:
-			return tetrinoTType();
-		default:
-			return tetrinoZType();
-		}
+
+	private Tetrino tetrinoOType() {
+		int[][] type = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 0 }, 
+				{ 0, 1, 1, 0 }, 
+				{ 0, 0, 0, 0 }, };
+
+		return new Tetrino(type, TetrinoType.OTYPE);
 	}
-	private static Tetrino tetrinoOType(){
-		int[][] type={
-				{0,0,0,0},
-				{0,1,1,0},
-				{0,1,1,0},
-				{0,0,0,0},
-		};
-		
-		return new Tetrino(type,OTYPE); 
+
+	private Tetrino tetrinoIType() {
+		int[][] type = { 
+				{ 0, 0, 1, 0 }, 
+				{ 0, 0, 1, 0 }, 
+				{ 0, 0, 1, 0 }, 
+				{ 0, 0, 1, 0 }, };
+		return new Tetrino(type, TetrinoType.ITYPE);
 	}
-	private static Tetrino tetrinoIType(){
-		int[][] type={
-				{0,0,1,0},
-				{0,0,1,0},
-				{0,0,1,0},
-				{0,0,1,0},
-		};
-		return new Tetrino(type,ITYPE);
+
+	private Tetrino tetrinoSType() {
+		int[][] type = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 1, 1 }, 
+				{ 0, 1, 1, 0 }, 
+				{ 0, 0, 0, 0 }, };
+		return new Tetrino(type, TetrinoType.STYPE);
 	}
-	private static Tetrino tetrinoSType(){
-		int[][] type={
-				{0,0,0,0},
-				{0,0,1,1},
-				{0,1,1,0},
-				{0,0,0,0},
-		};
-		return new Tetrino(type,STYPE);
+
+	private Tetrino tetrinoZType() {
+		int[][] type = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 0 }, 
+				{ 0, 0, 1, 1 }, 
+				{ 0, 0, 0, 0 }, };
+		return new Tetrino(type, TetrinoType.ZTYPE);
 	}
-	private static Tetrino tetrinoZType(){
-		int[][] type={
-				{0,0,0,0},
-				{0,1,1,0},
-				{0,0,1,1},
-				{0,0,0,0},
-		};
-		return new Tetrino(type,ZTYPE);
+
+	private Tetrino tetrinoLType() {
+		int[][] type = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 1 }, 
+				{ 0, 1, 0, 0 }, 
+				{ 0, 0, 0, 0 }, };
+		return new Tetrino(type, TetrinoType.LTYPE);
 	}
-	private static Tetrino tetrinoLType(){
-		int[][] type={
-				{0,0,0,0},
-				{0,1,1,1},
-				{0,1,0,0},
-				{0,0,0,0},
-		};
-		return new Tetrino(type,LTYPE);
+
+	private Tetrino tetrinoJType() {
+		int[][] type = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 1 }, 
+				{ 0, 0, 0, 1 }, 
+				{ 0, 0, 0, 0 }, 
+				};
+		return new Tetrino(type, TetrinoType.JTYPE);
 	}
-	private static Tetrino tetrinoJType(){
-		int[][] type={
-				{0,0,0,0},
-				{0,1,1,1},
-				{0,0,0,1},
-				{0,0,0,0},
-		};
-		return new Tetrino(type,JTYPE);
-	}
-	private static Tetrino tetrinoTType(){
-		int[][] type={
-				{0,0,0,0},
-				{0,1,1,1},
-				{0,0,1,0},
-				{0,0,0,0},
-		};
-		return new Tetrino(type,TTYPE);
+
+	private Tetrino tetrinoTType() {
+		int[][] type = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 1 }, 
+				{ 0, 0, 1, 0 }, 
+				{ 0, 0, 0, 0 }, };
+		return new Tetrino(type, TetrinoType.TTYPE);
 	}
 }
