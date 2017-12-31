@@ -1,6 +1,6 @@
 package Model;
 
-import Serversynchronization.User;
+import Control.User;
 
 public class UserInformation {
 	private User user;

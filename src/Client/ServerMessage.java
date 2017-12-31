@@ -5,19 +5,16 @@ import javax.swing.JOptionPane;
 import org.json.simple.JSONObject;
 
 import Control.FrameControl;
-import Control.MVC_Connect;
 import Control.ServerConnect;
+import Control.User;
 import Control.UserControl;
 import Control.UsersList;
 import Model.TetrinoType;
 import Serversynchronization.MessageType;
-import Serversynchronization.User;
-import ValueObject.Space;
-import View.SaveBlockPanel;
+import Serversynchronization.PlayerInformation;
 import View.Multe.ListViewFrame;
 import View.Multe.LoginFrame;
 import View.Multe.MultiFrame;
-import javazoom.jl.decoder.Manager;
 
 public class ServerMessage {
 	TetrisClient client = TetrisClient.getTetrisClient();
@@ -26,30 +23,66 @@ public class ServerMessage {
 		switch ((MessageType) msg.get("MessageType")) {
 		case LOGIN:
 			logIn(msg.get("User"));
+			break;
 		case USER_SERIAL_NUM:
-		case WAITING_ROOM_CONNECT:
+			setMyLogin(msg.get("Integer"));
 		case USER_LIST_MESSAGE:
-		case USER_SELECTING:
+			userListMessage(msg.get("User[]"));
 		case BE_CHOSEN:
-		case WAR_ACCEPT:
-		case WAR_DENIAL:
-		case WAR_START:
-		case WAR_END:
+			beChoice(msg.get("User"));
+			break;
+		case BATTLE_ACCEPT:
+			warAccept();
+			break;
+		case BATTLE_DENIAL:
+			warDenial();
+			break;
+		case BATTLE_END:
 		case LOGOUT:
+			logOut(msg.get("User"));
+			break;
 		case GAMEOVER_MESSAGE:
 		case RANK:
 
 		case USER_MESSAGE:
+			UserMessage(msg.get("User"));
+			break;
+			
 		case MAP_MESSAGE:
 		case NEXT_BLOCK_MESSAGE:
 		case SAVE_BLOCK_MESSAGE:
+			gameMessage(msg);
+			break;
 		case LEVEL_MESSAGE:
 		case SCORE_MESSAGE:
+			
+		case USER_SELECTING:
+			break;
+		case WAITING_ROOM_CONNECT:
+			break;
+		default:
+			break;
 
 		}
 	}
 
-	public static void logIn(Object msg) {
+	private static void warDenial() {
+		JSONObject msg = new JSONObject();
+
+		msg.put("method", "showMessageDialog");
+		msg.put("title", null);
+		msg.put("content", "상대방이 거부하였습니다");
+		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), msg);
+	}
+
+	private static void setMyLogin(Object msg) {
+		Integer usernum = (Integer) msg;
+		User user = UserControl.users.getPlayer();
+		user.setUserNumber(usernum);
+		UserControl.users.setPlayer(user);
+	}
+
+	private static void logIn(Object msg) {
 		User user = (User) msg;
 
 		JSONObject userMessage = new JSONObject();
@@ -59,7 +92,7 @@ public class ServerMessage {
 		ServerConnect.ServerToControl.callEvent(UsersList.class.getClass(), userMessage);
 	}
 
-	public static void logOut(Object msg) {
+	private static void logOut(Object msg) {
 		User user = (User) msg;
 
 		JSONObject userMessage = new JSONObject();
@@ -69,16 +102,16 @@ public class ServerMessage {
 		ServerConnect.ServerToControl.callEvent(UsersList.class.getClass(), userMessage);
 	}
 
-	public static void userListMessage(Object msg) {
+	private static void userListMessage(Object msg) {
 		User[] users = (User[]) msg;
 
 		JSONObject userMessage = new JSONObject();
 		userMessage.put("method", "setList");
 		userMessage.put("User[]", users);
-		
+
 		ServerConnect.ServerToControl.callEvent(UsersList.class.getClass(), userMessage);
-		
-		JSONObject frameMessage=new JSONObject();
+
+		JSONObject frameMessage = new JSONObject();
 		frameMessage.put("method", "FrameChange");
 		frameMessage.put("firstFrame", ListViewFrame.class);
 		frameMessage.put("secondFrame", LoginFrame.class);
@@ -86,79 +119,64 @@ public class ServerMessage {
 
 	}
 
-	public static void UserMessage(Object msg) {// 유저간 대결을 시작할때 유저리스트 창을 배틀 창으로 변경
-		User user=(User)msg;
-		JSONObject broadcast=new JSONObject();
-		broadcast.put("Class",UserControl.class);
-		broadcast.put("User", user);
-		
-		
-		JSONObject frameMessage=new JSONObject();
+	private static void UserMessage(Object msg) {// 유저간 대결을 시작할때 유저리스트 창을 배틀 창으로 변경
+		User user = (User) msg;
+		/*----이때 부터 상대플레이어가 필요하므로 상대플레이어를 유저컨트롤에 상대플레이어 생성----*/
+		UserControl.users.setOpplayer(user);
+		/*-------------------------------------------------------------------------*/
+
+		JSONObject frameMessage = new JSONObject();
 		frameMessage.put("method", "FrameChange");
 		frameMessage.put("firstFrame", MultiFrame.class);
 		frameMessage.put("secondFrame", ListViewFrame.class);
 		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), frameMessage);
 	}
 
-	public static void beChoice(Object msg) {
-		User user=(User)msg;
-		int val = JOptionPane.showOptionDialog(null, user.getName() + "님이 대전을 요청하셨습니다", "대전 요청",
-				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-		if (val == JOptionPane.YES_OPTION) {
-			client.send(new Object(MessageType.WAR_ACCEPT, null));
-			warAccept(msg);
-		} else {
-			client.send(new Object(MessageType.WAR_DENIAL, null));
-		}
+	private static void beChoice(Object msg) {
+		User user = (User) msg;
+		
+		JSONObject sendMsg = new JSONObject();
+		sendMsg.put("method", "showOptionDialog");
+		sendMsg.put("title", "대전 요청");
+		sendMsg.put("content", user.getName() + "님이 대전을 요청하셨습니다");
+		sendMsg.put("JOptionPaneType", JOptionPane.YES_NO_OPTION);
+		sendMsg.put("JOptionPaneStyle", JOptionPane.PLAIN_MESSAGE);
+
+		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), sendMsg);
 	}
 
-	public static void warAccept(Object msg) {
-		System.out.println("TetrisClient.warAccept()");
-		client.send(new Object(MessageType.USER_MESSAGE, usermanager.getUser()));
-		client.send(new Object(MessageType.WAR_START, null));
+	public static void warAccept() {
+		
 	}
 
-	public static void gameOverEvent() {
+	private static void gameOverEvent() {
 	}
 
-	public static void rankEvent(Object msg) {
-
-	}
-
-	public static void scoreEvent(Object socketmsg) {
-		ServerToControlConnect.connect.callEvent(Manager.class, socketmsg);
-	}
-
-	public static void levelEvent(Object socketmsg) {
-		OpponentEvent.getOpponentEvent().managerSetLevel(Object.GSONtoObject(socketmsg.getMessage(), int.class));
-	}
-
-	public static void saveBlockEvent(Object socketmsg) {
-		OpponentEvent.getOpponentEvent()
-				.managerSetSaveBlock(Object.GSONtoObject(socketmsg.getMessage(), TetrinoType.class));
-	}
-
-	public static void nextBlockEvent(Object socketmsg) {
-		OpponentEvent.getOpponentEvent()
-				.managerSetNextBlock(Object.GSONtoObject(socketmsg.getMessage(), TetrinoType.class));
-	}
-
-	public static void mapEvent(Object socketmsg) {
-		OpponentEvent.getOpponentEvent()
-				.managerSetRealtimemap(Object.GSONtoObject(socketmsg.getMessage(), Space[][].class));
-	}
-
-	public static void userEvent(Object socketmsg) {
-		event.UserMessage(socketmsg);
-	}
-
-	public static void userSelectingEvent(Object socketmsg) {
+	private static void rankEvent(Object msg) {
 
 	}
 
-	public static void waitingRoomConnectEvent(Object socketmsg) {
+	private static void scoreEvent(Object msg) {
+		int score = (int) msg;
+		User user = UserControl.users.getOpplayer();
+		PlayerInformation info = user.getInfo();
+		info.setScore(score);
+		user.setInfo(info);
+		UserControl.users.setOpplayer(user);
+		ServerConnect.ServerToControl.callBroadEvent(MessageType.SCORE_MESSAGE,score);
 	}
 
-	public static void warEndEvent(Object socketmsg) {
+	private static void levelEvent(Object msg) {
+		int level = (int) msg;
+		User user = UserControl.users.getOpplayer();
+		PlayerInformation info = user.getInfo();
+		info.setLevel(level);
+		user.setInfo(info);
+		UserControl.users.setOpplayer(user);
+		ServerConnect.ServerToControl.callBroadEvent(MessageType.LEVEL_MESSAGE,level);
+	}
+
+	private static void gameMessage(Object msg) {
+		ServerConnect.ServerToControl.callBroadEvent(msg);
 	}
 }

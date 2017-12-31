@@ -1,7 +1,7 @@
 package ValueObject;
 
+import Control.User;
 import Model.TetrisManager;
-import Serversynchronization.User;
 
 public class ManagerBasic {
 	protected User user;

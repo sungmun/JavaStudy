@@ -5,40 +5,47 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
-import Control.Observer;
+import org.json.simple.JSONObject;
+
+import Control.EventListener;
+import Control.ImagePrint;
+import Control.MVC_Connect;
 
 @SuppressWarnings("serial")
-public class LevelPanel extends JPanel implements CellSize, Observer {
+public class LevelPanel extends JPanel implements EventListener {
 
 	BasicJLabel title;
 	BasicJLabel level;
 
-	int height;
-
 	public LevelPanel() {
 		super(true);
-		height = 70;
+		int height = 70;
 
 		setOpaque(false);
-		setPreferredSize(new Dimension(width * 5, height + 10));
+		setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, height + 10));
 
 		title = new BasicJLabel("Level", Font.BOLD, 23);
 		level = new BasicJLabel("1", Font.BOLD, 23);
 
-		title.setPreferredSize(new Dimension(width * 5, height / 2));
-		level.setPreferredSize(new Dimension(width * 5, height / 2));
+		title.setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, height / 2));
+		level.setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, height / 2));
 
 		add(title);
 		add(level);
 
+		MVC_Connect.ControlToView.addListener(this);
 	}
 
 	@Override
-	public void update(String title, String source) {
-		if (title.equals("level")) {
-			level.setText(source);
-			repaint();
-		}
+	public void onEvent(JSONObject event) {
+		System.out.println("LevelPanel.onEvent()");
+		System.out.println(event.toJSONString());
+	}
+
+	@Override
+	public void methodCatch(JSONObject event) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

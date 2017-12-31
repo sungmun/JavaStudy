@@ -3,53 +3,35 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Client.ClientMessage;
-import Client.TetrisClient;
+import org.json.simple.JSONObject;
+
 import Model.MoveType;
 import Model.TetrisManager;
-import Model.UserTetrisManager;
-import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
-import ValueObject.Point;
+import View.Multe.MultiFrame;
+import View.Single.SingleFrame;
 
-public abstract class TicAction implements ActionListener, MoveType {
-	protected TetrisManager manager = UserTetrisManager.getTetrisManager();
+public class TicAction implements ActionListener {
 	ImagePrint mainprint;
-	
-	public TicAction(ImagePrint mainprint) {
-		super();
-		this.mainprint = mainprint;
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
-		if (manager.getNowTetrino() == null) {
-			manager.createBlock();
-			mainprint.NextBlockPaint(manager);
-		} else if (!manager.TetrinoBlockMove(DOWN)) {
-			check();
-		}
-		mainprint.TetrinoBlockPaint(manager);
+		JSONObject moveMessage = new JSONObject();
+		moveMessage.put("method", "TetrinoBlockMove");
+		moveMessage.put("MoveType", MoveType.DOWN);
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
 		speedChange();
-		new ClientMessage().mapSend(manager.getRealTimeMap());
 	}
 
-	public boolean check() {
-		Point nowpos = manager.tetrino.getFlowTetrino();
-		if (manager.gameOverCheack(nowpos)) {
-			timeStop();
-			return false;
-		}
-		manager.setNowTetrino(null);
-		int clearline = manager.lineCheack(nowpos);
-		if (clearline > 0) {
-			manager.lineClear(clearline, nowpos);
-		}
-		return true;
+	public void timeStop() {
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class.getClass(), "TimeStop");
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class.getClass(), "TimeStop");
 	}
 
-	public abstract void timeStop();
-
-	public abstract void speedChange();
+	public void speedChange() {
+		User user=UserControl.users.getPlayer();
+		int level=user.getInfo().getLevel();
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class.getClass(), "Delay",(int) (500 * Math.pow(0.999, level - 1)));
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class.getClass(), "Delay",(int) (500 * Math.pow(0.999, level - 1)));
+	}
 }

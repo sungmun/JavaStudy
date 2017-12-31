@@ -1,6 +1,5 @@
 package Serversynchronization;
 
-import com.google.gson.Gson;
 
 public class SocketMessage {
 	private MessageType messagetype;
@@ -16,7 +15,6 @@ public class SocketMessage {
 	}
 
 	public void setMessage(Object message) {
-		this.message = new Gson().toJson(message);
 	}
 
 	public MessageType getMessageType() {
@@ -27,9 +25,6 @@ public class SocketMessage {
 		this.messagetype = messagetype;
 	}
 	
-	public static <T> T GSONtoObject(String msg, Class<T> type) {
-		return new Gson().fromJson(msg, type);
-	}
 	
 
 }

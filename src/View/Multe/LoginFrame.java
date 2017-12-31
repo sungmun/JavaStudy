@@ -53,6 +53,7 @@ public class LoginFrame extends JFrame {
 		
 		BasicButton login = new BasicButton("Login");
 		login.addActionListener(new LoginEvent() {
+			
 			@Override
 			public String setName() {
 				return name_txt.getText();

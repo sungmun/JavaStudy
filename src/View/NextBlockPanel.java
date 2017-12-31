@@ -9,20 +9,19 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import Control.EventListener;
 import Control.ImagePrint;
+import Control.MVC_Connect;
 
 @SuppressWarnings("serial")
 public class NextBlockPanel extends JPanel implements EventListener {
 	Image graphics;
 
 	public NextBlockPanel() {
-
+		MVC_Connect.ControlToView.addListener(this);
 		setOpaque(false);
-		setPreferredSize(new Dimension(ImagePrint.width * 5, ImagePrint.height * 5));
+		setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, ImagePrint.HEIGHT * 5));
 		setBorder(new LineBorder(Color.WHITE, 2));
 	}
 
@@ -38,16 +37,27 @@ public class NextBlockPanel extends JPanel implements EventListener {
 	}
 
 	@Override
-	public void onEvent(String event) {
-		try {
-			JSONObject object = (JSONObject) new JSONParser().parse(event);
-			if (object.get("method").toString() == "paintComponent") {
-				setImage(object.get("Image"));
-			} else {
-				System.out.println("NextBlockPanel.onEvent()");
-				System.err.println(object.toJSONString());
-			}
-		} catch (ParseException e) {
+	public void onEvent(JSONObject event) {
+		System.out.println("NextBlockPanel.onEvent()");
+		System.out.println(event.toJSONString());
+		JSONObject object = event;
+		if (object.get("method") != null) {
+			methodCatch(object);
+		} else {
+			System.out.println("NextBlockPanel.onEvent()");
+			System.err.println(object.toJSONString());
+		}
+	}
+
+	@Override
+	public void methodCatch(JSONObject event) {
+		switch ((String) event.get("method")) {
+		case "paintComponent":
+			setImage(event.get("Image"));
+			break;
+
+		default:
+			break;
 		}
 	}
 }

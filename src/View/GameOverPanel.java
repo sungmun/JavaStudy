@@ -8,10 +8,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import Control.Observer;
+import org.json.simple.JSONObject;
+
+import Control.EventListener;
 
 @SuppressWarnings("serial")
-public class GameOverPanel extends JPanel implements Observer {
+public class GameOverPanel extends JPanel implements EventListener {
 	public JLabel score_lbl, level_lbl;
 	String score_txt="0",level_txt="1";
 	public GameOverPanel() {
@@ -29,17 +31,21 @@ public class GameOverPanel extends JPanel implements Observer {
 		this.setBorder(new LineBorder(Color.WHITE, 2));
 	}
 
-	@Override
-	public void update(String title, String source) {
-		if (title.equals("score")) {
-			score_txt=source;
-		} else if (title.equals("level")) {
-			level_txt=source;
-		}
-	}
 	public void initInfo() {
 		score_lbl.setText(score_txt);
 		level_lbl.setText(level_txt);
+	}
+
+	@Override
+	public void onEvent(JSONObject event) {
+		System.out.println("GameOverPanel.onEvent()");
+		System.out.println(event.toJSONString());
+	}
+
+	@Override
+	public void methodCatch(JSONObject event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

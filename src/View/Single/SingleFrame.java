@@ -12,7 +12,6 @@ import Control.ImagePrint;
 import Control.KeyBoardEvent;
 import Control.Tic;
 import Control.TicAction;
-import Control.UserEvent;
 import View.CellSize;
 import View.GameBasicFrame;
 import View.GameOverPanel;
@@ -27,18 +26,20 @@ public class SingleFrame extends GameBasicFrame implements CellSize {
 
 	public SingleFrame() {
 		MainPanel mainpanel = new MainPanel();
-		Rectangle basebounds=new Rectangle(mainpanel.getPreferredSize());
+		Rectangle basebounds = new Rectangle(mainpanel.getPreferredSize());
 		mainpanel.setBounds(basebounds);
 
 		JPanel game_over = new JPanel();
 		game_over.setBackground(Color.BLACK);
 		game_over.setLayout(new BorderLayout(5, 5));
 		game_over.setBounds(basebounds);
-		
-		GameOverPanel gameoverview=new GameOverPanel();
-		Dimension temp=gameoverview.getPreferredSize();
-		gameoverview.setBounds((int)((basebounds.getWidth()/2)-(temp.getWidth()/2)), (int)((basebounds.getHeight()/2)-(temp.getHeight()/2)), (int)temp.getWidth()+50, (int)temp.getHeight()+10);
-		
+
+		GameOverPanel gameoverview = new GameOverPanel();
+		Dimension temp = gameoverview.getPreferredSize();
+		gameoverview.setBounds((int) ((basebounds.getWidth() / 2) - (temp.getWidth() / 2)),
+				(int) ((basebounds.getHeight() / 2) - (temp.getHeight() / 2)), (int) temp.getWidth() + 50,
+				(int) temp.getHeight() + 10);
+
 		JLayeredPane layer = new JLayeredPane();
 		layer.setPreferredSize(mainpanel.getPreferredSize());
 
@@ -46,33 +47,12 @@ public class SingleFrame extends GameBasicFrame implements CellSize {
 		layer.add(game_over);
 		layer.add(gameoverview);
 
-		
-		ImagePrint print = new ImagePrint(mainpanel);
-		UserEvent event = new UserEvent();
-		event.add((ScorePanel) print.getContmap().get(ScorePanel.class));
-		event.add((LevelPanel) print.getContmap().get(LevelPanel.class));
-		event.add(gameoverview);
-		
 		this.add(layer);
 
 		this.setUndecorated(true);
 		this.pack();
 		this.setLocationRelativeTo(null);
-		TicAction action = new TicAction(print) {
-			@Override
-			public void timeStop() {
-				time.stop();
-			}
-
-			@Override
-			public void speedChange() {
-				int delay = (int) (500 * Math.pow(0.999, manager.info.getLevel() - 1));
-				if (delay > 10) {
-					time.setDelay(delay);
-				}
-			}
-		};
-		time = new Tic(speed, action) {
+		time = new Tic(speed, new TicAction()) {
 			@Override
 			public void timerstop() {
 				game_over.setBackground(new Color(0, 0, 0, 122));
@@ -84,7 +64,7 @@ public class SingleFrame extends GameBasicFrame implements CellSize {
 		};
 
 		time.start();
-		this.addKeyListener(new KeyBoardEvent(print));
+		this.addKeyListener(new KeyBoardEvent());
 	}
 
 	public static SingleFrame createSingleFrame() {

@@ -1,28 +1,37 @@
-package Serversynchronization;
+package Control;
+
+import Serversynchronization.MessageType;
+import Serversynchronization.PlayerInformation;
 
 public class User {
 	private int usernumber;
 	private String id;
 	private String name;
 	private PlayerInformation info;
-	public User(String id, String name,int level,int score) {
-		this.id=id;
-		this.name=name;
-		info=new PlayerInformation(level, score);
+
+	public User(String id, String name, int level, int score) {
+		this.id = id;
+		this.name = name;
+		info = new PlayerInformation(level, score);
 	}
+
 	public User(String id, String name, Integer num) {
 		this.usernumber = num.intValue();
 		this.id = id;
 		this.name = name;
+		info=new PlayerInformation();
 	}
 
 	public User(String id, String name) {
 		this.id = id;
 		this.name = name;
+		info=new PlayerInformation();
 	}
 
 	public User() {
+		info=new PlayerInformation();
 	}
+
 	public void setUserNumber(Integer num) {
 		usernumber = num.intValue();
 	}

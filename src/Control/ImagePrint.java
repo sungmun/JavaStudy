@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import Model.BlockType;
@@ -61,8 +60,8 @@ public class ImagePrint implements BlockType, EventListener {
 
 	private void tetrinoBlockPaint(Object object) {
 
-		Space[][] realtimeMap=(Space[][])object;
-		
+		Space[][] realtimeMap = (Space[][]) object;
+
 		BufferedImage buffer = new BufferedImage(WIDTH * 10, HEIGHT * 20 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
 		g.drawImage(tetrinoMapBackgroundPaint(), 0, 0, null);
@@ -71,40 +70,38 @@ public class ImagePrint implements BlockType, EventListener {
 		for (Space[] spcs : realtimeMap) {
 			int indexX = 0;
 			for (Space spc : spcs) {
-				try {
-					if (spc.getIsblock() == FLOW || spc.getIsblock() == FIXED) {
-						g.setColor(TetrisBlockColor.getColor(spc.getType()));
-						g.fill3DRect(indexX * WIDTH, (indexY - 3) * HEIGHT, WIDTH, HEIGHT, true);
-					}
-				} catch (NullPointerException e) {
+				if(spc==null) continue;
+				if ( spc.getIsblock() == FLOW || spc.getIsblock() == FIXED) {
+					g.setColor(TetrisBlockColor.getColor(spc.getType()));
+					g.fill3DRect(indexX * WIDTH, (indexY - 3) * HEIGHT, WIDTH, HEIGHT, true);
 				}
 				indexX++;
 			}
 			indexY++;
 		}
-		
-		JSONObject imageMessage=new JSONObject();
+
+		JSONObject imageMessage = new JSONObject();
 		imageMessage.put("method", "paintComponent");
-		imageMessage.put("Image", buffer);
+		imageMessage.put(buffer.getClass(), buffer);
 		MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class.getClass(), imageMessage);
 	}
 
 	private void nextBlockPaint(Object object) {
-		
-		TetrinoType nextBlock=(TetrinoType)object;
-		
+
+		TetrinoType nextBlock = (TetrinoType) object;
+
 		BufferedImage buffer = tetrinoImg.get(nextBlock);
-		
+
 		if (buffer == null) {
 			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(nextBlock).getArea());
 			tetrinoImg.put(nextBlock, buffer);
 		}
-		
-		JSONObject imageMessage=new JSONObject();
+
+		JSONObject imageMessage = new JSONObject();
 		imageMessage.put("method", "paintComponent");
-		imageMessage.put("Image", buffer);
+		imageMessage.put(buffer.getClass(), buffer);
 		MVC_Connect.ControlToView.callEvent(NextBlockPanel.class.getClass(), imageMessage);
-		
+
 	}
 
 	private BufferedImage blockPaint(Space[][] spaces) {
@@ -134,47 +131,47 @@ public class ImagePrint implements BlockType, EventListener {
 
 	private void saveBlockPaint(Object object) {
 
-		TetrinoType saveBlock=(TetrinoType)object;
-		
+		TetrinoType saveBlock = (TetrinoType) object;
+
 		BufferedImage buffer = tetrinoImg.get(saveBlock);
-		
+
 		if (buffer == null) {
 			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(saveBlock).getArea());
 			tetrinoImg.put(saveBlock, buffer);
 		}
-		
-		JSONObject imageMessage=new JSONObject();
+
+		JSONObject imageMessage = new JSONObject();
 		imageMessage.put("method", "paintComponent");
-		imageMessage.put("Image", buffer);
+		imageMessage.put(buffer.getClass(), buffer);
 		MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class.getClass(), imageMessage);
-		
+
 	}
 
 	@Override
-	public void onEvent(String event) {
-		try {
-			JSONObject object = (JSONObject) new JSONParser().parse(event);
-			if (object.get("method").toString() != null) {
-				methodCatch(object);
-			} else {
-				System.out.println("ImagePrint.onEvent()");
-				System.err.println(object.toJSONString());
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void onEvent(JSONObject event) {
+		System.out.println("ImagePrint.onEvent()");
+		System.out.println(event);
+		JSONObject object = event;
+		if (object.get("method") != null) {
+			methodCatch(object);
+		} else {
+			System.out.println("ImagePrint.onEvent()");
+			System.err.println(object.toJSONString());
 		}
 
 	}
 
 	public void methodCatch(JSONObject event) {
-		switch (event.get("method").toString()) {
+		switch ((String) event.get("method")) {
 		case "saveBlockPaint":
 			saveBlockPaint(event.get("TetrinoType"));
+			break;
 		case "nextBlockPaint":
 			nextBlockPaint(event.get("TetrinoType"));
-		case "tetrinoBlockPaint":
+			break;
+		case "TetrinoBlockPaint":
 			tetrinoBlockPaint(event.get("Space[][]"));
+			break;
 		}
 	}
 

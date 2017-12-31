@@ -1,9 +1,5 @@
 package Control;
-
 import javax.swing.table.DefaultTableModel;
-
-import Model.UserManager;
-import Serversynchronization.User;
 
 @SuppressWarnings("serial")
 public class UserListModel extends DefaultTableModel {
@@ -24,7 +20,7 @@ public class UserListModel extends DefaultTableModel {
 
 		for (User user : UsersList.getList()) {
 			str = new String[3];
-			if (UserManager.getUserManager().getUser().getUserNumber() == user.getUserNumber()) {
+			if(UserControl.users.getPlayer().getUserNumber()==user.getUserNumber()) {
 				continue;
 			}
 			str[0] = user.getUserNumber().toString();

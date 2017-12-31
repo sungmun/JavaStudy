@@ -5,9 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.google.gson.Gson;
-
-import Serversynchronization.SocketMessage;
+import org.json.simple.JSONObject;
 
 public class EventHandler {
 
@@ -31,36 +29,80 @@ public class EventHandler {
 		}
 	}
 
-	public synchronized void callEvent(final Class<?> caller, Object event) {
-		callEvent(caller, event);
-	}
-
-	@SuppressWarnings("unused")
-	private synchronized void callEventByAsynch(final Class<?> caller, final Object event) {
-		ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREAD_POOL);
+	private synchronized void callEventByAsynch(final Class<?> caller, final JSONObject event) {
 
 		for (final EventListener listener : listeners) {
-			executorService.execute(new Runnable() {
-				public void run() {
-					if (!listener.getClass().getName().equals(caller.getName()))
-						listener.onEvent((String) event);
-				}
-			});
+			if (!listener.getClass().getName().equals(caller.getName()))
+				listener.onEvent(event);
 		}
 
-		executorService.shutdown();
 	}
 
-	public void broadCast(final Object event) {
-		ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREAD_POOL);
-
+	public void broadCast(final JSONObject event) {
 		for (final EventListener listener : listeners) {
-			executorService.execute(new Runnable() {
-				public void run() {
-					listener.onEvent((String) event);
-				}
-			});
+			listener.onEvent(event);
 		}
+	}
+
+	public synchronized void callBroadEvent(Object msg1) {
+		callBroadEvent(msg1, null);
+	}
+
+	public synchronized void callBroadEvent(Object msg1, Object msg2) {
+		callBroadEvent(msg1, msg2, null);
+	}
+
+	public synchronized void callBroadEvent(Object msg1, Object msg2, Object msg3) {
+		callBroadEvent(msg1, msg2, msg3, null);
+	}
+
+	public synchronized void callBroadEvent(Object msg1, Object msg2, Object msg3, Object msg4) {
+		callBroadEvent(msg1, msg2, msg3, msg4, null);
+	}
+
+	public synchronized void callBroadEvent(Object msg1, Object msg2, Object msg3, Object msg4, Object msg5) {
+		JSONObject msg = new JSONObject();
+
+		Object[] msgs = { msg1, msg2, msg3, msg4, msg5 };
+		for (int i = 0; i < msgs.length; i++) {
+			if (msgs[i] == null)
+				break;
+			msg.put(msgs[i].getClass().getName(), msgs[i]);
+		}
+		broadCast(msg);
+	}
+
+	public synchronized void callEvent(final Class<?> caller, JSONObject msg1) {
+		callEventByAsynch(caller, msg1);
+	}
+
+	public synchronized void quickCallEvent(final Class<?> caller, Object msg1) {
+		quickCallEvent(caller, msg1, null);
+	}
+
+	public synchronized void quickCallEvent(final Class<?> caller, Object msg1, Object msg2) {
+		quickCallEvent(caller, msg1, msg2, null);
+	}
+
+	public synchronized void quickCallEvent(final Class<?> caller, Object msg1, Object msg2, Object msg3) {
+		quickCallEvent(caller, msg1, msg2, msg3, null);
+	}
+
+	public synchronized void quickCallEvent(final Class<?> caller, Object msg1, Object msg2, Object msg3, Object msg4) {
+		quickCallEvent(caller, msg1, msg2, msg3, msg4, null);
+	}
+
+	public synchronized void quickCallEvent(final Class<?> caller, Object msg1, Object msg2, Object msg3, Object msg4,
+			Object msg5) {
+		JSONObject msg = new JSONObject();
+
+		Object[] msgs = { msg1, msg2, msg3, msg4, msg5 };
+		for (int i = 0; i < msgs.length; i++) {
+			if (msgs[i] == null)
+				break;
+			msg.put(msgs[i].getClass().getName(), msgs[i]);
+		}
+		callEventByAsynch(caller, msg);
 	}
 
 }

@@ -7,10 +7,10 @@ public enum MessageType {
 	USER_LIST_MESSAGE, 		// 현재 대기실 목록
 	USER_SELECTING, // 대결을 요청
 	BE_CHOSEN, 		// 대결을 요청 받음
-	WAR_ACCEPT, 	// 대결 수락
-	WAR_DENIAL, 	// 대결 거절
-	WAR_START, 		// 대결 시작
-	WAR_END, 		// 대결 종료
+	BATTLE_ACCEPT, 	// 대결 수락
+	BATTLE_DENIAL, 	// 대결 거절
+	BATTLE_START, 		// 대결 시작
+	BATTLE_END, 		// 대결 종료
 	LOGOUT, 			// 로그아웃
 	GAMEOVER_MESSAGE, 	// 게임종료
 	RANK, 				// 랭킹

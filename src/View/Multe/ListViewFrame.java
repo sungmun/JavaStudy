@@ -9,11 +9,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Client.TetrisClient;
+import Control.BackFrameAction;
 import Control.FrameControl;
+import Control.MVC_Connect;
+import Control.MulitePlayAction;
+import Control.User;
 import Control.UsersList;
 import Serversynchronization.MessageType;
 import Serversynchronization.SocketMessage;
-import Serversynchronization.User;
 import View.BasicButton;
 import View.StartFrame;
 
@@ -28,37 +31,19 @@ public class ListViewFrame extends JFrame {
 		super("접속자 목록");
 		setLayout(new BorderLayout());
 		list = ListView.createListView();
-		
+
 		JPanel etc = new JPanel(new GridLayout(3, 1));
 		etc.setBackground(Color.BLACK);
-		
+
 		mulite_play_btn = new BasicButton("지정한 사람과 같이하기");
 		random_multie_play_btn = new BasicButton("랜덤으로 같이하기");
 		back_frame_btn = new BasicButton("뒤로가기");
 
 		TetrisClient client = TetrisClient.getTetrisClient();
 
-		mulite_play_btn.addActionListener((e) -> {
-			Object us = list.getData();
-			if (UsersList.findList(us)) {
-				int index=UsersList.getList().indexOf(us);
-				us = UsersList.getList().get(index);
-				client.send(new SocketMessage(MessageType.USER_SELECTING, us));
-			}
-		});
-		random_multie_play_btn.addActionListener((e) -> {
-			if(UsersList.getList().size()<1) {
-				return;
-			}
-			int random = new Random().nextInt(UsersList.getList().size());
-			User us = UsersList.getList().get(random);
-			client.send(new SocketMessage(MessageType.USER_SELECTING, us));
-		});
-		back_frame_btn.addActionListener((e) -> {
-			client.send(new SocketMessage(MessageType.LOGOUT, null));
-			client.deConnect();
-			FrameControl.FrameChange(StartFrame.getStartFrame(), this);
-		});
+		mulite_play_btn.addActionListener(new MulitePlayAction(list,false));
+		random_multie_play_btn.addActionListener(new MulitePlayAction(list,true));
+		back_frame_btn.addActionListener(new BackFrameAction(StartFrame.getStartFrame(), this));
 
 		etc.add(mulite_play_btn);
 		etc.add(random_multie_play_btn);
@@ -66,7 +51,7 @@ public class ListViewFrame extends JFrame {
 
 		add(list, BorderLayout.WEST);
 		add(etc, BorderLayout.EAST);
-		
+
 		this.getContentPane().setBackground(Color.BLACK);
 		this.setUndecorated(true);
 		this.setResizable(false);

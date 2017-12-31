@@ -1,44 +1,87 @@
 package Client;
 
-import Model.TetrinoType;
-import Model.UserManager;
+import org.json.simple.JSONObject;
+
+import Control.EventListener;
+import Control.ServerConnect;
+import Control.User;
+import Control.UserControl;
 import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
-import ValueObject.Space;
 
-public class ClientMessage {
-	TetrisClient client = TetrisClient.getTetrisClient();
+public class ClientMessage implements EventListener {
+	TetrisClient client;
 
-	public void warAccept(SocketMessage msg) {
-		sendMessage(new SocketMessage(MessageType.USER_MESSAGE, UserManager.getUserManager().getUser()));
-		sendMessage(new SocketMessage(MessageType.WAR_START, null));
+	public ClientMessage() {
+		ServerConnect.ControlToServer.addListener(this);
 	}
 
-	public void mapSend(Space[][] map) {
-		sendMessage(new SocketMessage(MessageType.MAP_MESSAGE, map));
+	@Override
+	public void onEvent(JSONObject event) {
+		System.out.println("ClientMessage.onEvent()");
+		System.out.println(event.toJSONString());
+		methodCatch(event);
 	}
 
-	public void levelSend(int level) {
-		sendMessage(new SocketMessage(MessageType.LEVEL_MESSAGE, level));
-	}
+	@Override
+	public void methodCatch(JSONObject event) {
+		switch ((MessageType) event.get("MessageType")) {
+		case LOGIN:
+			login(event.get("User"));
+			break;
+		case USER_SELECTING:
+			UserSelecting(event);
+		case BATTLE_ACCEPT:
+			battleAccept();
+		case LOGOUT:
+			logout(event);
+		case GAMEOVER_MESSAGE:
+		case RANK:
 
-	public void scoreSend(int score) {
-		sendMessage(new SocketMessage(MessageType.SCORE_MESSAGE, score));
-	}
-
-	public void gameOverSend() {
-		sendMessage(new SocketMessage(MessageType.GAMEOVER_MESSAGE, null));
-	}
-
-	public void nextBlockSend(TetrinoType tetrino) {
-		sendMessage(new SocketMessage(MessageType.NEXT_BLOCK_MESSAGE, tetrino));
-	}
-	public void saveBlockSend(TetrinoType tetrino) {
-		sendMessage(new SocketMessage(MessageType.SAVE_BLOCK_MESSAGE, tetrino));
-	}
-	private void sendMessage(SocketMessage message) {
-		if(client!=null) {
-			client.send(message);
+		case USER_MESSAGE:
+		case MAP_MESSAGE:
+		case NEXT_BLOCK_MESSAGE:
+		case SAVE_BLOCK_MESSAGE:
+		case LEVEL_MESSAGE:
+		case SCORE_MESSAGE:
 		}
+	}
+
+	private void login(Object obj) {
+		User user = (User) obj;
+
+		client = TetrisClient.createTetrisClient();
+
+		JSONObject message = new JSONObject();
+		message.put("MessageType", MessageType.LOGIN);
+		message.put("User", user);
+
+		client.send(message.toJSONString());
+
+	}
+
+	private void UserSelecting(Object obj) {
+		JSONObject msg = (JSONObject) obj;
+		client.send(msg.toJSONString());
+	}
+
+	private void logout(Object obj) {
+		JSONObject msg = (JSONObject) obj;
+		client.send(msg.toJSONString());
+	}
+
+	private void battleAccept() {
+
+		JSONObject message = new JSONObject();
+		message.put(MessageType.class.getName(), MessageType.BATTLE_ACCEPT);
+		client.send(message.toJSONString());
+
+		message = new JSONObject();
+		message.put(MessageType.class.getName(), MessageType.USER_MESSAGE);
+		message.put(UserControl.users.getPlayer().getClass(), UserControl.users.getPlayer());
+		client.send(message.toJSONString());
+
+		message = new JSONObject();
+		message.put(MessageType.class.getName(), MessageType.BATTLE_START);
+		client.send(message.toJSONString());
 	}
 }

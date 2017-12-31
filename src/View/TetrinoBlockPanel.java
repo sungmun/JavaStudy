@@ -4,19 +4,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import Control.EventListener;
 import Control.ImagePrint;
+import Control.MVC_Connect;
 
 @SuppressWarnings("serial")
-public class TetrinoBlockPanel extends JPanel implements  EventListener{
+public class TetrinoBlockPanel extends JPanel implements EventListener {
 
 	Image graphics;
 
@@ -24,12 +24,14 @@ public class TetrinoBlockPanel extends JPanel implements  EventListener{
 		super(true);
 		setLayout(null);
 		setLocation(0, 0);
-		setPreferredSize(new Dimension(ImagePrint.width * 10, ImagePrint.height * 20));
+		setPreferredSize(new Dimension(ImagePrint.WIDTH * 10, ImagePrint.HEIGHT * 20));
 		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));
+		MVC_Connect.ControlToView.addListener(this);
 	}
+
 	public void setImage(Object g) {
-		graphics = (Image)g;
+		graphics = (Image) g;
 	}
 
 	@Override
@@ -37,17 +39,30 @@ public class TetrinoBlockPanel extends JPanel implements  EventListener{
 		super.paintComponent(g);
 		g.drawImage(graphics, 0, 0, this);
 	}
+
 	@Override
-	public void onEvent(String event) {
-		try {
-			JSONObject object = (JSONObject) new JSONParser().parse(event);
-			if (object.get("method").toString() == "paintComponent") {
-				setImage(object.get("Image"));
-			}else {
-				System.out.println("NextBlockPanel.onEvent()");
-				System.err.println(object.toJSONString());
-			}
-		} catch (ParseException e) {
+	public void onEvent(JSONObject event) {
+		System.out.println("TetrinoBlockPanel.onEvent()");
+		System.out.println(event.toJSONString());
+		JSONObject object = event;
+		if (object.get("method") != null) {
+			methodCatch(object);
+		} else {
+			System.out.println("NextBlockPanel.onEvent()");
+			System.err.println(object.toJSONString());
+		}
+		repaint();
+	}
+
+	@Override
+	public void methodCatch(JSONObject event) {
+		switch ((String)event.get("method")) {
+		case "paintComponent":
+			setImage(event.get(BufferedImage.class.getClass().toString()));
+			break;
+
+		default:
+			break;
 		}
 	}
 }
