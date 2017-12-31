@@ -5,14 +5,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
 import Model.BlockType;
 import Model.CreateBlock;
 import Model.TetrinoType;
+import Model.TetrisManager;
 import ValueObject.Space;
 import View.NextBlockPanel;
 import View.SaveBlockPanel;
@@ -70,8 +72,7 @@ public class ImagePrint implements BlockType, EventListener {
 		for (Space[] spcs : realtimeMap) {
 			int indexX = 0;
 			for (Space spc : spcs) {
-				if(spc==null) continue;
-				if ( spc.getIsblock() == FLOW || spc.getIsblock() == FIXED) {
+				if (spc != null && (spc.getIsblock() == FLOW || spc.getIsblock() == FIXED)) {
 					g.setColor(TetrisBlockColor.getColor(spc.getType()));
 					g.fill3DRect(indexX * WIDTH, (indexY - 3) * HEIGHT, WIDTH, HEIGHT, true);
 				}
@@ -83,7 +84,7 @@ public class ImagePrint implements BlockType, EventListener {
 		JSONObject imageMessage = new JSONObject();
 		imageMessage.put("method", "paintComponent");
 		imageMessage.put(buffer.getClass(), buffer);
-		MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class.getClass(), imageMessage);
+		MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class, imageMessage);
 	}
 
 	private void nextBlockPaint(Object object) {
@@ -100,7 +101,7 @@ public class ImagePrint implements BlockType, EventListener {
 		JSONObject imageMessage = new JSONObject();
 		imageMessage.put("method", "paintComponent");
 		imageMessage.put(buffer.getClass(), buffer);
-		MVC_Connect.ControlToView.callEvent(NextBlockPanel.class.getClass(), imageMessage);
+		MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, imageMessage);
 
 	}
 
@@ -112,15 +113,12 @@ public class ImagePrint implements BlockType, EventListener {
 			int x = -1;
 			for (Space space : spcs) {
 				x++;
-				if (x == 0)
+				if (x == 0 || space == null)
 					continue;
 
-				try {
-					if (space.getIsblock() == BlockType.FLOW) {
-						g.setColor(TetrisBlockColor.getColor(space.getType()));
-						g.fill3DRect(x * WIDTH - WIDTH, y * HEIGHT, WIDTH, HEIGHT, true);
-					}
-				} catch (NullPointerException e) {
+				if (space.getIsblock() == BlockType.FLOW) {
+					g.setColor(TetrisBlockColor.getColor(space.getType()));
+					g.fill3DRect(x * WIDTH - WIDTH, y * HEIGHT, WIDTH, HEIGHT, true);
 				}
 
 			}
@@ -143,7 +141,7 @@ public class ImagePrint implements BlockType, EventListener {
 		JSONObject imageMessage = new JSONObject();
 		imageMessage.put("method", "paintComponent");
 		imageMessage.put(buffer.getClass(), buffer);
-		MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class.getClass(), imageMessage);
+		MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, imageMessage);
 
 	}
 

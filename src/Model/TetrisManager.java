@@ -1,10 +1,12 @@
 package Model;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Base64;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import Control.EventListener;
 import Control.ImagePrint;
@@ -183,6 +185,16 @@ public class TetrisManager implements EventListener {
 		while (sucess) {
 			sucess = TetrinoBlockMove(MoveType.DOWN);
 		}
+		for (Space[] spaces : realTimeMap) {
+			for (Space space : spaces) {
+				if (space == null) {
+					System.out.print(space + " ");
+				} else {
+					System.out.print(space.getIsblock() + " ");
+				}
+			}
+			System.out.println();
+		}
 		return false;
 	}
 
@@ -304,11 +316,15 @@ public class TetrisManager implements EventListener {
 		int returnvalue = 0;
 
 		for (int i = 0; i < spc.length; i++) {
+			boolean cheack = true;
 			for (int j = 0; j < spc[i].length; j++) {
 				if (spc[i][j] == null) {
-					returnvalue |= 0x01 << i;
+					cheack = false;
 					break;
 				}
+			}
+			if (cheack) {
+				returnvalue |= 0x01 << i;
 			}
 		}
 		return returnvalue;
@@ -340,14 +356,14 @@ public class TetrisManager implements EventListener {
 		JSONObject blockMessage = new JSONObject();
 		blockMessage.put("method", "nextBlockPaint");
 		blockMessage.put("TetrinoType", nextBlock);
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class.getClass(), blockMessage);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class.getClass(), blockMessage);
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage);
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage);
 	}
 
 	private void dropCheck(Object obj) {
 
 		MoveType type = (MoveType) obj;
-		if(tetrino==null) {
+		if (tetrino == null) {
 			createBlock();
 		}
 		boolean check = (MoveType.DROP != type) ? TetrinoBlockMove(type) : TetrinoBlockDropMove();
@@ -358,9 +374,16 @@ public class TetrisManager implements EventListener {
 			GameBasicFrame.time.stop();
 		}
 
-		if (!check)
+		if (!check && ((MoveType.DROP == type) || (MoveType.DOWN == type))) {
 			setNowTetrino(null);
-
+			for (int i = 0; i < realTimeMap.length; i++) {
+				for (int j = 0; j < realTimeMap[i].length; j++) {
+					if (realTimeMap[i][j] != null && realTimeMap[i][j].getIsblock() == BlockType.FLOW) {
+						realTimeMap[i][j].setIsblock(BlockType.FIXED);
+					}
+				}
+			}
+		}
 		int clearline = lineCheack(nowpos);
 		if (clearline > 0) {
 			lineClear(clearline, nowpos);
@@ -396,8 +419,8 @@ public class TetrisManager implements EventListener {
 		JSONObject mapMessage = new JSONObject();
 		mapMessage.put("method", "TetrinoBlockPaint");
 		mapMessage.put("Space[][]", realTimeMap);
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class.getClass(), mapMessage);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class.getClass(), mapMessage);
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage);
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage);
 	}
 
 }

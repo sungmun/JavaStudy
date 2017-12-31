@@ -163,7 +163,7 @@ public class ServerMessage {
 		info.setScore(score);
 		user.setInfo(info);
 		UserControl.users.setOpplayer(user);
-		ServerConnect.ServerToControl.callBroadEvent(MessageType.SCORE_MESSAGE,score);
+		ServerConnect.ServerToControl.quickCallEvent(ServerConnect.class, MessageType.SCORE_MESSAGE,score);
 	}
 
 	private static void levelEvent(Object msg) {
@@ -173,10 +173,10 @@ public class ServerMessage {
 		info.setLevel(level);
 		user.setInfo(info);
 		UserControl.users.setOpplayer(user);
-		ServerConnect.ServerToControl.callBroadEvent(MessageType.LEVEL_MESSAGE,level);
+		ServerConnect.ServerToControl.quickCallEvent(ServerConnect.class, MessageType.LEVEL_MESSAGE,level);
 	}
 
 	private static void gameMessage(Object msg) {
-		ServerConnect.ServerToControl.callBroadEvent(msg);
+		ServerConnect.ServerToControl.quickCallEvent(ServerConnect.class,msg);
 	}
 }

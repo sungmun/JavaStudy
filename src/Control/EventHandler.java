@@ -32,44 +32,10 @@ public class EventHandler {
 	private synchronized void callEventByAsynch(final Class<?> caller, final JSONObject event) {
 
 		for (final EventListener listener : listeners) {
-			if (!listener.getClass().getName().equals(caller.getName()))
+			if (listener.getClass().getName().equals(caller.getName()))
 				listener.onEvent(event);
 		}
 
-	}
-
-	public void broadCast(final JSONObject event) {
-		for (final EventListener listener : listeners) {
-			listener.onEvent(event);
-		}
-	}
-
-	public synchronized void callBroadEvent(Object msg1) {
-		callBroadEvent(msg1, null);
-	}
-
-	public synchronized void callBroadEvent(Object msg1, Object msg2) {
-		callBroadEvent(msg1, msg2, null);
-	}
-
-	public synchronized void callBroadEvent(Object msg1, Object msg2, Object msg3) {
-		callBroadEvent(msg1, msg2, msg3, null);
-	}
-
-	public synchronized void callBroadEvent(Object msg1, Object msg2, Object msg3, Object msg4) {
-		callBroadEvent(msg1, msg2, msg3, msg4, null);
-	}
-
-	public synchronized void callBroadEvent(Object msg1, Object msg2, Object msg3, Object msg4, Object msg5) {
-		JSONObject msg = new JSONObject();
-
-		Object[] msgs = { msg1, msg2, msg3, msg4, msg5 };
-		for (int i = 0; i < msgs.length; i++) {
-			if (msgs[i] == null)
-				break;
-			msg.put(msgs[i].getClass().getName(), msgs[i]);
-		}
-		broadCast(msg);
 	}
 
 	public synchronized void callEvent(final Class<?> caller, JSONObject msg1) {

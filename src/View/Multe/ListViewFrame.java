@@ -39,8 +39,6 @@ public class ListViewFrame extends JFrame {
 		random_multie_play_btn = new BasicButton("랜덤으로 같이하기");
 		back_frame_btn = new BasicButton("뒤로가기");
 
-		TetrisClient client = TetrisClient.getTetrisClient();
-
 		mulite_play_btn.addActionListener(new MulitePlayAction(list,false));
 		random_multie_play_btn.addActionListener(new MulitePlayAction(list,true));
 		back_frame_btn.addActionListener(new BackFrameAction(StartFrame.getStartFrame(), this));

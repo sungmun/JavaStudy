@@ -19,19 +19,19 @@ public class TicAction implements ActionListener {
 		JSONObject moveMessage = new JSONObject();
 		moveMessage.put("method", "TetrinoBlockMove");
 		moveMessage.put("MoveType", MoveType.DOWN);
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 		speedChange();
 	}
 
 	public void timeStop() {
-		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class.getClass(), "TimeStop");
-		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class.getClass(), "TimeStop");
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "TimeStop");
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "TimeStop");
 	}
 
 	public void speedChange() {
 		User user=UserControl.users.getPlayer();
 		int level=user.getInfo().getLevel();
-		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class.getClass(), "Delay",(int) (500 * Math.pow(0.999, level - 1)));
-		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class.getClass(), "Delay",(int) (500 * Math.pow(0.999, level - 1)));
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay",(int) (500 * Math.pow(0.999, level - 1)));
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay",(int) (500 * Math.pow(0.999, level - 1)));
 	}
 }

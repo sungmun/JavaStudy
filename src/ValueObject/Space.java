@@ -1,10 +1,12 @@
 package ValueObject;
 
+import java.io.Serializable;
+
 import Model.BlockType;
 import Model.SpaceSize;
 import Model.TetrinoType;
 
-public class Space implements SpaceSize, BlockType {
+public class Space implements SpaceSize, BlockType,Serializable {
 	private int isblock = FLOW;
 	private TetrinoType type = TetrinoType.DEFULT;
 

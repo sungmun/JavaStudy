@@ -1,6 +1,5 @@
 package Control;
 
-import Serversynchronization.MessageType;
 import Serversynchronization.PlayerInformation;
 
 public class User {

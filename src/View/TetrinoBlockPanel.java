@@ -27,11 +27,13 @@ public class TetrinoBlockPanel extends JPanel implements EventListener {
 		setPreferredSize(new Dimension(ImagePrint.WIDTH * 10, ImagePrint.HEIGHT * 20));
 		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));
+
 		MVC_Connect.ControlToView.addListener(this);
 	}
 
 	public void setImage(Object g) {
-		graphics = (Image) g;
+		graphics = (BufferedImage) g;
+		this.repaint();
 	}
 
 	@Override
@@ -47,18 +49,15 @@ public class TetrinoBlockPanel extends JPanel implements EventListener {
 		JSONObject object = event;
 		if (object.get("method") != null) {
 			methodCatch(object);
-		} else {
-			System.out.println("NextBlockPanel.onEvent()");
-			System.err.println(object.toJSONString());
 		}
-		repaint();
+
 	}
 
 	@Override
 	public void methodCatch(JSONObject event) {
-		switch ((String)event.get("method")) {
+		switch ((String) event.get("method")) {
 		case "paintComponent":
-			setImage(event.get(BufferedImage.class.getClass().toString()));
+			setImage(event.get(BufferedImage.class));
 			break;
 
 		default:

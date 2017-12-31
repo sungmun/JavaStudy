@@ -19,31 +19,31 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener {
 		case KeyEvent.VK_RIGHT:
 			moveMessage.put("method", "TetrinoBlockMove");
 			moveMessage.put("MoveType", MoveType.RIGHT);
-			MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 			break;
 		case KeyEvent.VK_LEFT:
 			moveMessage.put("method", "TetrinoBlockMove");
 			moveMessage.put("MoveType", MoveType.LEFT);
-			MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 			break;
 		case KeyEvent.VK_UP:
 			moveMessage.put("method", "TetrinoBlockMove");
 			moveMessage.put("MoveType", MoveType.TURN);
-			MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 			break;
 		case KeyEvent.VK_DOWN:
 			moveMessage.put("method", "TetrinoBlockMove");
 			moveMessage.put("MoveType", MoveType.DOWN);
-			MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 			break;
 		case KeyEvent.VK_SPACE:
 			moveMessage.put("method", "TetrinoBlockDropMove");
 			moveMessage.put("MoveType", MoveType.DROP);
-			MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 			break;
 		case KeyEvent.VK_Z:
 			moveMessage.put("method", "saveBlock");
-			MVC_Connect.ControlToModel.callEvent(TetrisManager.class.getClass(), moveMessage);
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
 			break;
 		}
 	}
