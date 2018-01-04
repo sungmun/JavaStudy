@@ -3,20 +3,12 @@ package View.Multe;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Client.TetrisClient;
 import Control.BackFrameAction;
-import Control.FrameControl;
-import Control.MVC_Connect;
 import Control.MulitePlayAction;
-import Control.User;
-import Control.UsersList;
-import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
 import View.BasicButton;
 import View.StartFrame;
 

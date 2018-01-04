@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 
 import org.json.simple.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import Model.MoveType;
 import Model.TetrisManager;
 import View.Multe.MultiFrame;
@@ -16,10 +19,10 @@ public class TicAction implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
-		JSONObject moveMessage = new JSONObject();
-		moveMessage.put("method", "TetrinoBlockMove");
-		moveMessage.put("MoveType", MoveType.DOWN);
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage);
+		JsonObject moveMessage = new JsonObject();
+		moveMessage.addProperty("method", "TetrinoBlockMove");
+		moveMessage.addProperty("MoveType", MoveType.DOWN.toString());
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, new Gson().toJson(moveMessage));
 		speedChange();
 	}
 

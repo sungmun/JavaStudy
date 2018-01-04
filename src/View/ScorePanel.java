@@ -3,25 +3,18 @@ package View;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.JPanel;
-
 import org.json.simple.JSONObject;
 
-import Control.EventListener;
 import Control.ImagePrint;
-import Control.MVC_Connect;
 
 @SuppressWarnings("serial")
-public class ScorePanel extends JPanel implements  EventListener {
+public class ScorePanel extends SendDataPanel {
 
 	BasicJLabel title;
 	BasicJLabel score;
 
 	public ScorePanel() {
-		super(true);
-		
-		MVC_Connect.ControlToView.addListener(this);
-		
+
 		int height = 70;
 
 		setOpaque(false);
@@ -38,16 +31,10 @@ public class ScorePanel extends JPanel implements  EventListener {
 
 	}
 
-
 	@Override
-	public void onEvent(JSONObject event) {
-		System.out.println("ScorePanel.onEvent()");
-		System.out.println(event.toJSONString());
-	}
-
-	@Override
-	public void methodCatch(JSONObject event) {
-		// TODO Auto-generated method stub
-		
+	void setData(Object obj) {
+		JSONObject event = (JSONObject) obj;
+		score.setText(event.get("Score").toString());
+		repaint();
 	}
 }

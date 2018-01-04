@@ -3,11 +3,12 @@ package Control;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import Client.ClientMessage;
+import Model.ClientMessage;
 import Serversynchronization.MessageType;
 
 public class FrameControl implements EventListener {
@@ -16,23 +17,37 @@ public class FrameControl implements EventListener {
 		MVC_Connect.ViewToControl.addListener(this);
 	}
 
-	static void FrameChange(Object fropen, Object frclose) {
-
-		JSONObject open = new JSONObject();
-		open.put("method", "setVisible");
-		open.put("boolean", true);
-		MVC_Connect.ControlToView.callEvent(fropen.getClass(), open);
-
-		JSONObject close = new JSONObject();
-		close.put("method", "dispose");
-		MVC_Connect.ControlToView.callEvent(frclose.getClass(), close);
+	static void FrameChange(JsonObject obj) {
+		FrameChange(obj.get("firstFrame"), obj.get("secondFrame"));
 	}
 
-	static void showOptionDialog(Object title, Object content, Object JOptionPaneType, Object JOptionPaneStyle) {
-		int op = JOptionPane.showOptionDialog(null, (String) content, (String) title, (int) JOptionPaneType,
-				(int) JOptionPaneStyle, null, null, null);
-		ServerConnect.ControlToServer.quickCallEvent(ClientMessage.class.getClass(),
+	static void FrameChange(Object fropen, Object frclose) {
+
+		JsonObject open = new JsonObject();
+		open.addProperty("method", "setVisible");
+		open.addProperty("boolean", true);
+		MVC_Connect.ControlToView.callEvent(fropen.getClass(), new Gson().toJson(open));
+
+		JsonObject close = new JsonObject();
+		close.addProperty("method", "dispose");
+		MVC_Connect.ControlToView.callEvent(frclose.getClass(), new Gson().toJson(close));
+	}
+
+	static void showOptionDialog(JsonObject obj) {
+		int op = showOptionDialog(obj.get("title"), obj.get("content"), obj.get("JOptionPaneType"),
+				obj.get("JOptionPaneStyle"));
+		MVC_Connect.ControlToModel.quickCallEvent(ClientMessage.class,
 				(op == JOptionPane.YES_OPTION) ? MessageType.BATTLE_ACCEPT : MessageType.BATTLE_DENIAL);
+	}
+
+	static int showOptionDialog(Object title, Object content, Object JOptionPaneType, Object JOptionPaneStyle) {
+		return JOptionPane.showOptionDialog(null, (String) content, (String) title, (int) JOptionPaneType,
+				(int) JOptionPaneStyle, null, null, null);
+
+	}
+
+	static void showMessageDialog(JsonObject event) {
+		showMessageDialog(event.get("title"), event.get("content"));
 	}
 
 	static void showMessageDialog(Object title, Object content) {
@@ -44,29 +59,27 @@ public class FrameControl implements EventListener {
 	}
 
 	@Override
-	public void onEvent(JSONObject event) {
+	public void onEvent(String event) {
 		System.out.println("FrameControl.onEvent()");
-		System.out.println(event.toJSONString());
-		JSONObject json = event;
-
-		if (json.get("method") != null) {
-			methodCatch(json);
-		} else {
-			System.out.println(json.toJSONString());
-		}
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(event);
+		methodCatch(element);
 	}
 
-	public void methodCatch(JSONObject event) {
-		switch ((String) event.get("method")) {
+	@Override
+	public void methodCatch(Object event) {
+		JsonElement obj = (JsonElement) event;
+		switch (obj.getAsJsonObject().get("method").getAsString()) {
 		case "FrameChange":
-			FrameChange(event.get("firstFrame"), event.get("secondFrame"));
+			FrameChange( obj.getAsJsonObject());
 			break;
 		case "showOptionDialog":
-			showOptionDialog(event.get("title"), event.get("content"), event.get("JOptionPaneType"),
-					event.get("JOptionPaneStyle"));
+			showOptionDialog(obj.getAsJsonObject());
 			break;
 		case "showMessageDialog":
-			showMessageDialog(event.get("title"), event.get("content"));
+			showMessageDialog(obj.getAsJsonObject());
+			break;
 		}
+
 	}
 }

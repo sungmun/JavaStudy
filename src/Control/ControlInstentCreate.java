@@ -5,7 +5,6 @@ public class ControlInstentCreate {
 		new FrameControl();
 		new MVC_Connect();
 		new ImagePrint();
-		new ServerConnect();
 		
 	}
 }

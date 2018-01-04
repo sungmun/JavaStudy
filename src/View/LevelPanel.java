@@ -3,22 +3,17 @@ package View;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.JPanel;
-
 import org.json.simple.JSONObject;
 
-import Control.EventListener;
 import Control.ImagePrint;
-import Control.MVC_Connect;
 
 @SuppressWarnings("serial")
-public class LevelPanel extends JPanel implements EventListener {
+public class LevelPanel extends SendDataPanel {
 
 	BasicJLabel title;
 	BasicJLabel level;
 
 	public LevelPanel() {
-		super(true);
 		int height = 70;
 
 		setOpaque(false);
@@ -32,20 +27,16 @@ public class LevelPanel extends JPanel implements EventListener {
 
 		add(title);
 		add(level);
-
-		MVC_Connect.ControlToView.addListener(this);
 	}
 
 	@Override
-	public void onEvent(JSONObject event) {
-		System.out.println("LevelPanel.onEvent()");
+	void setData(Object obj) {
+		JSONObject event=(JSONObject) obj;
 		System.out.println(event.toJSONString());
+		level.setText(event.get("Level").toString());
 	}
 
-	@Override
-	public void methodCatch(JSONObject event) {
-		// TODO Auto-generated method stub
 
-	}
+
 
 }

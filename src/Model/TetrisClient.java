@@ -1,19 +1,15 @@
-package Client;
+package Model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import Control.EventListener;
 
 public class TetrisClient extends Thread {
 	public final static String IP = "mydirectory.iptime.org";
@@ -67,11 +63,8 @@ public class TetrisClient extends Thread {
 		// ServerMessage event = new ServerMessage();
 		try {
 			JSONObject object = (JSONObject) new JSONParser().parse(in.readLine());
-			if (object.get("MessageType").toString() != null) {
+			if (object.get("MessageType")!= null) {
 				ServerMessage.eventCatch(object);
-			} else {
-				System.out.println("TetrisClient.onMessage()");
-				System.err.println(object.toJSONString());
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();

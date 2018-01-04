@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-import Client.ClientMessage;
+import Model.ClientMessage;
 import Serversynchronization.MessageType;
 import View.Multe.ListView;
 
@@ -32,8 +32,7 @@ public class MulitePlayAction implements ActionListener {
 		}
 
 		User us = UsersList.getList().get(index);
-
-		ServerConnect.ControlToServer.quickCallEvent(ClientMessage.class.getClass(), MessageType.USER_SELECTING,us);
+		MVC_Connect.ControlToModel.quickCallEvent(ClientMessage.class, MessageType.USER_SELECTING,us);
 	}
 
 }

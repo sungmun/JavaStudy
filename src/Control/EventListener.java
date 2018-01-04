@@ -1,8 +1,7 @@
 package Control;
 
-import org.json.simple.JSONObject;
 
 public interface EventListener {
-	public void onEvent(JSONObject event);
-	public void methodCatch(JSONObject event);
+	public void onEvent(String event);
+	public void methodCatch(Object event);
 }

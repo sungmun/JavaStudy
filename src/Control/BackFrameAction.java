@@ -3,10 +3,9 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
-import Client.ClientMessage;
+import Model.ClientMessage;
 import Serversynchronization.MessageType;
 
 public class BackFrameAction implements ActionListener{
@@ -18,7 +17,7 @@ public class BackFrameAction implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ServerConnect.ControlToServer.quickCallEvent(ClientMessage.class.getClass(), MessageType.LOGOUT);
+		MVC_Connect.ControlToModel.quickCallEvent(ClientMessage.class, MessageType.LOGOUT);
 		FrameControl.FrameChange(fopen,fclose);
 	}
 

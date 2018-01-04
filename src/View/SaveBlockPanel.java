@@ -5,30 +5,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.json.simple.JSONObject;
 
-import Control.EventListener;
 import Control.ImagePrint;
-import Control.MVC_Connect;
 
 @SuppressWarnings("serial")
-public class SaveBlockPanel extends JPanel implements EventListener {
+public class SaveBlockPanel extends SendDataPanel {
 	Image graphics;
-
 	public SaveBlockPanel() {
-		MVC_Connect.ControlToView.addListener(this);
 		setOpaque(false);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, ImagePrint.HEIGHT * 5));
 		setBorder(new LineBorder(Color.WHITE, 2));
-	}
-
-	public void setImage(Object g) {
-		graphics = (Image) g;
 	}
 
 	@Override
@@ -39,29 +31,11 @@ public class SaveBlockPanel extends JPanel implements EventListener {
 	}
 
 	@Override
-	public void onEvent(JSONObject event) {
-		System.out.println("SaveBlockPanel.onEvent()");
-		System.out.println(event.toJSONString());
-		JSONObject object = event;
-		if (object.get("method") != null) {
-			methodCatch(object);
-		} else {
-			System.out.println("SaveBlockPanel.onEvent()");
-			System.err.println(object.toJSONString());
-		}
-	}
-
-	@Override
-	public void methodCatch(JSONObject event) {
-		switch ((String) event.get("method")) {
-		case "paintComponent":
-			setImage(event.get("Image"));
-			break;
-
-		default:
-			break;
-		}
-
+	void setData(Object obj) {
+		// TODO Auto-generated method stub
+		JSONObject event=(JSONObject) obj;
+		graphics=(BufferedImage)event.get(BufferedImage.class);
+		repaint();
 	}
 
 }

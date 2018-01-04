@@ -1,15 +1,14 @@
-package Client;
+package Model;
 
 import javax.swing.JOptionPane;
 
 import org.json.simple.JSONObject;
 
 import Control.FrameControl;
-import Control.ServerConnect;
+import Control.MVC_Connect;
 import Control.User;
 import Control.UserControl;
 import Control.UsersList;
-import Model.TetrinoType;
 import Serversynchronization.MessageType;
 import Serversynchronization.PlayerInformation;
 import View.Multe.ListViewFrame;
@@ -72,7 +71,8 @@ public class ServerMessage {
 		msg.put("method", "showMessageDialog");
 		msg.put("title", null);
 		msg.put("content", "상대방이 거부하였습니다");
-		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), msg);
+		
+		MVC_Connect.ModelToControl.callEvent(FrameControl.class, msg.toJSONString());
 	}
 
 	private static void setMyLogin(Object msg) {
@@ -89,7 +89,7 @@ public class ServerMessage {
 		userMessage.put("method", "add");
 		userMessage.put("User", user);
 
-		ServerConnect.ServerToControl.callEvent(UsersList.class.getClass(), userMessage);
+		MVC_Connect.ModelToControl.callEvent(UsersList.class, userMessage.toJSONString());
 	}
 
 	private static void logOut(Object msg) {
@@ -99,7 +99,7 @@ public class ServerMessage {
 		userMessage.put("method", "delete");
 		userMessage.put("User", user);
 
-		ServerConnect.ServerToControl.callEvent(UsersList.class.getClass(), userMessage);
+		MVC_Connect.ModelToControl.callEvent(UsersList.class, userMessage.toJSONString());
 	}
 
 	private static void userListMessage(Object msg) {
@@ -109,13 +109,13 @@ public class ServerMessage {
 		userMessage.put("method", "setList");
 		userMessage.put("User[]", users);
 
-		ServerConnect.ServerToControl.callEvent(UsersList.class.getClass(), userMessage);
+		MVC_Connect.ModelToControl.callEvent(UsersList.class, userMessage.toJSONString());
 
 		JSONObject frameMessage = new JSONObject();
 		frameMessage.put("method", "FrameChange");
 		frameMessage.put("firstFrame", ListViewFrame.class);
 		frameMessage.put("secondFrame", LoginFrame.class);
-		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), frameMessage);
+		MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toJSONString());
 
 	}
 
@@ -129,7 +129,7 @@ public class ServerMessage {
 		frameMessage.put("method", "FrameChange");
 		frameMessage.put("firstFrame", MultiFrame.class);
 		frameMessage.put("secondFrame", ListViewFrame.class);
-		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), frameMessage);
+		MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toJSONString());
 	}
 
 	private static void beChoice(Object msg) {
@@ -142,7 +142,7 @@ public class ServerMessage {
 		sendMsg.put("JOptionPaneType", JOptionPane.YES_NO_OPTION);
 		sendMsg.put("JOptionPaneStyle", JOptionPane.PLAIN_MESSAGE);
 
-		ServerConnect.ServerToControl.callEvent(FrameControl.class.getClass(), sendMsg);
+		MVC_Connect.ModelToControl.callEvent(FrameControl.class, sendMsg.toJSONString());
 	}
 
 	public static void warAccept() {
@@ -163,7 +163,7 @@ public class ServerMessage {
 		info.setScore(score);
 		user.setInfo(info);
 		UserControl.users.setOpplayer(user);
-		ServerConnect.ServerToControl.quickCallEvent(ServerConnect.class, MessageType.SCORE_MESSAGE,score);
+		MVC_Connect.ModelToControl.quickCallEvent(MVC_Connect.class, MessageType.SCORE_MESSAGE,score);
 	}
 
 	private static void levelEvent(Object msg) {
@@ -173,10 +173,10 @@ public class ServerMessage {
 		info.setLevel(level);
 		user.setInfo(info);
 		UserControl.users.setOpplayer(user);
-		ServerConnect.ServerToControl.quickCallEvent(ServerConnect.class, MessageType.LEVEL_MESSAGE,level);
+		MVC_Connect.ModelToControl.quickCallEvent(MVC_Connect.class, MessageType.LEVEL_MESSAGE,level);
 	}
 
 	private static void gameMessage(Object msg) {
-		ServerConnect.ServerToControl.quickCallEvent(ServerConnect.class,msg);
+		MVC_Connect.ModelToControl.quickCallEvent(MVC_Connect.class,msg);
 	}
 }

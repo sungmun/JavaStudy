@@ -1,39 +1,59 @@
-package Client;
+package Model;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import Control.EventListener;
-import Control.ServerConnect;
+import Control.MVC_Connect;
 import Control.User;
 import Control.UserControl;
 import Serversynchronization.MessageType;
 
 public class ClientMessage implements EventListener {
 	TetrisClient client;
-
-	public ClientMessage() {
-		ServerConnect.ControlToServer.addListener(this);
+	static ClientMessage message;
+	ClientMessage() {
+		message=this;
+		MVC_Connect.ControlToModel.addListener(this);
 	}
 
 	@Override
-	public void onEvent(JSONObject event) {
+	public void onEvent(String event)  {
 		System.out.println("ClientMessage.onEvent()");
-		System.out.println(event.toJSONString());
-		methodCatch(event);
+		System.out.println(event);
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(event);
+		if (element.getAsJsonObject().get(MessageType.class.getName()) == null)
+			return;
+		element.getAsJsonObject().remove("sentClass");
+		methodCatch(element);
 	}
 
 	@Override
-	public void methodCatch(JSONObject event) {
-		switch ((MessageType) event.get("MessageType")) {
+	public void methodCatch(Object event) {
+		if(event.getClass()==JSONArray.class) {
+			JSONArray array=(JSONArray)event;
+			client.send(array.toJSONString());
+			return;
+		}
+		JSONObject obj=(JSONObject)event;
+		switch ((MessageType) obj.get("MessageType")) {
 		case LOGIN:
-			login(event.get("User"));
+			login(obj.get("User"));
 			break;
 		case USER_SELECTING:
-			UserSelecting(event);
+			UserSelecting(obj);
 		case BATTLE_ACCEPT:
 			battleAccept();
 		case LOGOUT:
-			logout(event);
+			logout(obj);
 		case GAMEOVER_MESSAGE:
 		case RANK:
 
@@ -43,6 +63,8 @@ public class ClientMessage implements EventListener {
 		case SAVE_BLOCK_MESSAGE:
 		case LEVEL_MESSAGE:
 		case SCORE_MESSAGE:
+		default:
+			break;
 		}
 	}
 
