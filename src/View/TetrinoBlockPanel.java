@@ -8,9 +8,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.border.LineBorder;
 
-import org.json.simple.JSONObject;
-
 import Control.ImagePrint;
+import Control.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class TetrinoBlockPanel extends SendDataPanel {
@@ -31,8 +30,9 @@ public class TetrinoBlockPanel extends SendDataPanel {
 
 	@Override
 	void setData(Object obj) {
-		JSONObject event=(JSONObject) obj;
-		graphics=(BufferedImage)event.get(BufferedImage.class);
+		TotalJsonObject jsonObj = (TotalJsonObject) obj;
+
+		graphics = (BufferedImage) jsonObj.get(BufferedImage.class.getName());
 		repaint();
 	}
 }

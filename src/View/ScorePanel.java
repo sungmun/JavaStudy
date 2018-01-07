@@ -3,9 +3,8 @@ package View;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import org.json.simple.JSONObject;
-
 import Control.ImagePrint;
+import Control.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class ScorePanel extends SendDataPanel {
@@ -33,7 +32,8 @@ public class ScorePanel extends SendDataPanel {
 
 	@Override
 	void setData(Object obj) {
-		JSONObject event = (JSONObject) obj;
+		TotalJsonObject event = (TotalJsonObject) obj;
+
 		score.setText(event.get("Score").toString());
 		repaint();
 	}

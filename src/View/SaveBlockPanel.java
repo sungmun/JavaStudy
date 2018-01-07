@@ -9,13 +9,14 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.border.LineBorder;
 
-import org.json.simple.JSONObject;
 
 import Control.ImagePrint;
+import Control.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class SaveBlockPanel extends SendDataPanel {
 	Image graphics;
+
 	public SaveBlockPanel() {
 		setOpaque(false);
 		setLocation(0, 0);
@@ -32,9 +33,9 @@ public class SaveBlockPanel extends SendDataPanel {
 
 	@Override
 	void setData(Object obj) {
-		// TODO Auto-generated method stub
-		JSONObject event=(JSONObject) obj;
-		graphics=(BufferedImage)event.get(BufferedImage.class);
+		TotalJsonObject jsonObj = (TotalJsonObject) obj;
+
+		graphics = (BufferedImage) jsonObj.get(BufferedImage.class.getName());
 		repaint();
 	}
 

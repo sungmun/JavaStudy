@@ -1,17 +1,8 @@
 package Model;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import Control.EventListener;
 import Control.MVC_Connect;
+import Control.TotalJsonObject;
 import Control.User;
 import Control.UserControl;
 import Serversynchronization.MessageType;
@@ -19,32 +10,29 @@ import Serversynchronization.MessageType;
 public class ClientMessage implements EventListener {
 	TetrisClient client;
 	static ClientMessage message;
+
 	ClientMessage() {
-		message=this;
+		message = this;
 		MVC_Connect.ControlToModel.addListener(this);
 	}
 
 	@Override
-	public void onEvent(String event)  {
+	public void onEvent(Object event) {
 		System.out.println("ClientMessage.onEvent()");
 		System.out.println(event);
-		JsonParser parser = new JsonParser();
-		JsonElement element = parser.parse(event);
-		if (element.getAsJsonObject().get(MessageType.class.getName()) == null)
+		TotalJsonObject parser = new TotalJsonObject((String) event);
+		if (parser.get(MessageType.class.getName()) == null)
 			return;
-		element.getAsJsonObject().remove("sentClass");
-		methodCatch(element);
+		parser.removeValue("sentClass");
+		methodCatch(parser);
 	}
 
 	@Override
 	public void methodCatch(Object event) {
-		if(event.getClass()==JSONArray.class) {
-			JSONArray array=(JSONArray)event;
-			client.send(array.toJSONString());
-			return;
-		}
-		JSONObject obj=(JSONObject)event;
-		switch ((MessageType) obj.get("MessageType")) {
+		TotalJsonObject obj = (TotalJsonObject) event;
+		String messageTypeStr=(String) obj.get("MessageType");
+		MessageType messageType=MessageType.valueOf(messageTypeStr);
+		switch (messageType) {
 		case LOGIN:
 			login(obj.get("User"));
 			break;
@@ -73,37 +61,37 @@ public class ClientMessage implements EventListener {
 
 		client = TetrisClient.createTetrisClient();
 
-		JSONObject message = new JSONObject();
-		message.put("MessageType", MessageType.LOGIN);
-		message.put("User", user);
-
-		client.send(message.toJSONString());
+		TotalJsonObject message = new TotalJsonObject();
+		message.addProperty("MessageType", MessageType.LOGIN.toString());
+		message.addProperty("User", message.GsonConverter(user));
+		
+		client.send(message.toString());
 
 	}
 
 	private void UserSelecting(Object obj) {
-		JSONObject msg = (JSONObject) obj;
-		client.send(msg.toJSONString());
+		TotalJsonObject msg = (TotalJsonObject) obj;
+		client.send(msg.toString());
 	}
 
 	private void logout(Object obj) {
-		JSONObject msg = (JSONObject) obj;
-		client.send(msg.toJSONString());
+		TotalJsonObject msg = (TotalJsonObject) obj;
+		client.send(msg.toString());
 	}
 
 	private void battleAccept() {
 
-		JSONObject message = new JSONObject();
-		message.put(MessageType.class.getName(), MessageType.BATTLE_ACCEPT);
-		client.send(message.toJSONString());
+		TotalJsonObject message = new TotalJsonObject();
+		message.addProperty(MessageType.class.getName(), MessageType.BATTLE_ACCEPT.toString());
+		client.send(message.toString());
 
-		message = new JSONObject();
-		message.put(MessageType.class.getName(), MessageType.USER_MESSAGE);
-		message.put(UserControl.users.getPlayer().getClass(), UserControl.users.getPlayer());
-		client.send(message.toJSONString());
+		message = new TotalJsonObject();
+		message.addProperty(MessageType.class.getName(), MessageType.USER_MESSAGE.toString());
+		message.addProperty(UserControl.users.getPlayer().getClass().getName(), message.GsonConverter(UserControl.users.getPlayer()));
+		client.send(message.toString());
 
-		message = new JSONObject();
-		message.put(MessageType.class.getName(), MessageType.BATTLE_START);
-		client.send(message.toJSONString());
+		message = new TotalJsonObject();
+		message.addProperty(MessageType.class.getName(), MessageType.BATTLE_START.toString());
+		client.send(message.toString());
 	}
 }

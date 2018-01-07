@@ -8,11 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import Control.EventListener;
+import Control.TotalJsonObject;
+import Serversynchronization.MessageType;
 
 @SuppressWarnings("serial")
 public class GameOverPanel extends JPanel implements EventListener {
@@ -40,17 +38,18 @@ public class GameOverPanel extends JPanel implements EventListener {
 	}
 
 	@Override
-	public void onEvent(String event) throws ParseException {
-		JSONObject obj = (JSONObject) new JSONParser().parse(event);
-		System.out.println(obj.toJSONString());
-		methodCatch(obj);
+	public void onEvent(Object event){
+		TotalJsonObject object=new TotalJsonObject((String) event);
+		if (object.get(MessageType.class.getName()) == null)
+			return;
+		methodCatch(object);
 	}
 
 	@Override
 	public void methodCatch(Object event) {
-		JSONObject obj = (JSONObject) event;
+		TotalJsonObject obj = (TotalJsonObject) event;
 		Integer score=(Integer) obj.get("Score");
-		Integer level=(Integer) obj.get("Level");
+		Integer level=(Integer) obj.get("Score");
 		score_txt=(score!=null)?score.toString():score_txt;
 		level_txt=(level!=null)?level.toString():level_txt;
 	}

@@ -1,11 +1,8 @@
 package Control;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class EventHandler {
 
@@ -27,7 +24,7 @@ public class EventHandler {
 		}
 	}
 
-	private synchronized void callEventByAsynch(final Class<?> caller, final String event) {
+	private synchronized void callEventByAsynch(final Class<?> caller, final Object event) {
 
 		for (final EventListener listener : listeners) {
 			if (listener.getClass().getName().equals(caller.getName())) {
@@ -37,7 +34,7 @@ public class EventHandler {
 
 	}
 
-	public synchronized void callEvent(final Class<?> caller, String msg1) {
+	public synchronized void callEvent(final Class<?> caller, Object msg1) {
 		callEventByAsynch(caller, msg1);
 	}
 
@@ -59,14 +56,14 @@ public class EventHandler {
 
 	public synchronized void quickCallEvent(final Class<?> caller, Object msg1, Object msg2, Object msg3, Object msg4,
 			Object msg5) {
-		JsonObject msg=new JsonObject();
+		TotalJsonObject msg=new TotalJsonObject();
 		Object[] msgs = { msg1, msg2, msg3, msg4, msg5 };
 		for (int i = 0; i < msgs.length; i++) {
 			if (msgs[i] == null)
 				break;
 			msg.addProperty(msgs[i].getClass().getName(), msgs[i].toString());
 		}
-		callEventByAsynch(caller, new Gson().toJson(msg));
+		callEventByAsynch(caller, msg.toString());
 	}
 
 }

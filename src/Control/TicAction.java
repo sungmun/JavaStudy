@@ -3,11 +3,6 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.json.simple.JSONObject;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import Model.MoveType;
 import Model.TetrisManager;
 import View.Multe.MultiFrame;
@@ -19,10 +14,10 @@ public class TicAction implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
-		JsonObject moveMessage = new JsonObject();
+		TotalJsonObject moveMessage = new TotalJsonObject();
 		moveMessage.addProperty("method", "TetrinoBlockMove");
 		moveMessage.addProperty("MoveType", MoveType.DOWN.toString());
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, new Gson().toJson(moveMessage));
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class,moveMessage.toString());
 		speedChange();
 	}
 
@@ -32,9 +27,9 @@ public class TicAction implements ActionListener {
 	}
 
 	public void speedChange() {
-		User user=UserControl.users.getPlayer();
-		int level=user.getInfo().getLevel();
-		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay",(int) (500 * Math.pow(0.999, level - 1)));
-		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay",(int) (500 * Math.pow(0.999, level - 1)));
+		User user = UserControl.users.getPlayer();
+		int level = user.getInfo().getLevel();
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay", (int) (500 * Math.pow(0.999, level - 1)));
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay", (int) (500 * Math.pow(0.999, level - 1)));
 	}
 }

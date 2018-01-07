@@ -3,11 +3,6 @@ package Control;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import Model.ClientMessage;
 import Serversynchronization.MessageType;
 
@@ -17,23 +12,23 @@ public class FrameControl implements EventListener {
 		MVC_Connect.ViewToControl.addListener(this);
 	}
 
-	static void FrameChange(JsonObject obj) {
+	static void FrameChange(TotalJsonObject obj) {
 		FrameChange(obj.get("firstFrame"), obj.get("secondFrame"));
 	}
 
 	static void FrameChange(Object fropen, Object frclose) {
 
-		JsonObject open = new JsonObject();
+		TotalJsonObject open = new TotalJsonObject();
 		open.addProperty("method", "setVisible");
 		open.addProperty("boolean", true);
-		MVC_Connect.ControlToView.callEvent(fropen.getClass(), new Gson().toJson(open));
+		MVC_Connect.ControlToView.callEvent(fropen.getClass(), open.toString());
 
-		JsonObject close = new JsonObject();
+		TotalJsonObject close = new TotalJsonObject();
 		close.addProperty("method", "dispose");
-		MVC_Connect.ControlToView.callEvent(frclose.getClass(), new Gson().toJson(close));
+		MVC_Connect.ControlToView.callEvent(frclose.getClass(), close.toString());
 	}
 
-	static void showOptionDialog(JsonObject obj) {
+	static void showOptionDialog(TotalJsonObject obj) {
 		int op = showOptionDialog(obj.get("title"), obj.get("content"), obj.get("JOptionPaneType"),
 				obj.get("JOptionPaneStyle"));
 		MVC_Connect.ControlToModel.quickCallEvent(ClientMessage.class,
@@ -46,7 +41,7 @@ public class FrameControl implements EventListener {
 
 	}
 
-	static void showMessageDialog(JsonObject event) {
+	static void showMessageDialog(TotalJsonObject event) {
 		showMessageDialog(event.get("title"), event.get("content"));
 	}
 
@@ -59,25 +54,24 @@ public class FrameControl implements EventListener {
 	}
 
 	@Override
-	public void onEvent(String event) {
+	public void onEvent(Object event) {
 		System.out.println("FrameControl.onEvent()");
-		JsonParser parser = new JsonParser();
-		JsonElement element = parser.parse(event);
-		methodCatch(element);
+		TotalJsonObject object = new TotalJsonObject((String) event);
+		methodCatch(object);
 	}
 
 	@Override
 	public void methodCatch(Object event) {
-		JsonElement obj = (JsonElement) event;
-		switch (obj.getAsJsonObject().get("method").getAsString()) {
+		TotalJsonObject obj = (TotalJsonObject) event;
+		switch (obj.get("method").toString()) {
 		case "FrameChange":
-			FrameChange( obj.getAsJsonObject());
+			FrameChange(obj);
 			break;
 		case "showOptionDialog":
-			showOptionDialog(obj.getAsJsonObject());
+			showOptionDialog(obj);
 			break;
 		case "showMessageDialog":
-			showMessageDialog(obj.getAsJsonObject());
+			showMessageDialog(obj);
 			break;
 		}
 

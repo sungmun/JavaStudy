@@ -7,10 +7,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 public class TetrisClient extends Thread {
 	public final static String IP = "mydirectory.iptime.org";
 	public final static int PORT = 4160;
@@ -21,7 +17,7 @@ public class TetrisClient extends Thread {
 
 	private static TetrisClient client = null;
 
-	private TetrisClient()  {
+	private TetrisClient() {
 		try {
 			socket = new Socket(IP, PORT);
 			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -36,7 +32,7 @@ public class TetrisClient extends Thread {
 		close();
 	}
 
-	public static TetrisClient createTetrisClient(){
+	public static TetrisClient createTetrisClient() {
 		if (client == null) {
 			client = new TetrisClient();
 			client.start();
@@ -61,14 +57,7 @@ public class TetrisClient extends Thread {
 
 	public void onMessage(Socket server) throws IOException {
 		// ServerMessage event = new ServerMessage();
-		try {
-			JSONObject object = (JSONObject) new JSONParser().parse(in.readLine());
-			if (object.get("MessageType")!= null) {
-				ServerMessage.eventCatch(object);
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		ServerMessage.onEvent(in.readLine());
 		in.reset();
 	}
 

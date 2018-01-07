@@ -2,14 +2,10 @@ package Model;
 
 import java.util.Arrays;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import Control.EventListener;
 import Control.ImagePrint;
-import Control.JSONObjectCustom;
 import Control.MVC_Connect;
+import Control.TotalJsonObject;
 import Control.User;
 import Control.UserControl;
 import Serversynchronization.MessageType;
@@ -174,17 +170,17 @@ public class TetrisManager implements EventListener {
 		int level = info.getScore() / 1000;
 		if (level > info.getLevel()) {
 			info.setLevel(level);
-			JSONObject msg = new JSONObject();
-			msg.put("Level", info.getLevel());
-			msg.put("sentClass", this.getClass());
-			msg.put(MessageType.class, MessageType.LEVEL_MESSAGE);
+			TotalJsonObject msg = new TotalJsonObject();
+			msg.addProperty("Level", info.getLevel());
+			msg.addProperty("sentClass", this.getClass().getName());
+			msg.addProperty(MessageType.class.getName(), MessageType.LEVEL_MESSAGE.toString());
 			MVC_Connect.ModelToControl.quickCallEvent(MVC_Connect.class, "Level", level);
 		}
-		JSONObject msg = new JSONObject();
-		msg.put("Score", info.getScore());
-		msg.put("sentClass", this.getClass());
-		msg.put(MessageType.class, MessageType.SCORE_MESSAGE);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.toJSONString());
+		TotalJsonObject msg = new TotalJsonObject();
+		msg.addProperty("Score", info.getScore());
+		msg.addProperty("sentClass", this.getClass().getName());
+		msg.addProperty(MessageType.class.getName(), MessageType.SCORE_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.getAsString());
 
 		User user = UserControl.users.getPlayer();
 		user.setInfo(info);
@@ -350,26 +346,26 @@ public class TetrisManager implements EventListener {
 
 	public void setSaveBlock(TetrinoType tetrino) {
 		this.saveBlock = tetrino;
-		JSONObject blockMessage = new JSONObject();
-		blockMessage.put("method", "saveBlockPaint");
-		blockMessage.put("TetrinoType", saveBlock);
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.toJSONString());
+		TotalJsonObject blockMessage = new TotalJsonObject();
+		blockMessage.addProperty("method", "saveBlockPaint");
+		blockMessage.addProperty(TetrinoType.class.getName(), saveBlock.toString());
+		blockMessage.addProperty("sentClass", this.getClass().getName());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.getAsString());
 
-		blockMessage.put("sentClass", this.getClass());
-		blockMessage.put(MessageType.class, MessageType.SAVE_BLOCK_MESSAGE);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.toJSONString());
+		blockMessage.addProperty(MessageType.class.getName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.getAsString());
 	}
 
 	public void setNextBlock(TetrinoType tetrino) {
 		this.nextBlock = tetrino;
-		JSONObject blockMessage = new JSONObject();
-		blockMessage.put("method", "nextBlockPaint");
-		blockMessage.put("TetrinoType", nextBlock);
-		blockMessage.put("sentClass", this.getClass());
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.toJSONString());
+		TotalJsonObject blockMessage = new TotalJsonObject();
+		blockMessage.addProperty("method", "nextBlockPaint");
+		blockMessage.addProperty(TetrinoType.class.getName(), nextBlock.name());
+		blockMessage.addProperty("sentClass", this.getClass().getName());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.toString());
 
-		blockMessage.put(MessageType.class, MessageType.NEXT_BLOCK_MESSAGE);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.toJSONString());
+		blockMessage.addProperty(MessageType.class.getName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.toString());
 	}
 
 	private void dropCheck(Object obj) {
@@ -405,38 +401,34 @@ public class TetrisManager implements EventListener {
 		}
 	}
 
-	public void methodCatch(JSONObject event) {
-
-	}
 
 	public void sendRealTimeMap() {
-		JSONObject mapMessage = new JSONObject();
-		
-		mapMessage.put("method", "TetrinoBlockPaint");
-		
-		mapMessage.put(realTimeMap.getClass().getName(), JSONObjectCustom.fromToString(realTimeMap));
-		mapMessage.put("sentClass", this.getClass().getName());
-		System.out.println(mapMessage.toJSONString());
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage.toJSONString());
-		
-		mapMessage.put(MessageType.class.getName(), MessageType.MAP_MESSAGE);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage.toJSONString());
+		TotalJsonObject mapMessage = new TotalJsonObject();
+
+		mapMessage.addProperty("method", "TetrinoBlockPaint");
+
+		mapMessage.addProperty(realTimeMap.getClass().getName(), mapMessage.GsonConverter(realTimeMap));
+		mapMessage.addProperty("sentClass", this.getClass().getName());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage.toString());
+
+		mapMessage.addProperty(MessageType.class.getName(), MessageType.MAP_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage.toString());
 	}
 
 	@Override
-	public void onEvent(String event) throws ParseException {
-		// TODO Auto-generated method stub
-		JSONObject obj = (JSONObject) new JSONParser().parse(event);
-		methodCatch(obj);
+	public void onEvent(Object event) {
+		TotalJsonObject object=new TotalJsonObject((String) event);
+		methodCatch(object);
 	}
 
 	@Override
 	public void methodCatch(Object event) {
-		JSONObject obj=(JSONObject) event;
-		switch (obj.get("method").toString()) {
+		TotalJsonObject object = (TotalJsonObject) event;
+		switch (object.get("method").toString()) {
 		case "TetrinoBlockDropMove":
 		case "TetrinoBlockMove":
-			dropCheck(obj.get("MoveType"));
+			MoveType type = MoveType.valueOf(object.get("MoveType").toString());
+			dropCheck(type);
 			break;
 		case "saveBlock":
 			saveBlock();

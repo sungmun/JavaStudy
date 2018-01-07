@@ -3,9 +3,8 @@ package View;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import org.json.simple.JSONObject;
-
 import Control.ImagePrint;
+import Control.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class LevelPanel extends SendDataPanel {
@@ -31,12 +30,10 @@ public class LevelPanel extends SendDataPanel {
 
 	@Override
 	void setData(Object obj) {
-		JSONObject event=(JSONObject) obj;
-		System.out.println(event.toJSONString());
+		TotalJsonObject event = (TotalJsonObject) obj;
+
 		level.setText(event.get("Level").toString());
+		repaint();
 	}
-
-
-
 
 }

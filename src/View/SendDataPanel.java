@@ -2,11 +2,9 @@ package View;
 
 import javax.swing.JPanel;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-
 import Control.EventListener;
 import Control.MVC_Connect;
+import Control.TotalJsonObject;
 import Model.ServerMessage;
 import Model.TetrisManager;
 import View.Multe.MultiFrame;
@@ -37,27 +35,34 @@ public abstract class SendDataPanel extends JPanel implements EventListener {
 	}
 
 	@Override
-	public void onEvent(String event) throws ParseException {
-		// TODO Auto-generated method stub
-		
+	public void onEvent(Object event) {
+		try {
+			TotalJsonObject message = (TotalJsonObject) event;
+			methodCatch(message);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
 	}
 
 	@Override
 	public void methodCatch(Object event) {
-		JSONObject obj=(JSONObject) event;
-		if (obj.get("sentClass") == ServerMessage.class && originClass == PanelForTheOpponent.class) {
+		TotalJsonObject element = (TotalJsonObject) event;
+		if (element.get("sentClass").equals(ServerMessage.class.getName())
+				&& originClass == PanelForTheOpponent.class) {
 			System.out.println("============================");
 			System.out.println("SendDataPanel.onEvent()");
-			System.out.println(obj.toJSONString());
+			System.out.println(element.toString());
 			System.out.println("============================");
-			setData(obj);
-		} else if (obj.get("sentClass") == TetrisManager.class && originClass == PanelForTheUser.class) {
+			setData(element);
+		} else if (element.get("sentClass").equals(TetrisManager.class.getName())
+				&& originClass == PanelForTheUser.class) {
 			System.out.println("============================");
 			System.out.println("SendDataPanel.onEvent()");
-			System.out.println(obj.toJSONString());
+			System.out.println(element.toString());
 			System.out.println("============================");
 			System.out.println();
-			setData(obj);
+			setData(element);
 		}
 	}
 
