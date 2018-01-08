@@ -1,6 +1,9 @@
 package Control;
 import javax.swing.table.DefaultTableModel;
 
+import Serversynchronization.User;
+import Serversynchronization.UsersList;
+
 @SuppressWarnings("serial")
 public class UserListModel extends DefaultTableModel {
 	public UserListModel(String[] header, int date) {

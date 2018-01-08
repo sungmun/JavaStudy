@@ -3,6 +3,8 @@ package Control;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import Serversynchronization.TotalJsonObject;
+
 
 public class EventHandler {
 

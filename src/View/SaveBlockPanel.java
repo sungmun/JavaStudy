@@ -11,7 +11,7 @@ import javax.swing.border.LineBorder;
 
 
 import Control.ImagePrint;
-import Control.TotalJsonObject;
+import Serversynchronization.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class SaveBlockPanel extends SendDataPanel {

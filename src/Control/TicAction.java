@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import Model.MoveType;
 import Model.TetrisManager;
+import Serversynchronization.TotalJsonObject;
+import Serversynchronization.User;
 import View.Multe.MultiFrame;
 import View.Single.SingleFrame;
 

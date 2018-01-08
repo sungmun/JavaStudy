@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 
 import Model.ClientMessage;
 import Serversynchronization.MessageType;
+import Serversynchronization.TotalJsonObject;
 
 public class FrameControl implements EventListener {
 	public FrameControl() {
@@ -21,11 +22,11 @@ public class FrameControl implements EventListener {
 		TotalJsonObject open = new TotalJsonObject();
 		open.addProperty("method", "setVisible");
 		open.addProperty("boolean", true);
-		MVC_Connect.ControlToView.callEvent(fropen.getClass(), open.toString());
+		MVC_Connect.ControlToView.callEvent(fropen.getClass(), open);
 
 		TotalJsonObject close = new TotalJsonObject();
 		close.addProperty("method", "dispose");
-		MVC_Connect.ControlToView.callEvent(frclose.getClass(), close.toString());
+		MVC_Connect.ControlToView.callEvent(frclose.getClass(), close);
 	}
 
 	static void showOptionDialog(TotalJsonObject obj) {

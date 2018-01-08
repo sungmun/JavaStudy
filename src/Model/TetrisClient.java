@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class TetrisClient extends Thread {
-	public final static String IP = "mydirectory.iptime.org";
+	public final static String IP = "localhost" /* "mydirectory.iptime.org" */;
 	public final static int PORT = 4160;
 
 	Socket socket;
@@ -19,9 +19,11 @@ public class TetrisClient extends Thread {
 
 	private TetrisClient() {
 		try {
+
 			socket = new Socket(IP, PORT);
 			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
@@ -46,22 +48,31 @@ public class TetrisClient extends Thread {
 
 	@Override
 	public void run() {
-		try {
-			while (true) {
-				onMessage(socket);
-			}
-		} catch (IOException e) {
-			close();
+		while (!Thread.currentThread().isInterrupted()) {
+			onMessage(socket);
 		}
 	}
 
-	public void onMessage(Socket server) throws IOException {
+	public void onMessage(Socket server) {
 		// ServerMessage event = new ServerMessage();
-		ServerMessage.onEvent(in.readLine());
-		in.reset();
+		System.out.println("TetrisClient.onMessage()");
+		try {
+			String str = in.readLine();
+			System.out.println(str);
+			ServerMessage.onEvent(str);
+			
+			in.mark(0);
+			in.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			interrupt();
+		}
+
 	}
 
 	public void send(String msg) {
+		System.out.println("TetrisClient.send()");
+		System.out.println(msg);
 		out.println(msg);
 		out.flush();
 		System.gc();

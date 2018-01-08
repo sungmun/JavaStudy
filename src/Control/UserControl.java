@@ -1,5 +1,7 @@
 package Control;
 
+import Serversynchronization.User;
+
 public class UserControl {
 	public static UserControl users=new UserControl();
 	private User player;

@@ -1,4 +1,4 @@
-package Control;
+package Serversynchronization;
 
 import java.util.Vector;
 

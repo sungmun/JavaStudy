@@ -8,12 +8,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Control.BackFrameAction;
+import Control.EventListener;
+import Control.MVC_Connect;
 import Control.MulitePlayAction;
+import Serversynchronization.TotalJsonObject;
 import View.BasicButton;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
-public class ListViewFrame extends JFrame {
+public class ListViewFrame extends JFrame implements EventListener{
 	ListView list;
 	BasicButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
 
@@ -21,6 +24,9 @@ public class ListViewFrame extends JFrame {
 
 	private ListViewFrame() {
 		super("접속자 목록");
+		
+		MVC_Connect.ControlToView.addListener(this);
+		
 		setLayout(new BorderLayout());
 		list = ListView.createListView();
 
@@ -54,5 +60,30 @@ public class ListViewFrame extends JFrame {
 			listframe = new ListViewFrame();
 		}
 		return listframe;
+	}
+
+	@Override
+	public void onEvent(Object event) {
+		TotalJsonObject object=(TotalJsonObject) event;
+		
+		if(object.get("method")==null) {
+			return;
+		}
+		methodCatch(object);
+	}
+
+	@Override
+	public void methodCatch(Object event) {
+		TotalJsonObject object=(TotalJsonObject) event;
+		switch (object.get("method").toString()) {
+		case "setVisible":
+			setVisible((Boolean)object.get("boolean"));
+			break;
+		case "dispose":
+			dispose();
+			break;
+		default:
+			break;
+		}
 	}
 }

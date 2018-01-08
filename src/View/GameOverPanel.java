@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import Control.EventListener;
-import Control.TotalJsonObject;
 import Serversynchronization.MessageType;
+import Serversynchronization.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class GameOverPanel extends JPanel implements EventListener {

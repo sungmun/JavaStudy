@@ -5,12 +5,11 @@ import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 
-import Model.ServerInfomation;
 import View.Multe.LoginFrame;
 import View.Single.SingleFrame;
 
 @SuppressWarnings("serial")
-public class StartFrame extends JFrame implements ServerInfomation {
+public class StartFrame extends JFrame  {
 	private static StartFrame startfr = null;
 
 	private StartFrame() {

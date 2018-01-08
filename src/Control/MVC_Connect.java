@@ -3,6 +3,7 @@ package Control;
 import Model.ClientMessage;
 import Model.TetrisManager;
 import Serversynchronization.MessageType;
+import Serversynchronization.TotalJsonObject;
 
 public class MVC_Connect implements EventListener {
 	public static EventHandler ModelToControl = new EventHandler();

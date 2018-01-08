@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 
 import Model.MoveType;
 import Model.TetrisManager;
+import Serversynchronization.TotalJsonObject;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener {
 	ImagePrint mainprint;

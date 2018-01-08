@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.border.LineBorder;
 
 import Control.ImagePrint;
-import Control.TotalJsonObject;
+import Serversynchronization.TotalJsonObject;
 
 @SuppressWarnings("serial")
 public class NextBlockPanel extends SendDataPanel {

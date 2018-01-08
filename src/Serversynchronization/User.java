@@ -1,6 +1,4 @@
-package Control;
-
-import Serversynchronization.PlayerInformation;
+package Serversynchronization;
 
 public class User {
 	private int usernumber;

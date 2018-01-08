@@ -2,14 +2,14 @@ package Model;
 
 import Control.EventListener;
 import Control.MVC_Connect;
-import Control.TotalJsonObject;
-import Control.User;
 import Control.UserControl;
 import Serversynchronization.MessageType;
+import Serversynchronization.TotalJsonObject;
 
 public class ClientMessage implements EventListener {
 	TetrisClient client;
 	static ClientMessage message;
+	final String MessageTypeKey = MessageType.class.getSimpleName();
 
 	ClientMessage() {
 		message = this;
@@ -21,7 +21,7 @@ public class ClientMessage implements EventListener {
 		System.out.println("ClientMessage.onEvent()");
 		System.out.println(event);
 		TotalJsonObject parser = new TotalJsonObject((String) event);
-		if (parser.get(MessageType.class.getName()) == null)
+		if (parser.get(MessageTypeKey) == null)
 			return;
 		parser.removeValue("sentClass");
 		methodCatch(parser);
@@ -30,11 +30,11 @@ public class ClientMessage implements EventListener {
 	@Override
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
-		String messageTypeStr=(String) obj.get("MessageType");
-		MessageType messageType=MessageType.valueOf(messageTypeStr);
+		String messageTypeStr = (String) obj.get(MessageTypeKey);
+		MessageType messageType = MessageType.valueOf(messageTypeStr);
 		switch (messageType) {
 		case LOGIN:
-			login(obj.get("User"));
+			login();
 			break;
 		case USER_SELECTING:
 			UserSelecting(obj);
@@ -56,15 +56,15 @@ public class ClientMessage implements EventListener {
 		}
 	}
 
-	private void login(Object obj) {
-		User user = (User) obj;
+	private void login() {
 
 		client = TetrisClient.createTetrisClient();
 
 		TotalJsonObject message = new TotalJsonObject();
-		message.addProperty("MessageType", MessageType.LOGIN.toString());
-		message.addProperty("User", message.GsonConverter(user));
-		
+		message.addProperty(MessageTypeKey, MessageType.LOGIN.toString());
+		message.addProperty(UserControl.users.getPlayer().getClass().getSimpleName(),
+				TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
+
 		client.send(message.toString());
 
 	}
@@ -82,16 +82,17 @@ public class ClientMessage implements EventListener {
 	private void battleAccept() {
 
 		TotalJsonObject message = new TotalJsonObject();
-		message.addProperty(MessageType.class.getName(), MessageType.BATTLE_ACCEPT.toString());
+		message.addProperty(MessageTypeKey, MessageType.BATTLE_ACCEPT.toString());
 		client.send(message.toString());
 
 		message = new TotalJsonObject();
-		message.addProperty(MessageType.class.getName(), MessageType.USER_MESSAGE.toString());
-		message.addProperty(UserControl.users.getPlayer().getClass().getName(), message.GsonConverter(UserControl.users.getPlayer()));
+		message.addProperty(MessageTypeKey, MessageType.USER_MESSAGE.toString());
+		message.addProperty(UserControl.users.getPlayer().getClass().getSimpleName(),
+				TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
 		client.send(message.toString());
 
 		message = new TotalJsonObject();
-		message.addProperty(MessageType.class.getName(), MessageType.BATTLE_START.toString());
+		message.addProperty(MessageTypeKey, MessageType.BATTLE_START.toString());
 		client.send(message.toString());
 	}
 }

@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import Control.User;
 import Control.UserListModel;
+import Serversynchronization.User;
 
 @SuppressWarnings("serial")
 public class ListView extends JPanel {

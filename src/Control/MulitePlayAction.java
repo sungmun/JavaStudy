@@ -6,6 +6,8 @@ import java.util.Random;
 
 import Model.ClientMessage;
 import Serversynchronization.MessageType;
+import Serversynchronization.User;
+import Serversynchronization.UsersList;
 import View.Multe.ListView;
 
 public class MulitePlayAction implements ActionListener {

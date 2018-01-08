@@ -20,67 +20,63 @@ public class LoginFrame extends JFrame {
 	public LoginFrame() {
 		this.setLayout(new GridLayout(3, 0));
 
-		JPanel id = new JPanel(new FlowLayout());
-		id.setOpaque(false);
+		JPanel idPanel = new JPanel(new FlowLayout());
+		idPanel.setOpaque(false);
 		
-		JPanel name = new JPanel(new FlowLayout());
-		name.setOpaque(false);
+		JPanel namePanel = new JPanel(new FlowLayout());
+		namePanel.setOpaque(false);
 		
-		JPanel btn_panel=new JPanel(new FlowLayout());
-		btn_panel.setOpaque(false);
+		JPanel btnPanel=new JPanel(new FlowLayout());
+		btnPanel.setOpaque(false);
 
-		JLabel id_lbl = new JLabel("    ID     :");
-		id_lbl.setForeground(Color.WHITE);
-		id_lbl.setOpaque(false);
+		JLabel idLable = new JLabel("    ID     :");
+		idLable.setForeground(Color.WHITE);
+		idLable.setOpaque(false);
 
-		JTextField id_txt = new JTextField(12);
-		id_txt.setForeground(Color.WHITE);
-		id_txt.setOpaque(false);
+		JTextField idText = new JTextField(12);
+		idText.setForeground(Color.WHITE);
+		idText.setOpaque(false);
 		
-		id.add(id_lbl);
-		id.add(id_txt);
+		idPanel.add(idLable);
+		idPanel.add(idText);
 
-		JLabel name_lbl = new JLabel("Name :");
-		name_lbl.setForeground(Color.WHITE);
-		name_lbl.setOpaque(false);
+		JLabel nameLable = new JLabel("Name :");
+		nameLable.setForeground(Color.WHITE);
+		nameLable.setOpaque(false);
 
-		JTextField name_txt = new JTextField(12);
-		name_txt.setForeground(Color.WHITE);
-		name_txt.setOpaque(false);
+		JTextField nameText = new JTextField(12);
+		nameText.setForeground(Color.WHITE);
+		nameText.setOpaque(false);
 
-		name.add(name_lbl);
-		name.add(name_txt);
+		namePanel.add(nameLable);
+		namePanel.add(nameText);
 		
 		BasicButton login = new BasicButton("Login");
 		login.addActionListener(new LoginEvent() {
 			
 			@Override
-			public String setName() {
-				return name_txt.getText();
-			}
-			
-			@Override
-			public String setId() {
-				return id_txt.getText();
+			public void setUserInfo() {
+				this.id=idText.getText();
+				this.name=nameText.getText();
 			}
 		});
-		btn_panel.add(login);
+		btnPanel.add(login);
 		
 		BasicButton back = new BasicButton("Back");
 		back.addActionListener((e) -> {
 			StartFrame.getStartFrame().setVisible(true);
 			dispose();
 		});
-		btn_panel.add(back);
+		btnPanel.add(back);
 		
 		BasicButton exit=new BasicButton("Exit");
 		exit.addActionListener((e)->System.exit(0));
 		exit.setPreferredSize(login.getPreferredSize());
-		btn_panel.add(exit);
+		btnPanel.add(exit);
 		
-		this.add(id);
-		this.add(name);
-		this.add(btn_panel);
+		this.add(idPanel);
+		this.add(namePanel);
+		this.add(btnPanel);
 		
 		this.getContentPane().setBackground(Color.BLACK);
 		this.setUndecorated(true);

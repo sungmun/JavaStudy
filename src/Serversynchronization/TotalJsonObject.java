@@ -1,4 +1,4 @@
-package Control;
+package Serversynchronization;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,6 +16,7 @@ public class TotalJsonObject {
 		jsonParser(json);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addProperty(String key, Object value) {
 		object.put(key, value);
 	}
@@ -28,11 +29,11 @@ public class TotalJsonObject {
 		object.remove(key);
 	}
 
-	public <T> T GsonConverter(String gson, Class<T> classOfT) {
+	public static <T> T GsonConverter(String gson, Class<T> classOfT) {
 		return new Gson().fromJson(gson, classOfT);
 	}
 
-	public String GsonConverter(Object obj) {
+	public static String GsonConverter(Object obj) {
 		return new Gson().toJson(obj);
 	}
 

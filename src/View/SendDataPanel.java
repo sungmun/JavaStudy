@@ -4,9 +4,9 @@ import javax.swing.JPanel;
 
 import Control.EventListener;
 import Control.MVC_Connect;
-import Control.TotalJsonObject;
 import Model.ServerMessage;
 import Model.TetrisManager;
+import Serversynchronization.TotalJsonObject;
 import View.Multe.MultiFrame;
 import View.Multe.PanelForTheOpponent;
 import View.Single.SingleFrame;

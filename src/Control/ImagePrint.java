@@ -10,6 +10,7 @@ import java.util.HashMap;
 import Model.BlockType;
 import Model.CreateBlock;
 import Model.TetrinoType;
+import Serversynchronization.TotalJsonObject;
 import ValueObject.Space;
 import View.NextBlockPanel;
 import View.SaveBlockPanel;

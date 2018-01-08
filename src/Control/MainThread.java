@@ -1,6 +1,7 @@
 package Control;
 
 import Model.ModelInstentCreate;
+import Serversynchronization.User;
 import View.StartFrame;
 
 public class MainThread {
