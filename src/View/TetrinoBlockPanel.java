@@ -18,7 +18,6 @@ public class TetrinoBlockPanel extends SendDataPanel {
 		setLayout(null);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(ImagePrint.WIDTH * 10, ImagePrint.HEIGHT * 20));
-		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));
 	}
 

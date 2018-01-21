@@ -1,29 +1,42 @@
 package Control;
+
 import javax.swing.table.DefaultTableModel;
 
+import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
 import Serversynchronization.UsersList;
 
 @SuppressWarnings("serial")
-public class UserListModel extends DefaultTableModel {
+public class UserListModel extends DefaultTableModel implements EventListener {
+	TotalJsonObject json;
+	static int selectedRow = -1;
+	static UserListModel model=null;
+	
 	public UserListModel(String[] header, int date) {
 		super(header, date);
-
+		MVC_Connect.ModelToControl.addListener(this);
+		MVC_Connect.ViewToControl.addListener(this);
+		UserListModel.model=this;
 	}
 
-	public User getData(int row) {
-		Integer num = new Integer((String) getValueAt(row, 0));
-		String name = (String) getValueAt(row, 1);
-		String id = (String) getValueAt(row, 2);
+	// User정보 전달 함수
+	static User getData() {
+		if (selectedRow == -1||UserListModel.model==null)
+			return null;
+		Integer num = new Integer(UserListModel.model.getValueAt(selectedRow, 0).toString());
+		String name = UserListModel.model.getValueAt(selectedRow, 1).toString();
+		String id = UserListModel.model.getValueAt(selectedRow, 2).toString();
 		return new User(id, name, num);
 	}
 
+	// 초기화 함수
 	public void initList() {
 		String[] str;
-
-		for (User user : UsersList.getList()) {
+		
+		this.setRowCount(0);
+		for (User user : UsersList.list.values()) {
 			str = new String[3];
-			if(UserControl.users.getPlayer().getUserNumber()==user.getUserNumber()) {
+			if (user.equals(UserControl.users.getPlayer())) {
 				continue;
 			}
 			str[0] = user.getUserNumber().toString();
@@ -32,16 +45,60 @@ public class UserListModel extends DefaultTableModel {
 			addRow(str);
 		}
 	}
+	private void setUsersList(TotalJsonObject json) {
+		if(json.get(User[].class.getSimpleName())==null){
+			initList();
+			return;
+		}
+		final User[] users=TotalJsonObject.GsonConverter(json.get(User[].class.getSimpleName()).toString(), User[].class);
 
-	public void adddata(Object data) {
-		if (data instanceof User) {
-			String[] str = new String[3];
-			User user = (User) data;
-
-			str[0] = user.getUserNumber().toString();
-			str[1] = user.getName();
-			str[2] = user.getID();
-			addRow(str);
+		UsersList.list.clear();
+		for (User user : users) {
+			addData(user);
 		}
 	}
+	// User추가 함수
+	public void addData(Object data) {
+		if (!(data instanceof User) || UsersList.list.containsKey(((User) data).getUserNumber())) {
+			return;
+		}
+		User user = (User) data;
+
+		UsersList.list.put(user.getUserNumber(), user);
+
+		String[] str = new String[3];
+		str[0] = user.getUserNumber().toString();
+		str[1] = user.getName();
+		str[2] = user.getID();
+		addRow(str);
+	}
+	private void delete(Object data) {
+		UsersList.list.remove((User) data);
+		initList();
+	}
+
+	@Override
+	public void onEvent(Object event) {
+		json = new TotalJsonObject(event.toString());
+		String source=null;
+		switch (json.get("method").toString()) {
+		case "addData":
+			source=json.get("User").toString();
+			addData(TotalJsonObject.GsonConverter(source, User.class));
+			break;
+		case "setUsersList":
+			setUsersList(json);
+			break;
+		case "getData":
+			getData();
+			break;
+		case "delete":
+			source=json.get("User").toString();
+			delete(TotalJsonObject.GsonConverter(source, User.class));
+			break;
+		default:
+			break;
+		}
+	}
+
 }

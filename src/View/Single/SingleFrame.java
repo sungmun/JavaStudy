@@ -1,20 +1,16 @@
 package View.Single;
 
 import Control.KeyBoardEvent;
-import View.CellSize;
 import View.GameBasicFrame;
 import View.PanelForTheUser;
 
 @SuppressWarnings("serial")
-public class SingleFrame extends GameBasicFrame implements CellSize {
-
-	static private SingleFrame singleviewcopy = null;
+public class SingleFrame extends GameBasicFrame {
 
 	public SingleFrame() {
 
 		PanelForTheUser userPanel=new PanelForTheUser();
 		time=userPanel.getTimer();
-		time.start();
 
 		this.add(userPanel);
 
@@ -22,17 +18,8 @@ public class SingleFrame extends GameBasicFrame implements CellSize {
 		this.pack();
 		this.setLocationRelativeTo(null);
 
+		time.start();
 		this.addKeyListener(new KeyBoardEvent());
 	}
 
-	public static SingleFrame createSingleFrame() {
-		if (singleviewcopy == null) {
-			singleviewcopy = new SingleFrame();
-		}
-		return singleviewcopy;
-	}
-
-	public static SingleFrame getMainviewcopy() {
-		return singleviewcopy;
-	}
 }

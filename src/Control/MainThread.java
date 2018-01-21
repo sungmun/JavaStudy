@@ -12,7 +12,7 @@ public class MainThread {
 		new ModelInstentCreate();
 		UserControl.users.setPlayer(new User());
 		
-		StartFrame startfr = StartFrame.createStartFrame();
+		StartFrame startfr = new StartFrame();
 		startfr.setVisible(true);
 	}
 

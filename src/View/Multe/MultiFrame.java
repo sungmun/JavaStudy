@@ -1,19 +1,19 @@
 package View.Multe;
 
-import java.awt.Graphics;
 import java.awt.GridLayout;
 
+import Control.EventListener;
 import Control.KeyBoardEvent;
-import View.CellSize;
+import Control.MVC_Connect;
 import View.GameBasicFrame;
 import View.PanelForTheUser;
 
 @SuppressWarnings("serial")
-public class MultiFrame extends GameBasicFrame implements CellSize {
+public class MultiFrame extends GameBasicFrame implements EventListener {
 
-	static private MultiFrame multeviewcopy = null;
-
-	private MultiFrame() {
+	public MultiFrame() {
+		
+		MVC_Connect.ControlToView.addListener(this);
 		
 		PanelForTheUser userPanel=new PanelForTheUser();
 		PanelForTheOpponent opponentPanel=new PanelForTheOpponent();
@@ -34,19 +34,5 @@ public class MultiFrame extends GameBasicFrame implements CellSize {
 		this.addKeyListener(new KeyBoardEvent());
 	}
 
-	@Override
-	public void update(Graphics g) {
-		paintComponents(g);
-	}
 
-	public static MultiFrame createMulteFrame() {
-		if (multeviewcopy == null) {
-			multeviewcopy = new MultiFrame();
-		}
-		return multeviewcopy;
-	}
-
-	public static MultiFrame getMulteFrame() {
-		return multeviewcopy;
-	}
 }

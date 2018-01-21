@@ -18,7 +18,6 @@ public class SaveBlockPanel extends SendDataPanel {
 	Image graphics;
 
 	public SaveBlockPanel() {
-		setOpaque(false);
 		setLocation(0, 0);
 		setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, ImagePrint.HEIGHT * 5));
 		setBorder(new LineBorder(Color.WHITE, 2));

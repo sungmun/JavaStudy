@@ -5,36 +5,33 @@ import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 
+import Control.EventListener;
+import Control.FrameChangeAction;
+import Control.MVC_Connect;
+import Serversynchronization.TotalJsonObject;
 import View.Multe.LoginFrame;
 import View.Single.SingleFrame;
 
 @SuppressWarnings("serial")
-public class StartFrame extends JFrame  {
-	private static StartFrame startfr = null;
+public class StartFrame extends JFrame implements EventListener{
 
-	private StartFrame() {
+	public StartFrame() {
+		super();
+		MVC_Connect.ControlToView.addListener(this);
 		
 		BasicButton single = new BasicButton("혼자하기");
-		single.addActionListener((e) -> {
-			JFrame fr = SingleFrame.createSingleFrame();
-			fr.setVisible(true);
-			dispose();
-		});
+		single.addActionListener(new FrameChangeAction(SingleFrame.class, this.getClass()));
+		add(single);
 
 		BasicButton mulite = new BasicButton("같이하기");
-		mulite.addActionListener((e) -> {
-			JFrame fr = LoginFrame.createLoginFrame();
-			fr.setVisible(true);
-			dispose();
-		});
+		mulite.addActionListener(new FrameChangeAction(LoginFrame.class, this.getClass()));
+		add(mulite);
 		
 		BasicButton exit=new BasicButton("Exit");
 		exit.addActionListener((e)->System.exit(0));
 		exit.setPreferredSize(single.getPreferredSize());
-		
-		add(single);
-		add(mulite);
 		add(exit);
+		
 		
 		this.getContentPane().setBackground(Color.BLACK);
 		this.setUndecorated(true);
@@ -43,15 +40,28 @@ public class StartFrame extends JFrame  {
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
-
-	public static StartFrame createStartFrame() {
-		if (startfr == null) {
-			startfr = new StartFrame();
+	
+	@Override
+	public void onEvent(Object event) {
+		TotalJsonObject object=(TotalJsonObject) event;
+		
+		if(object.get("method")==null) {
+			return;
 		}
-		return startfr;
+		methodCatch(object);
 	}
 
-	public static StartFrame getStartFrame() {
-		return startfr;
+	public void methodCatch(Object event) {
+		TotalJsonObject object=(TotalJsonObject) event;
+		switch (object.get("method").toString()) {
+		case "setVisible":
+			setVisible((Boolean)object.get("boolean"));
+			break;
+		case "dispose":
+			this.dispose();
+			break;
+		default:
+			break;
+		}
 	}
 }

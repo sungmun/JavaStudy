@@ -19,40 +19,32 @@ public class FrameControl implements EventListener {
 
 	static void FrameChange(Object fropen, Object frclose) {
 
-		TotalJsonObject open = new TotalJsonObject();
-		open.addProperty("method", "setVisible");
-		open.addProperty("boolean", true);
-		MVC_Connect.ControlToView.callEvent(fropen.getClass(), open);
+		try {
+			Class.forName(fropen.toString()).newInstance();
 
-		TotalJsonObject close = new TotalJsonObject();
-		close.addProperty("method", "dispose");
-		MVC_Connect.ControlToView.callEvent(frclose.getClass(), close);
-	}
+			TotalJsonObject open = new TotalJsonObject();
+			open.addProperty("method", "setVisible");
+			open.addProperty("boolean", true);
+			MVC_Connect.ControlToView.callEvent(Class.forName(fropen.toString()), open);
 
-	static void showOptionDialog(TotalJsonObject obj) {
-		int op = showOptionDialog(obj.get("title"), obj.get("content"), obj.get("JOptionPaneType"),
-				obj.get("JOptionPaneStyle"));
-		MVC_Connect.ControlToModel.quickCallEvent(ClientMessage.class,
-				(op == JOptionPane.YES_OPTION) ? MessageType.BATTLE_ACCEPT : MessageType.BATTLE_DENIAL);
+			TotalJsonObject close = new TotalJsonObject();
+			close.addProperty("method", "dispose");
+			MVC_Connect.ControlToView.callEvent(Class.forName(frclose.toString()), close);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static int showOptionDialog(Object title, Object content, Object JOptionPaneType, Object JOptionPaneStyle) {
-		return JOptionPane.showOptionDialog(null, (String) content, (String) title, (int) JOptionPaneType,
-				(int) JOptionPaneStyle, null, null, null);
-
-	}
-
-	static void showMessageDialog(TotalJsonObject event) {
-		showMessageDialog(event.get("title"), event.get("content"));
+		int type = Integer.parseInt(JOptionPaneType.toString());
+		int style = Integer.parseInt(JOptionPaneStyle.toString());
+		return JOptionPane.showOptionDialog(null, (String) content, (String) title, type, style, null, null, null);
 	}
 
 	static void showMessageDialog(Object title, Object content) {
 		JOptionPane.showMessageDialog(null, (String) content, (String) title, JOptionPane.PLAIN_MESSAGE);
 	}
 
-	void FrameClose(JFrame frclose) {
-
-	}
 
 	@Override
 	public void onEvent(Object event) {
@@ -61,18 +53,11 @@ public class FrameControl implements EventListener {
 		methodCatch(object);
 	}
 
-	@Override
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
 		switch (obj.get("method").toString()) {
 		case "FrameChange":
 			FrameChange(obj);
-			break;
-		case "showOptionDialog":
-			showOptionDialog(obj);
-			break;
-		case "showMessageDialog":
-			showMessageDialog(obj);
 			break;
 		}
 

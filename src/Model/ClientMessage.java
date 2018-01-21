@@ -5,6 +5,7 @@ import Control.MVC_Connect;
 import Control.UserControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
+import Serversynchronization.User;
 
 public class ClientMessage implements EventListener {
 	TetrisClient client;
@@ -19,7 +20,6 @@ public class ClientMessage implements EventListener {
 	@Override
 	public void onEvent(Object event) {
 		System.out.println("ClientMessage.onEvent()");
-		System.out.println(event);
 		TotalJsonObject parser = new TotalJsonObject((String) event);
 		if (parser.get(MessageTypeKey) == null)
 			return;
@@ -27,7 +27,6 @@ public class ClientMessage implements EventListener {
 		methodCatch(parser);
 	}
 
-	@Override
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
 		String messageTypeStr = (String) obj.get(MessageTypeKey);
@@ -38,10 +37,13 @@ public class ClientMessage implements EventListener {
 			break;
 		case USER_SELECTING:
 			UserSelecting(obj);
+			break;
 		case BATTLE_ACCEPT:
 			battleAccept();
+			break;
 		case LOGOUT:
 			logout(obj);
+			break;
 		case GAMEOVER_MESSAGE:
 		case RANK:
 
@@ -51,13 +53,13 @@ public class ClientMessage implements EventListener {
 		case SAVE_BLOCK_MESSAGE:
 		case LEVEL_MESSAGE:
 		case SCORE_MESSAGE:
+			client.send(obj.toString());
 		default:
 			break;
 		}
 	}
 
 	private void login() {
-
 		client = TetrisClient.createTetrisClient();
 
 		TotalJsonObject message = new TotalJsonObject();
@@ -83,12 +85,7 @@ public class ClientMessage implements EventListener {
 
 		TotalJsonObject message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.BATTLE_ACCEPT.toString());
-		client.send(message.toString());
-
-		message = new TotalJsonObject();
-		message.addProperty(MessageTypeKey, MessageType.USER_MESSAGE.toString());
-		message.addProperty(UserControl.users.getPlayer().getClass().getSimpleName(),
-				TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
+		message.addProperty(User.class.getSimpleName(), TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
 		client.send(message.toString());
 
 		message = new TotalJsonObject();

@@ -7,12 +7,13 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Control.BackFrameAction;
+import Control.FrameChangeAction;
 import Control.EventListener;
 import Control.MVC_Connect;
 import Control.MulitePlayAction;
 import Serversynchronization.TotalJsonObject;
 import View.BasicButton;
+import View.BasicPanel;
 import View.StartFrame;
 
 @SuppressWarnings("serial")
@@ -20,30 +21,26 @@ public class ListViewFrame extends JFrame implements EventListener{
 	ListView list;
 	BasicButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
 
-	private static ListViewFrame listframe;
-
-	private ListViewFrame() {
+	public ListViewFrame() {
 		super("접속자 목록");
 		
 		MVC_Connect.ControlToView.addListener(this);
 		
 		setLayout(new BorderLayout());
-		list = ListView.createListView();
+		list = new ListView();
 
-		JPanel etc = new JPanel(new GridLayout(3, 1));
+		JPanel etc = new BasicPanel(new GridLayout(3, 1));
 		etc.setBackground(Color.BLACK);
 
-		mulite_play_btn = new BasicButton("지정한 사람과 같이하기");
-		random_multie_play_btn = new BasicButton("랜덤으로 같이하기");
-		back_frame_btn = new BasicButton("뒤로가기");
-
-		mulite_play_btn.addActionListener(new MulitePlayAction(list,false));
-		random_multie_play_btn.addActionListener(new MulitePlayAction(list,true));
-		back_frame_btn.addActionListener(new BackFrameAction(StartFrame.getStartFrame(), this));
-
+		mulite_play_btn = new BasicButton("Start",new MulitePlayAction());
 		etc.add(mulite_play_btn);
+
+		random_multie_play_btn = new BasicButton("RandomStart",new MulitePlayAction());
 		etc.add(random_multie_play_btn);
+
+		back_frame_btn = new BasicButton("Back",new FrameChangeAction(new StartFrame().getClass(), this.getClass()));
 		etc.add(back_frame_btn);
+		
 
 		add(list, BorderLayout.WEST);
 		add(etc, BorderLayout.EAST);
@@ -53,13 +50,6 @@ public class ListViewFrame extends JFrame implements EventListener{
 		this.setResizable(false);
 		this.pack();
 		this.setLocationRelativeTo(null);
-	}
-
-	public static ListViewFrame createListViewFrame() {
-		if (listframe == null) {
-			listframe = new ListViewFrame();
-		}
-		return listframe;
 	}
 
 	@Override
@@ -72,7 +62,6 @@ public class ListViewFrame extends JFrame implements EventListener{
 		methodCatch(object);
 	}
 
-	@Override
 	public void methodCatch(Object event) {
 		TotalJsonObject object=(TotalJsonObject) event;
 		switch (object.get("method").toString()) {

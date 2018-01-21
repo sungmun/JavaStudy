@@ -50,10 +50,7 @@ public class User {
 	}
 
 	public boolean equals(User user) {
-		if (this.usernumber == user.usernumber) {
-			return true;
-		}
-		return false;
+		return this.usernumber==user.usernumber?true:false;
 	}
 
 	public void setName(String name) {

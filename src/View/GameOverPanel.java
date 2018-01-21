@@ -5,53 +5,52 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import Control.EventListener;
-import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
 
 @SuppressWarnings("serial")
-public class GameOverPanel extends JPanel implements EventListener {
+public class GameOverPanel extends SendDataPanel {
 	public JLabel score_lbl, level_lbl;
-	String score_txt = "0", level_txt = "1";
+	String score = "0", level = "1";
 
 	public GameOverPanel() {
+		super();
+		
+		setOpaque(true);
 		setLayout(new GridLayout(5, 0));
-		this.setBackground(Color.BLACK);
-		this.add(new BasicJLabel("GAME OVER", Font.BOLD, 40));
-		this.add(new BasicJLabel("점수", Font.BOLD, 23));
-		score_lbl = new BasicJLabel("0", Font.CENTER_BASELINE, 16);
-		this.add(score_lbl);
+		setBackground(Color.BLACK);
+		setBorder(new LineBorder(Color.WHITE, 2));
+		
+		add(new BasicLabel("GAME OVER", Font.BOLD, 40));
+		add(new BasicLabel("점수", Font.BOLD, 23));
+		
+		score_lbl = new BasicLabel("0", Font.CENTER_BASELINE, 16);
+		add(score_lbl);
 
-		this.add(new BasicJLabel("레벨", Font.BOLD, 23));
-		level_lbl = new BasicJLabel("1", Font.CENTER_BASELINE, 16);
-		this.add(level_lbl);
+		add(new BasicLabel("레벨", Font.BOLD, 23));
+		
+		level_lbl = new BasicLabel("1", Font.CENTER_BASELINE, 16);
+		add(level_lbl);
 
-		this.setBorder(new LineBorder(Color.WHITE, 2));
 	}
-
 	public void initInfo() {
-		score_lbl.setText(score_txt);
-		level_lbl.setText(level_txt);
+		score_lbl.setText(score);
+		level_lbl.setText(level);
 	}
 
 	@Override
-	public void onEvent(Object event){
-		TotalJsonObject object=new TotalJsonObject((String) event);
-		if (object.get(MessageType.class.getName()) == null)
-			return;
-		methodCatch(object);
-	}
-
-	@Override
-	public void methodCatch(Object event) {
-		TotalJsonObject obj = (TotalJsonObject) event;
-		Integer score=(Integer) obj.get("Score");
-		Integer level=(Integer) obj.get("Score");
-		score_txt=(score!=null)?score.toString():score_txt;
-		level_txt=(level!=null)?level.toString():level_txt;
+	void setData(Object obj) {
+		TotalJsonObject event = new TotalJsonObject(obj.toString());
+		
+		String level=event.get("Level").toString();
+		String score=event.get("Score").toString();
+		
+		this.level=(level==null)?this.level:level;
+		this.score=(score==null)?this.score:score;
+		
+		
+		repaint();
 	}
 
 }

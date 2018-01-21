@@ -13,13 +13,13 @@ import Serversynchronization.User;
 import ValueObject.Map;
 import ValueObject.Point;
 import ValueObject.Space;
-import View.GameBasicFrame;
 
 public class TetrisManager implements EventListener {
 
 	public static final int HEIGHT = 23;
 	public static final int WIDTH = 10;
 
+	final String sentClass = this.getClass().getName();
 	private TetrinoType saveBlock = null;
 	private TetrinoType nextBlock = null;
 
@@ -85,7 +85,13 @@ public class TetrisManager implements EventListener {
 	}
 
 	public void createBlock() {
-		int createposition = WIDTH / 3;
+		final int createPosition = WIDTH / 3;
+
+		if (gameOverCheack()) {
+			gameOver();
+			return;
+		}
+
 		if (nextBlock == null) {
 			setNextBlock(TetrinoType.getRandomTetrino());
 			tetrino = new CreateBlock().tetrinoRandomCreate();
@@ -96,14 +102,15 @@ public class TetrisManager implements EventListener {
 
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
-				if (realTimeMap[y][x + createposition] != null || tetrino.getTetrino()[y][x] == null) {
-					realTimeMap[y][x + createposition] = tetrino.getTetrino()[y][x];
-				} else if (realTimeMap[y][x + createposition] == null || tetrino.getTetrino()[y][x] != null) {
-					realTimeMap[y][x + createposition] = tetrino.getTetrino()[y][x];
+				if (realTimeMap[y][x + createPosition] != null || tetrino.getTetrino()[y][x] == null) {
+					realTimeMap[y][x + createPosition] = tetrino.getTetrino()[y][x];
+				} else if (realTimeMap[y][x + createPosition] == null || tetrino.getTetrino()[y][x] != null) {
+					realTimeMap[y][x + createPosition] = tetrino.getTetrino()[y][x];
 				}
 			}
 		}
-		tetrino.setFlowTetrino(new Point(1, createposition + 2));
+
+		tetrino.setFlowTetrino(new Point(1, createPosition + 2));
 		sendRealTimeMap();
 	}
 
@@ -172,15 +179,15 @@ public class TetrisManager implements EventListener {
 			info.setLevel(level);
 			TotalJsonObject msg = new TotalJsonObject();
 			msg.addProperty("Level", info.getLevel());
-			msg.addProperty("sentClass", this.getClass().getName());
-			msg.addProperty(MessageType.class.getName(), MessageType.LEVEL_MESSAGE.toString());
-			MVC_Connect.ModelToControl.quickCallEvent(MVC_Connect.class, "Level", level);
+			msg.addProperty("sentClass", sentClass);
+			msg.addProperty(MessageType.class.getSimpleName(), MessageType.LEVEL_MESSAGE.toString());
+			MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.toString());
 		}
 		TotalJsonObject msg = new TotalJsonObject();
 		msg.addProperty("Score", info.getScore());
-		msg.addProperty("sentClass", this.getClass().getName());
-		msg.addProperty(MessageType.class.getName(), MessageType.SCORE_MESSAGE.toString());
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.getAsString());
+		msg.addProperty("sentClass", sentClass);
+		msg.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.toString());
 
 		User user = UserControl.users.getPlayer();
 		user.setInfo(info);
@@ -273,14 +280,9 @@ public class TetrisManager implements EventListener {
 		return true;
 	}
 
-	public boolean gameOverCheack(Point pos) {
-		if (getNowTetrino().getFlowTetrino().getY() >= 5) {
-			return false;
-		}
-		Space[][] spaces = getRangeRealTimeMap(0);
+	public boolean gameOverCheack() {
 		for (int i = 0; i < 3; i++) {
-			for (Space space : spaces[i]) {
-
+			for (Space space : realTimeMap[i]) {
 				if (space != null && space.getIsblock() == BlockType.FIXED) {
 					return true;
 				}
@@ -348,11 +350,12 @@ public class TetrisManager implements EventListener {
 		this.saveBlock = tetrino;
 		TotalJsonObject blockMessage = new TotalJsonObject();
 		blockMessage.addProperty("method", "saveBlockPaint");
-		blockMessage.addProperty(TetrinoType.class.getName(), saveBlock.toString());
-		blockMessage.addProperty("sentClass", this.getClass().getName());
+		blockMessage.addProperty(TetrinoType.class.getSimpleName(), saveBlock.toString());
+		blockMessage.addProperty("sentClass", sentClass);
+		blockMessage.addProperty(MessageType.class.getName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
 		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.getAsString());
 
-		blockMessage.addProperty(MessageType.class.getName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
+		blockMessage.removeValue("method");
 		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.getAsString());
 	}
 
@@ -360,11 +363,12 @@ public class TetrisManager implements EventListener {
 		this.nextBlock = tetrino;
 		TotalJsonObject blockMessage = new TotalJsonObject();
 		blockMessage.addProperty("method", "nextBlockPaint");
-		blockMessage.addProperty(TetrinoType.class.getName(), nextBlock.name());
-		blockMessage.addProperty("sentClass", this.getClass().getName());
+		blockMessage.addProperty(TetrinoType.class.getSimpleName(), nextBlock.name());
+		blockMessage.addProperty("sentClass", sentClass);
+		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
 		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.toString());
 
-		blockMessage.addProperty(MessageType.class.getName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
+		blockMessage.removeValue("method");
 		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.toString());
 	}
 
@@ -381,9 +385,6 @@ public class TetrisManager implements EventListener {
 		}
 
 		Point nowpos = tetrino.getFlowTetrino();
-		if (gameOverCheack(nowpos)) {
-			GameBasicFrame.time.stop();
-		}
 
 		if (MoveType.DROP == type || MoveType.DOWN == type) {
 			setNowTetrino(null);
@@ -395,33 +396,37 @@ public class TetrisManager implements EventListener {
 				}
 			}
 		}
+
+		if (gameOverCheack()) {
+			gameOver();
+			return;
+		}
+
 		int clearline = lineCheack(nowpos);
 		if (clearline > 0) {
 			lineClear(clearline, nowpos);
 		}
 	}
 
-
 	public void sendRealTimeMap() {
 		TotalJsonObject mapMessage = new TotalJsonObject();
 
 		mapMessage.addProperty("method", "TetrinoBlockPaint");
-
-		mapMessage.addProperty(realTimeMap.getClass().getName(), mapMessage.GsonConverter(realTimeMap));
-		mapMessage.addProperty("sentClass", this.getClass().getName());
+		mapMessage.addProperty(realTimeMap.getClass().getSimpleName(), TotalJsonObject.GsonConverter(realTimeMap));
+		mapMessage.addProperty("sentClass", sentClass);
+		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
 		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage.toString());
 
-		mapMessage.addProperty(MessageType.class.getName(), MessageType.MAP_MESSAGE.toString());
+		mapMessage.removeValue("method");
 		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage.toString());
 	}
 
 	@Override
 	public void onEvent(Object event) {
-		TotalJsonObject object=new TotalJsonObject((String) event);
+		TotalJsonObject object = new TotalJsonObject((String) event);
 		methodCatch(object);
 	}
 
-	@Override
 	public void methodCatch(Object event) {
 		TotalJsonObject object = (TotalJsonObject) event;
 		switch (object.get("method").toString()) {
@@ -436,4 +441,10 @@ public class TetrisManager implements EventListener {
 		}
 	}
 
+	public void gameOver() {
+		TotalJsonObject jsonObject = new TotalJsonObject();
+		jsonObject.addProperty("sentClass", sentClass);
+		jsonObject.addProperty("method", "stop");
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, jsonObject.toString());
+	}
 }

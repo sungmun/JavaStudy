@@ -2,27 +2,25 @@ package View.Multe;
 
 import java.awt.Color;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import Control.ListSelectAction;
+import Control.MVC_Connect;
 import Control.UserListModel;
-import Serversynchronization.User;
+import Serversynchronization.TotalJsonObject;
+import View.BasicPanel;
 
 @SuppressWarnings("serial")
-public class ListView extends JPanel {
+public class ListView extends BasicPanel{
 	String header[] = { "번호", "이름", "ID" };
 	String data[][];
-
-	UserListModel model;
 
 	JTable table;
 	JScrollPane listJs;
 
-	private static ListView listview = null;
-
-	private ListView() {
-		model = new UserListModel(header, 0);
+	public ListView() {
+		UserListModel model = new UserListModel(header, 0);
 		
 		table = new JTable(model);
 		table.getTableHeader().setBackground(Color.BLACK);
@@ -30,42 +28,18 @@ public class ListView extends JPanel {
 		table.setBackground(Color.BLACK);
 		table.setOpaque(false);
 		table.setForeground(Color.WHITE);
-
+		table.addMouseListener(new ListSelectAction());
+		
 		listJs = new JScrollPane(table);
 		listJs.setOpaque(false);
 		listJs.getViewport().setOpaque(false);
 		add(listJs);
 
 		setOpaque(false);
-		listReFresh();
-	}
-
-	public static ListView createListView() {
-		if (listview == null) {
-			listview = new ListView();
-		}
-		return listview;
-	}
-
-	public static ListView getListview() {
-		return listview;
-	}
-
-	public Object getData() {
-		return model.getData(table.getSelectedRow());
-	}
-
-	private void listInit() {
-		model.initList();
-	}
-
-	public void listReFresh() {
-		model.setRowCount(0);
-		this.listInit();
-	}
-
-	public void listAdd(User user) {
 		
+		TotalJsonObject json=new TotalJsonObject();
+		json.addProperty("method", "initList");
+		MVC_Connect.ViewToControl.callEvent(UserListModel.class, json.toString());
 	}
 
 }

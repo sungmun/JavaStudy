@@ -10,20 +10,20 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import Control.UserControl;
-import View.BasicJLabel;
+import View.BasicLabel;
+import View.BasicPanel;
 import View.GameOverPanel;
 import View.MainPanel;
 
 @SuppressWarnings("serial")
 public class PanelForTheOpponent extends JLayeredPane{
 	public PanelForTheOpponent() {
-		JPanel basePanel = new JPanel(new BorderLayout(), true);
+		BasicPanel basePanel = new BasicPanel(new BorderLayout(), true);
 
 		MainPanel mainPanel = new MainPanel();
-		BasicJLabel label = new BasicJLabel(UserControl.users.getOpplayer().getName(), Font.BOLD, 16);
+		BasicLabel label = new BasicLabel(UserControl.users.getOpplayer().getName(), Font.BOLD, 16);
 		basePanel.add(label, BorderLayout.NORTH);
 		basePanel.add(mainPanel, BorderLayout.CENTER);
-		basePanel.setOpaque(false);
 		
 		Rectangle bound = new Rectangle(basePanel.getPreferredSize());
 		basePanel.setBounds(bound);

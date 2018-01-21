@@ -15,7 +15,6 @@ import ValueObject.Space;
 import View.NextBlockPanel;
 import View.SaveBlockPanel;
 import View.TetrinoBlockPanel;
-import View.TetrisBlockColor;
 
 public class ImagePrint implements BlockType, EventListener {
 
@@ -60,7 +59,8 @@ public class ImagePrint implements BlockType, EventListener {
 
 	private void tetrinoBlockPaint(Object object) {
 		
-		Space[][] realtimeMap = new TotalJsonObject().GsonConverter((String)object, Space[][].class);
+		new TotalJsonObject();
+		Space[][] realtimeMap = TotalJsonObject.GsonConverter((String)object, Space[][].class);
 		BufferedImage buffer = new BufferedImage(WIDTH * 10, HEIGHT * 20 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
 		g.drawImage(tetrinoMapBackgroundPaint(), 0, 0, null);
@@ -153,11 +153,10 @@ public class ImagePrint implements BlockType, EventListener {
 	@Override
 	public void onEvent(Object event) {
 		System.out.println("ImagePrint.tetrinoBlockPaint()");
-		TotalJsonObject obj=new TotalJsonObject((String) event);
+		TotalJsonObject obj=new TotalJsonObject( event.toString());
 		methodCatch(obj);
 	}
 
-	@Override
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
 		try {
@@ -165,13 +164,13 @@ public class ImagePrint implements BlockType, EventListener {
 			sentClass = Class.forName(obj.get("sentClass").toString());
 			switch ((String)obj.get("method")) {
 			case "saveBlockPaint":
-				saveBlockPaint(obj.get(TetrinoType.class.getName()));
+				saveBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
 				break;
 			case "nextBlockPaint":
-				nextBlockPaint(obj.get(TetrinoType.class.getName()));
+				nextBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
 				break;
 			case "TetrinoBlockPaint":
-				tetrinoBlockPaint(obj.get(Space[][].class.getName()));
+				tetrinoBlockPaint(obj.get(Space[][].class.getSimpleName()));
 				break;
 			}
 		} catch (ClassNotFoundException e) {

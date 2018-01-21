@@ -16,7 +16,6 @@ public class NextBlockPanel extends SendDataPanel {
 	Image graphics;
 
 	public NextBlockPanel() {
-		setOpaque(false);
 		setPreferredSize(new Dimension(ImagePrint.WIDTH * 5, ImagePrint.HEIGHT * 5));
 		setBorder(new LineBorder(Color.WHITE, 2));
 	}

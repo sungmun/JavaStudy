@@ -14,20 +14,19 @@ import Control.TicAction;
 import Control.UserControl;
 
 @SuppressWarnings("serial")
-public class PanelForTheUser extends JLayeredPane {
+public class PanelForTheUser extends JLayeredPane  {
 	GameOverPanel gameOverViewPanel;
 	JPanel gameOverPanel;
 
 	public PanelForTheUser() {
 		super();
 
-		JPanel basePanel = new JPanel(new BorderLayout(), true);
+		BasicPanel basePanel = new BasicPanel(new BorderLayout(), true);
 
 		MainPanel mainPanel = new MainPanel();
-		BasicJLabel label = new BasicJLabel(UserControl.users.getPlayer().getName(), Font.BOLD, 16);
+		BasicLabel label = new BasicLabel(UserControl.users.getPlayer().getName(), Font.BOLD, 16);
 		basePanel.add(label, BorderLayout.NORTH);
 		basePanel.add(mainPanel, BorderLayout.CENTER);
-		basePanel.setOpaque(false);
 
 		Rectangle bound = new Rectangle(basePanel.getPreferredSize());
 		basePanel.setBounds(bound);
@@ -63,4 +62,5 @@ public class PanelForTheUser extends JLayeredPane {
 			}
 		};
 	}
+
 }
