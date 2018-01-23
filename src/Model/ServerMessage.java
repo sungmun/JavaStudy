@@ -46,6 +46,7 @@ public class ServerMessage {
 			beChoice(obj.get(User.class.getSimpleName()));
 			break;
 		case BATTLE_ACCEPT:
+			accept();
 			break;
 		case BATTLE_DENIAL:
 			battleDenial();
@@ -85,13 +86,7 @@ public class ServerMessage {
 	}
 
 	private static void battleDenial() {
-		TotalJsonObject msg = new TotalJsonObject();
-
-		msg.addProperty("method", "showMessageDialog");
-		msg.addProperty("title", "null");
-		msg.addProperty("content", "상대방이 거부하였습니다");
-
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, msg.getAsString());
+		JOptionPane.showMessageDialog(null, null, "상대방이 거부하였습니다", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	private static void setMyLogin(Object msg) {
@@ -106,9 +101,8 @@ public class ServerMessage {
 		TotalJsonObject userMessage = new TotalJsonObject();
 		userMessage.addProperty("method", "addData");
 		userMessage.addProperty(User.class.getSimpleName(), msg);
-		userMessage.addProperty("sentClass", SentClass);
 
-		MVC_Connect.ModelToControl.callEvent(UserListModel.class, userMessage.getAsString());
+		sendMessage(UserListModel.class, userMessage);
 	}
 
 	private static void logOut(Object msg) {
@@ -116,26 +110,19 @@ public class ServerMessage {
 		TotalJsonObject userMessage = new TotalJsonObject();
 		userMessage.addProperty("method", "delete");
 		userMessage.addProperty(User.class.getSimpleName(), msg);
-		userMessage.addProperty("sentClass", SentClass);
 
-		MVC_Connect.ModelToControl.callEvent(UserListModel.class, userMessage.getAsString());
+		sendMessage(UserListModel.class, userMessage);
 	}
 
 	private static void userListMessage(Object msg) {
 
-		TotalJsonObject frameMessage = new TotalJsonObject();
-		frameMessage.addProperty("method", "FrameChange");
-		frameMessage.addProperty("firstFrame", ListViewFrame.class.getName());
-		frameMessage.addProperty("secondFrame", LoginFrame.class.getName());
-
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.getAsString());
+		frameChange(ListViewFrame.class, LoginFrame.class);
 
 		TotalJsonObject userMessage = new TotalJsonObject();
 		userMessage.addProperty("method", "setUsersList");
 		userMessage.addProperty(User[].class.getSimpleName(), msg);
-		userMessage.addProperty("sentClass", SentClass);
 
-		MVC_Connect.ModelToControl.callEvent(UserListModel.class, userMessage.getAsString());
+		sendMessage(UserListModel.class, userMessage);
 	}
 
 	private static void UserMessage(Object msg) {// 유저간 대결을 시작할때 유저리스트 창을 배틀 창으로 변경
@@ -143,17 +130,19 @@ public class ServerMessage {
 		/*----이때 부터 상대플레이어가 필요하므로 상대플레이어를 유저컨트롤에 상대플레이어 생성----*/
 		UserControl.users.setOpplayer(user);
 		/*-------------------------------------------------------------------------*/
-		frameChange(MultiFrame.class,ListViewFrame.class);
+		frameChange(MultiFrame.class, ListViewFrame.class);
 
 	}
-	private static void frameChange(final Class firstFrame,final Class secondFrame) {
+
+	private static void frameChange(final Class<?> firstFrame, final Class<?> secondFrame) {
 		TotalJsonObject frameMessage = new TotalJsonObject();
 		frameMessage.addProperty("method", "FrameChange");
 		frameMessage.addProperty("firstFrame", firstFrame.getName());
 		frameMessage.addProperty("secondFrame", secondFrame.getName());
-		
+
 		sendMessage(FrameControl.class, frameMessage);
 	}
+
 	private static void beChoice(Object msg) {
 		User user = TotalJsonObject.GsonConverter(msg.toString(), User.class);
 
@@ -162,6 +151,8 @@ public class ServerMessage {
 
 		TotalJsonObject jsonObject = new TotalJsonObject();
 		if (value == JOptionPane.YES_OPTION) {
+			UserControl.users.setOpplayer(user);
+			
 			jsonObject.addProperty(MessageTypeKey, MessageType.BATTLE_ACCEPT.toString());
 			ClientMessage.message.onEvent(jsonObject.toString());
 
@@ -179,8 +170,8 @@ public class ServerMessage {
 		jsonObject.addProperty(User.class.getSimpleName(),
 				TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
 		ClientMessage.message.onEvent(jsonObject.toString());
-		
-		frameChange(MultiFrame.class,ListViewFrame.class);
+
+		frameChange(MultiFrame.class, ListViewFrame.class);
 
 	}
 
@@ -229,9 +220,8 @@ public class ServerMessage {
 		sendMessage(MVC_Connect.class, userMessage);
 	}
 
-	@SuppressWarnings("unused")
-	private static void sendMessage(final Class sendclass, TotalJsonObject obj) {
+	private static void sendMessage(final Class<?> sendclass, TotalJsonObject obj) {
 		obj.addProperty("sentClass", SentClass);
-		MVC_Connect.ModelToControl.quickCallEvent(sendclass, obj.toString());
+		MVC_Connect.ModelToControl.callEvent(sendclass, obj.toString());
 	}
 }

@@ -59,8 +59,7 @@ public class ImagePrint implements BlockType, EventListener {
 
 	private void tetrinoBlockPaint(Object object) {
 		
-		new TotalJsonObject();
-		Space[][] realtimeMap = TotalJsonObject.GsonConverter((String)object, Space[][].class);
+		Space[][] realtimeMap = TotalJsonObject.GsonConverter(object.toString(), Space[][].class);
 		BufferedImage buffer = new BufferedImage(WIDTH * 10, HEIGHT * 20 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
 		g.drawImage(tetrinoMapBackgroundPaint(), 0, 0, null);

@@ -1,10 +1,7 @@
 package Control;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Model.ClientMessage;
-import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
 
 public class FrameControl implements EventListener {

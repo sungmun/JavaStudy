@@ -1,6 +1,7 @@
 package Control;
 
 import Model.ClientMessage;
+import Model.ServerMessage;
 import Model.TetrisManager;
 import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
@@ -20,18 +21,37 @@ public class MVC_Connect implements EventListener {
 		ViewToControl.addListener(this);
 	}
 
-	public void sendModelMessage(Object event) {
+	public void sentServerMessage(Object event) {
+		TotalJsonObject object = new TotalJsonObject(event.toString());
+		MessageType type = TotalJsonObject.GsonConverter(object.get(MessageType.class.getSimpleName()).toString(),
+				MessageType.class);
+		switch (type) {
+		case LEVEL_MESSAGE:
+			MVC_Connect.ControlToView.callEvent(LevelPanel.class, event);
+			break;
+		case SCORE_MESSAGE:
+			MVC_Connect.ControlToView.callEvent(ScorePanel.class, event);
+			break;
+		case SAVE_BLOCK_MESSAGE:
+		case NEXT_BLOCK_MESSAGE:
+		case MAP_MESSAGE:
+			MVC_Connect.ControlToView.callEvent(ImagePrint.class, event);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void sendServerMessage(Object event) {
 
 		TotalJsonObject object = new TotalJsonObject(event.toString());
 
 		switch (TotalJsonObject.GsonConverter(object.get(MessageType.class.getSimpleName()).toString(),
 				MessageType.class)) {
 		case LEVEL_MESSAGE:
-			MVC_Connect.ControlToView.callEvent(LevelPanel.class, object);
 			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
 			break;
 		case SCORE_MESSAGE:
-			MVC_Connect.ControlToView.callEvent(ScorePanel.class, object);
 			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
 			break;
 		case SAVE_BLOCK_MESSAGE:
@@ -42,34 +62,9 @@ public class MVC_Connect implements EventListener {
 		case BATTLE_ACCEPT:
 		case BATTLE_DENIAL:
 			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
-			
 		default:
 		}
 
-	}
-
-	public void sendViewMessage(Object event) {
-		String message = (String) event;
-		TotalJsonObject object = new TotalJsonObject();
-		object.jsonParser(message);
-
-		// switch ((MessageType)
-		// object.GsonConverter((String)object.get(MessageType.class.getName()),
-		// MessageType.class)) {
-		// case LEVEL_MESSAGE:
-		// System.out.println("level");
-		// MVC_Connect.ControlToView.callEvent(LevelPanel.class, message);
-		// break;
-		// case SCORE_MESSAGE:
-		// System.out.println("score");
-		// MVC_Connect.ControlToView.callEvent(ScorePanel.class, message);
-		// break;
-		// case MAP_MESSAGE:
-		// System.out.println("map");
-		// MVC_Connect.ControlToView.callEvent(ScorePanel.class, message);
-		// break;
-		// default:
-		// }
 	}
 
 	@Override
@@ -77,16 +72,15 @@ public class MVC_Connect implements EventListener {
 		// System.out.println("MVC_Connect.onEvent()");
 		// System.out.println(event);
 		TotalJsonObject object = new TotalJsonObject(event.toString());
+		String type = object.get("sentClass").toString();
+
+		if (type.equals(TetrisManager.class.getName())) {
+			sendServerMessage(event);
+		} else if (type.equals(ServerMessage.class.getSimpleName())) {
+			sentServerMessage(event);
+		}
 		if (object.get("method") != null)
 			methodCatch(object);
-
-		if (object.get(MessageType.class.getSimpleName()) == null)
-			return;
-		sendViewMessage(event);
-		String type = object.get("sentClass").toString();
-		if (type.equals(TetrisManager.class.getName())) {
-			sendModelMessage(event);
-		}
 	}
 
 	public void methodCatch(Object event) {

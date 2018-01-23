@@ -73,7 +73,7 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 		addRow(str);
 	}
 	private void delete(Object data) {
-		UsersList.list.remove((User) data);
+		UsersList.list.remove(data);
 		initList();
 	}
 
