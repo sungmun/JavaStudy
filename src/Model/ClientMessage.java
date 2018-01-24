@@ -19,22 +19,27 @@ public class ClientMessage implements EventListener {
 
 	@Override
 	public void onEvent(Object event) {
-		System.out.println("ClientMessage.onEvent()");
 		TotalJsonObject parser = new TotalJsonObject((String) event);
+		
 		if (parser.get(MessageTypeKey) == null)
 			return;
-		parser.removeValue("sentClass");
 		methodCatch(parser);
+		parser.removeValue("sentClass");
 	}
 
 	public void methodCatch(Object event) {
+		if(event==null) return;
 		TotalJsonObject obj = (TotalJsonObject) event;
 		String messageTypeStr = (String) obj.get(MessageTypeKey);
 		MessageType messageType = MessageType.valueOf(messageTypeStr);
+		if(client==null) {
+			if(messageType==MessageType.LOGIN) {
+				login();
+			}
+			return;
+		}
+		
 		switch (messageType) {
-		case LOGIN:
-			login();
-			break;
 		case USER_SELECTING:
 			UserSelecting(obj);
 			break;

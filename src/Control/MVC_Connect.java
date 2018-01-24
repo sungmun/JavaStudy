@@ -32,11 +32,6 @@ public class MVC_Connect implements EventListener {
 		case SCORE_MESSAGE:
 			MVC_Connect.ControlToView.callEvent(ScorePanel.class, event);
 			break;
-		case SAVE_BLOCK_MESSAGE:
-		case NEXT_BLOCK_MESSAGE:
-		case MAP_MESSAGE:
-			MVC_Connect.ControlToView.callEvent(ImagePrint.class, event);
-			break;
 		default:
 			break;
 		}
@@ -76,7 +71,7 @@ public class MVC_Connect implements EventListener {
 
 		if (type.equals(TetrisManager.class.getName())) {
 			sendServerMessage(event);
-		} else if (type.equals(ServerMessage.class.getSimpleName())) {
+		} else if (type.equals(ServerMessage.class.getName())) {
 			sentServerMessage(event);
 		}
 		if (object.get("method") != null)

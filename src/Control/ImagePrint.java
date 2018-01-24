@@ -159,7 +159,8 @@ public class ImagePrint implements BlockType, EventListener {
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
 		try {
-			System.out.println(obj.get("sentClass"));
+			System.out.println("sentClass : "+obj.get("sentClass"));
+			System.out.println("----------------------------");
 			sentClass = Class.forName(obj.get("sentClass").toString());
 			switch ((String)obj.get("method")) {
 			case "saveBlockPaint":
@@ -173,7 +174,6 @@ public class ImagePrint implements BlockType, EventListener {
 				break;
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

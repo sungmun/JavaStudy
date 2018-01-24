@@ -352,7 +352,7 @@ public class TetrisManager implements EventListener {
 		blockMessage.addProperty("method", "saveBlockPaint");
 		blockMessage.addProperty(TetrinoType.class.getSimpleName(), saveBlock.toString());
 		blockMessage.addProperty("sentClass", sentClass);
-		blockMessage.addProperty(MessageType.class.getName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
+		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
 		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.getAsString());
 
 		blockMessage.removeValue("method");
@@ -417,7 +417,6 @@ public class TetrisManager implements EventListener {
 		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
 		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage.toString());
 
-		mapMessage.removeValue("method");
 		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage.toString());
 	}
 

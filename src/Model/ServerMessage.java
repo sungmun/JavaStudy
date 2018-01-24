@@ -3,6 +3,7 @@ package Model;
 import javax.swing.JOptionPane;
 
 import Control.FrameControl;
+import Control.ImagePrint;
 import Control.MVC_Connect;
 import Control.UserControl;
 import Control.UserListModel;
@@ -17,12 +18,13 @@ import View.Multe.MultiFrame;
 
 public class ServerMessage {
 	final static String MessageTypeKey = MessageType.class.getSimpleName();
-	final static String SentClass = ServerMessage.class.getSimpleName();
+	final static String SentClass = ServerMessage.class.getName();
 
 	final TetrisClient client = TetrisClient.getTetrisClient();
 
 	public static void onEvent(String event) {
 		TotalJsonObject parser = new TotalJsonObject(event);
+		System.out.println(parser.get(MessageTypeKey));
 		if (parser.get(MessageTypeKey) == null)
 			return;
 		eventCatch(parser);
@@ -214,10 +216,8 @@ public class ServerMessage {
 	}
 
 	private static void gameMessage(Object msg) {
-		TotalJsonObject userMessage = new TotalJsonObject();
-		userMessage.addProperty(MessageTypeKey, MessageType.MAP_MESSAGE.toString());
-		userMessage.addProperty(Space[][].class.getSimpleName(), msg);
-		sendMessage(MVC_Connect.class, userMessage);
+		TotalJsonObject userMessage = new TotalJsonObject(msg.toString());
+		sendMessage(ImagePrint.class, userMessage);
 	}
 
 	private static void sendMessage(final Class<?> sendclass, TotalJsonObject obj) {

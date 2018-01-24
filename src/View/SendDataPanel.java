@@ -52,7 +52,7 @@ public abstract class SendDataPanel extends BasicPanel implements EventListener 
 			setData(element);
 		} else if (element.get("sentClass").equals(TetrisManager.class.getName())
 				&& originClass == PanelForTheUser.class) {
-			System.out.println(element.get(MessageType.class.getSimpleName()));
+//			System.out.println(element.get(MessageType.class.getSimpleName()));
 			setData(element);
 		}
 	}

@@ -55,10 +55,8 @@ public class TetrisClient extends Thread {
 
 	public void onMessage(Socket server) {
 		// ServerMessage event = new ServerMessage();
-		System.out.println("TetrisClient.onMessage()");
 		try {
 			String str = in.readLine();
-			System.out.println(str);
 			ServerMessage.onEvent(str);
 			
 			in.mark(0);
@@ -71,8 +69,6 @@ public class TetrisClient extends Thread {
 	}
 
 	public void send(String msg) {
-		System.out.println("TetrisClient.send()");
-		System.out.println(msg);
 		out.println(msg);
 		out.flush();
 		System.gc();
