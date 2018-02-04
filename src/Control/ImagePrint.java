@@ -151,7 +151,7 @@ public class ImagePrint implements BlockType, EventListener {
 
 	@Override
 	public void onEvent(Object event) {
-		System.out.println("ImagePrint.tetrinoBlockPaint()");
+//		System.out.println("ImagePrint.tetrinoBlockPaint()");
 		TotalJsonObject obj=new TotalJsonObject( event.toString());
 		methodCatch(obj);
 	}
@@ -159,8 +159,8 @@ public class ImagePrint implements BlockType, EventListener {
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
 		try {
-			System.out.println("sentClass : "+obj.get("sentClass"));
-			System.out.println("----------------------------");
+//			System.out.println("sentClass : "+obj.get("sentClass"));
+//			System.out.println("----------------------------");
 			sentClass = Class.forName(obj.get("sentClass").toString());
 			switch ((String)obj.get("method")) {
 			case "saveBlockPaint":

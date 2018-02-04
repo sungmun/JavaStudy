@@ -1,29 +1,23 @@
 package View.Multe;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
-import javax.swing.JFrame;
-
-import Control.EventListener;
 import Control.FrameChangeAction;
 import Control.LoginEvent;
-import Control.MVC_Connect;
 import Serversynchronization.TotalJsonObject;
-import View.BasicButton;
-import View.BasicLabel;
-import View.BasicPanel;
-import View.BasicTextField;
 import View.ExitButton;
+import View.BaseClass.BasicButton;
+import View.BaseClass.BasicFrame;
+import View.BaseClass.BasicLabel;
+import View.BaseClass.BasicPanel;
+import View.BaseClass.BasicTextField;
 
 @SuppressWarnings("serial")
-public class LoginFrame extends JFrame implements EventListener {
+public class LoginFrame extends BasicFrame {
 
 	public LoginFrame() {
 		super();
-		
-		MVC_Connect.ControlToView.addListener(this);
 		
 		this.setLayout(new GridLayout(3, 0));
 
@@ -64,14 +58,7 @@ public class LoginFrame extends JFrame implements EventListener {
 		this.add(namePanel);
 		this.add(btnPanel);
 
-		this.getContentPane().setBackground(Color.BLACK);
-		this.setUndecorated(true);
-		this.setResizable(false);
-		this.pack();
-		this.setLocationRelativeTo(null);
-
 	}
-
 	@Override
 	public void onEvent(Object event) {
 		TotalJsonObject object = (TotalJsonObject) event;

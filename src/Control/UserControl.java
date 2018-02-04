@@ -8,6 +8,7 @@ public class UserControl {
 	private User opplayer;
 
 	public UserControl() {
+		player=new User();
 	}
 
 	public User getPlayer() {

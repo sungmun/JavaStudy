@@ -12,12 +12,13 @@ import Control.EventListener;
 import Control.MVC_Connect;
 import Control.MulitePlayAction;
 import Serversynchronization.TotalJsonObject;
-import View.BasicButton;
-import View.BasicPanel;
 import View.StartFrame;
+import View.BaseClass.BasicButton;
+import View.BaseClass.BasicFrame;
+import View.BaseClass.BasicPanel;
 
 @SuppressWarnings("serial")
-public class ListViewFrame extends JFrame implements EventListener{
+public class ListViewFrame extends BasicFrame{
 	ListView list;
 	BasicButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
 
@@ -45,13 +46,7 @@ public class ListViewFrame extends JFrame implements EventListener{
 		add(list, BorderLayout.WEST);
 		add(etc, BorderLayout.EAST);
 
-		this.getContentPane().setBackground(Color.BLACK);
-		this.setUndecorated(true);
-		this.setResizable(false);
-		this.pack();
-		this.setLocationRelativeTo(null);
 	}
-
 	@Override
 	public void onEvent(Object event) {
 		TotalJsonObject object=(TotalJsonObject) event;

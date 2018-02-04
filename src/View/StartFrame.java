@@ -9,6 +9,7 @@ import Control.EventListener;
 import Control.FrameChangeAction;
 import Control.MVC_Connect;
 import Serversynchronization.TotalJsonObject;
+import View.BaseClass.BasicButton;
 import View.Multe.LoginFrame;
 import View.Single.SingleFrame;
 

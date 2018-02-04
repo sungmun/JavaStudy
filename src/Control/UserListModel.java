@@ -1,5 +1,7 @@
 package Control;
 
+import java.util.UUID;
+
 import javax.swing.table.DefaultTableModel;
 
 import Serversynchronization.TotalJsonObject;
@@ -23,7 +25,7 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 	static User getData() {
 		if (selectedRow == -1||UserListModel.model==null)
 			return null;
-		Integer num = new Integer(UserListModel.model.getValueAt(selectedRow, 0).toString());
+		UUID num=UUID.fromString(UserListModel.model.getValueAt(selectedRow, 0).toString());
 		String name = UserListModel.model.getValueAt(selectedRow, 1).toString();
 		String id = UserListModel.model.getValueAt(selectedRow, 2).toString();
 		return new User(id, name, num);
@@ -39,7 +41,7 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 			if (user.equals(UserControl.users.getPlayer())) {
 				continue;
 			}
-			str[0] = user.getUserNumber().toString();
+			str[0] = user.getUuid().toString();
 			str[1] = user.getName();
 			str[2] = user.getID();
 			addRow(str);
@@ -59,15 +61,15 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 	}
 	// User추가 함수
 	public void addData(Object data) {
-		if (!(data instanceof User) || UsersList.list.containsKey(((User) data).getUserNumber())) {
+		if (!(data instanceof User) || UsersList.list.containsKey(((User) data).getUuid())) {
 			return;
 		}
 		User user = (User) data;
 
-		UsersList.list.put(user.getUserNumber(), user);
+		UsersList.list.put(user.getUuid(), user);
 
 		String[] str = new String[3];
-		str[0] = user.getUserNumber().toString();
+		str[0] = user.getUuid().toString();
 		str[1] = user.getName();
 		str[2] = user.getID();
 		addRow(str);

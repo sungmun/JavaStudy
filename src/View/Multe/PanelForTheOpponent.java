@@ -10,10 +10,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import Control.UserControl;
-import View.BasicLabel;
-import View.BasicPanel;
 import View.GameOverPanel;
 import View.MainPanel;
+import View.BaseClass.BasicLabel;
+import View.BaseClass.BasicPanel;
 
 @SuppressWarnings("serial")
 public class PanelForTheOpponent extends JLayeredPane{

@@ -10,11 +10,35 @@ public class FrameControl implements EventListener {
 		MVC_Connect.ViewToControl.addListener(this);
 	}
 
+	static void FrameOpen(TotalJsonObject obj) {
+		FrameOpen(obj.get("openFrame"));
+	}
+
+	static void FrameClose(TotalJsonObject obj) {
+		FrameClose(obj.get("closeFrame"));
+	}
+
 	static void FrameChange(TotalJsonObject obj) {
 		FrameChange(obj.get("firstFrame"), obj.get("secondFrame"));
 	}
 
 	static void FrameChange(Object fropen, Object frclose) {
+		FrameOpen(fropen);
+		FrameClose(frclose);
+	}
+
+	static void FrameClose(Object frclose) {
+
+		try {
+			TotalJsonObject close = new TotalJsonObject();
+			close.addProperty("method", "dispose");
+			MVC_Connect.ControlToView.callEvent(Class.forName(frclose.toString()), close);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	static void FrameOpen(Object fropen) {
 
 		try {
 			Class.forName(fropen.toString()).newInstance();
@@ -23,10 +47,6 @@ public class FrameControl implements EventListener {
 			open.addProperty("method", "setVisible");
 			open.addProperty("boolean", true);
 			MVC_Connect.ControlToView.callEvent(Class.forName(fropen.toString()), open);
-
-			TotalJsonObject close = new TotalJsonObject();
-			close.addProperty("method", "dispose");
-			MVC_Connect.ControlToView.callEvent(Class.forName(frclose.toString()), close);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -42,7 +62,6 @@ public class FrameControl implements EventListener {
 		JOptionPane.showMessageDialog(null, (String) content, (String) title, JOptionPane.PLAIN_MESSAGE);
 	}
 
-
 	@Override
 	public void onEvent(Object event) {
 		System.out.println("FrameControl.onEvent()");
@@ -55,6 +74,12 @@ public class FrameControl implements EventListener {
 		switch (obj.get("method").toString()) {
 		case "FrameChange":
 			FrameChange(obj);
+			break;
+		case "FrameOpen":
+			FrameOpen(obj);
+			break;
+		case "FrameClose":
+			FrameClose(obj);
 			break;
 		}
 

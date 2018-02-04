@@ -2,6 +2,8 @@ package View;
 
 import javax.swing.BoxLayout;
 
+import View.BaseClass.BasicPanel;
+
 @SuppressWarnings("serial")
 public class MainPanel extends BasicPanel {
 

@@ -9,7 +9,7 @@ import Control.ListSelectAction;
 import Control.MVC_Connect;
 import Control.UserListModel;
 import Serversynchronization.TotalJsonObject;
-import View.BasicPanel;
+import View.BaseClass.BasicPanel;
 
 @SuppressWarnings("serial")
 public class ListView extends BasicPanel{

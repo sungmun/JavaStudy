@@ -6,6 +6,7 @@ import java.awt.Font;
 import Control.ImagePrint;
 import Control.MVC_Connect;
 import Serversynchronization.TotalJsonObject;
+import View.BaseClass.BasicLabel;
 
 @SuppressWarnings("serial")
 public class LevelPanel extends SendDataPanel {

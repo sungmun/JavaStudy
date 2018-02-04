@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import Control.Tic;
 import Control.TicAction;
 import Control.UserControl;
+import View.BaseClass.BasicLabel;
+import View.BaseClass.BasicPanel;
 
 @SuppressWarnings("serial")
 public class PanelForTheUser extends JLayeredPane  {

@@ -6,6 +6,7 @@ import Model.ServerMessage;
 import Model.TetrisManager;
 import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
+import View.BaseClass.BasicPanel;
 import View.Multe.MultiFrame;
 import View.Multe.PanelForTheOpponent;
 import View.Single.SingleFrame;

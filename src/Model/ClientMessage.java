@@ -1,11 +1,15 @@
 package Model;
 
+import javax.swing.JOptionPane;
+
 import Control.EventListener;
+import Control.FrameControl;
 import Control.MVC_Connect;
 import Control.UserControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
+import View.Multe.LoginFrame;
 
 public class ClientMessage implements EventListener {
 	TetrisClient client;
@@ -20,7 +24,7 @@ public class ClientMessage implements EventListener {
 	@Override
 	public void onEvent(Object event) {
 		TotalJsonObject parser = new TotalJsonObject((String) event);
-		
+
 		if (parser.get(MessageTypeKey) == null)
 			return;
 		methodCatch(parser);
@@ -28,17 +32,20 @@ public class ClientMessage implements EventListener {
 	}
 
 	public void methodCatch(Object event) {
-		if(event==null) return;
+		if (event == null)
+			return;
 		TotalJsonObject obj = (TotalJsonObject) event;
 		String messageTypeStr = (String) obj.get(MessageTypeKey);
 		MessageType messageType = MessageType.valueOf(messageTypeStr);
-		if(client==null) {
-			if(messageType==MessageType.LOGIN) {
+		if (client == null) {
+			if (messageType == MessageType.LOGIN) {
 				login();
+			} else if (messageType == MessageType.GAMEOVER_MESSAGE) {
+				gameOver();
 			}
 			return;
 		}
-		
+
 		switch (messageType) {
 		case USER_SELECTING:
 			UserSelecting(obj);
@@ -50,6 +57,8 @@ public class ClientMessage implements EventListener {
 			logout(obj);
 			break;
 		case GAMEOVER_MESSAGE:
+			gameOver();
+			break;
 		case RANK:
 
 		case USER_MESSAGE:
@@ -96,5 +105,25 @@ public class ClientMessage implements EventListener {
 		message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.BATTLE_START.toString());
 		client.send(message.toString());
+	}
+
+	private void gameOver() {
+		String userStr = TotalJsonObject.GsonConverter(UserControl.users.getPlayer());
+		TotalJsonObject jsonObject = new TotalJsonObject();
+
+		jsonObject.addStringProperty(MessageTypeKey, MessageType.GAMEOVER_MESSAGE);
+
+		if (client == null) {
+			int value = JOptionPane.showOptionDialog(null, "기록을 남기시겠습니까?", null, JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, null, null);
+			if(value==JOptionPane.OK_OPTION) {
+				TotalJsonObject frameMessage = new TotalJsonObject();
+				frameMessage.addProperty("method", "FrameOpen");
+				frameMessage.addProperty("openFrame", LoginFrame.class.getName());
+				MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toString());
+			}
+			client=TetrisClient.createTetrisClient();
+		}
+		client.send(jsonObject.toString());
 	}
 }

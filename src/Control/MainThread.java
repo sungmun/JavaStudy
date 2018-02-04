@@ -5,7 +5,7 @@ import Serversynchronization.User;
 import View.StartFrame;
 
 public class MainThread {
-
+public static boolean gameflag=true;
 	public static void main(String[] args) {
 		
 		new ControlInstentCreate();

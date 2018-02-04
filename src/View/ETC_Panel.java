@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 
 import Control.ImagePrint;
+import View.BaseClass.BasicPanel;
 
 @SuppressWarnings("serial")
 public class ETC_Panel extends BasicPanel {

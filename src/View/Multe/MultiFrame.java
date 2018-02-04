@@ -5,8 +5,8 @@ import java.awt.GridLayout;
 import Control.EventListener;
 import Control.KeyBoardEvent;
 import Control.MVC_Connect;
-import View.GameBasicFrame;
 import View.PanelForTheUser;
+import View.BaseClass.GameBasicFrame;
 
 @SuppressWarnings("serial")
 public class MultiFrame extends GameBasicFrame implements EventListener {
@@ -18,7 +18,6 @@ public class MultiFrame extends GameBasicFrame implements EventListener {
 		PanelForTheUser userPanel=new PanelForTheUser();
 		PanelForTheOpponent opponentPanel=new PanelForTheOpponent();
 
-		
 		time=userPanel.getTimer();
 		time.start();
 
@@ -26,10 +25,6 @@ public class MultiFrame extends GameBasicFrame implements EventListener {
 		
 		this.add(userPanel);
 		this.add(opponentPanel);
-		
-		this.setUndecorated(true);
-		this.pack();
-		this.setLocationRelativeTo(null);
 
 		this.addKeyListener(new KeyBoardEvent());
 	}

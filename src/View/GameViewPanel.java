@@ -1,5 +1,7 @@
 package View;
 
+import View.BaseClass.BasicPanel;
+
 @SuppressWarnings("serial")
 public class GameViewPanel extends BasicPanel {
 

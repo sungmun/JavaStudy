@@ -21,7 +21,38 @@ public class MVC_Connect implements EventListener {
 		ViewToControl.addListener(this);
 	}
 
-	public void sentServerMessage(Object event) {
+	@Override
+	public void onEvent(Object event) {
+		// System.out.println("MVC_Connect.onEvent()");
+		// System.out.println(event);
+		TotalJsonObject object = new TotalJsonObject(event.toString());
+		String type = object.get("sentClass").toString();
+
+		if (type.equals(TetrisManager.class.getName())) {
+			sendServerMessage(event);
+		} else {
+			sendEtcMessage(event);
+		}
+		if (object.get("method") != null)
+			methodCatch(object);
+	}
+
+	public void methodCatch(Object event) {
+		TotalJsonObject jsonObject = (TotalJsonObject) event;
+		String jsonStr = jsonObject.get("method").toString();
+		switch (jsonStr) {
+		case "stop":
+			MVC_Connect.ControlToView.callEvent(SingleFrame.class, jsonObject.toString());
+			MVC_Connect.ControlToView.callEvent(MultiFrame.class, jsonObject.toString());
+			MainThread.gameflag=false;
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	public void sendEtcMessage(Object event) {
 		TotalJsonObject object = new TotalJsonObject(event.toString());
 		MessageType type = TotalJsonObject.GsonConverter(object.get(MessageType.class.getSimpleName()).toString(),
 				MessageType.class);
@@ -43,52 +74,28 @@ public class MVC_Connect implements EventListener {
 
 		switch (TotalJsonObject.GsonConverter(object.get(MessageType.class.getSimpleName()).toString(),
 				MessageType.class)) {
+		case GAMEOVER_MESSAGE:
+			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event.toString());
+			break;
 		case LEVEL_MESSAGE:
-			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
+			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event.toString());
+			MVC_Connect.ControlToView.callEvent(LevelPanel.class, event);
 			break;
 		case SCORE_MESSAGE:
-			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
+			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event.toString());
+			MVC_Connect.ControlToView.callEvent(ScorePanel.class, event);
 			break;
 		case SAVE_BLOCK_MESSAGE:
 		case NEXT_BLOCK_MESSAGE:
 		case MAP_MESSAGE:
-			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
+			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event.toString());
 			break;
 		case BATTLE_ACCEPT:
 		case BATTLE_DENIAL:
-			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event);
+			MVC_Connect.ControlToModel.callEvent(ClientMessage.class, event.toString());
 		default:
 		}
 
 	}
 
-	@Override
-	public void onEvent(Object event) {
-		// System.out.println("MVC_Connect.onEvent()");
-		// System.out.println(event);
-		TotalJsonObject object = new TotalJsonObject(event.toString());
-		String type = object.get("sentClass").toString();
-
-		if (type.equals(TetrisManager.class.getName())) {
-			sendServerMessage(event);
-		} else if (type.equals(ServerMessage.class.getName())) {
-			sentServerMessage(event);
-		}
-		if (object.get("method") != null)
-			methodCatch(object);
-	}
-
-	public void methodCatch(Object event) {
-		TotalJsonObject jsonObject = (TotalJsonObject) event;
-		String jsonStr = jsonObject.get("method").toString();
-		switch (jsonStr) {
-		case "stop":
-			MVC_Connect.ControlToView.callEvent(SingleFrame.class, jsonObject.toString());
-			MVC_Connect.ControlToView.callEvent(MultiFrame.class, jsonObject.toString());
-			break;
-
-		default:
-			break;
-		}
-	}
 }

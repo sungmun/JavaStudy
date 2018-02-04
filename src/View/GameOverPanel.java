@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
 import Serversynchronization.TotalJsonObject;
+import View.BaseClass.BasicLabel;
 
 @SuppressWarnings("serial")
 public class GameOverPanel extends SendDataPanel {

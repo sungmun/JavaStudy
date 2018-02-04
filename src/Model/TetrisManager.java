@@ -181,13 +181,13 @@ public class TetrisManager implements EventListener {
 			msg.addProperty("Level", info.getLevel());
 			msg.addProperty("sentClass", sentClass);
 			msg.addProperty(MessageType.class.getSimpleName(), MessageType.LEVEL_MESSAGE.toString());
-			MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.toString());
+			MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg);
 		}
 		TotalJsonObject msg = new TotalJsonObject();
 		msg.addProperty("Score", info.getScore());
 		msg.addProperty("sentClass", sentClass);
 		msg.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg);
 
 		User user = UserControl.users.getPlayer();
 		user.setInfo(info);
@@ -442,8 +442,9 @@ public class TetrisManager implements EventListener {
 
 	public void gameOver() {
 		TotalJsonObject jsonObject = new TotalJsonObject();
-		jsonObject.addProperty("sentClass", sentClass);
-		jsonObject.addProperty("method", "stop");
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, jsonObject.toString());
+		jsonObject.addStringProperty("sentClass", sentClass);
+		jsonObject.addStringProperty(MessageType.class.getSimpleName(), MessageType.GAMEOVER_MESSAGE);
+		jsonObject.addStringProperty("method", "stop");
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, jsonObject);
 	}
 }

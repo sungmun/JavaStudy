@@ -1,17 +1,19 @@
 package Model;
 
+import java.util.UUID;
+
 import javax.swing.JOptionPane;
 
 import Control.FrameControl;
 import Control.ImagePrint;
 import Control.MVC_Connect;
+import Control.MainThread;
 import Control.UserControl;
 import Control.UserListModel;
 import Serversynchronization.MessageType;
 import Serversynchronization.PlayerInformation;
 import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
-import ValueObject.Space;
 import View.Multe.ListViewFrame;
 import View.Multe.LoginFrame;
 import View.Multe.MultiFrame;
@@ -39,7 +41,7 @@ public class ServerMessage {
 			logIn(obj.get(User.class.getSimpleName()));
 			break;
 		case USER_SERIAL_NUM:
-			setMyLogin(obj.get(Integer.class.getSimpleName()));
+			setMyLogin(obj.get(UUID.class.getSimpleName()));
 			break;
 		case USER_LIST_MESSAGE:
 			userListMessage(obj.get(User[].class.getSimpleName()));
@@ -92,10 +94,20 @@ public class ServerMessage {
 	}
 
 	private static void setMyLogin(Object msg) {
-		Integer usernum = Integer.parseInt(msg.toString());
+		UUID usernum = (UUID)msg;
 		User user = UserControl.users.getPlayer();
-		user.setUserNumber(usernum);
-		UserControl.users.setPlayer(user);
+		user.setUuid(usernum);
+		JOptionPane.showMessageDialog(null, null, "당신의 고유번호는 "+usernum.toString()+" 입니다", JOptionPane.PLAIN_MESSAGE);
+		
+		TotalJsonObject object=new TotalJsonObject();
+		if(MainThread.gameflag) {
+			object.addProperty(MessageTypeKey, MessageType.USER_LIST_MESSAGE);
+			ClientMessage.message.client.send(object.toString());
+		}else {
+			object.addProperty(MessageTypeKey, MessageType.RANK);
+			ClientMessage.message.client.send(object.toString());
+		}
+		
 	}
 
 	private static void logIn(Object msg) {
@@ -178,6 +190,7 @@ public class ServerMessage {
 	}
 
 	private static void gameOverEvent() {
+		
 	}
 
 	private static void rankEvent(Object msg) {

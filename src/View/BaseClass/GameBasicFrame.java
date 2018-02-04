@@ -1,27 +1,16 @@
-package View;
+package View.BaseClass;
 
-import java.awt.Color;
-
-import javax.swing.JFrame;
-
-import Control.EventListener;
-import Control.MVC_Connect;
 import Control.Tic;
 import Serversynchronization.TotalJsonObject;
 
 @SuppressWarnings("serial")
-public class GameBasicFrame extends JFrame implements EventListener{
+public class GameBasicFrame extends BasicFrame{
 	protected int speed = 500;
 	public static Tic time;
 	public GameBasicFrame( ) {
 		super("Tetris");
-		MVC_Connect.ControlToView.addListener(this);
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
-		
-		this.getContentPane().setBackground(Color.BLACK);
 	}
+	
 	@Override
 	public void onEvent(Object event) {
 		TotalJsonObject object=new TotalJsonObject(event.toString());

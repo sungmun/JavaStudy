@@ -6,6 +6,8 @@ import java.awt.Font;
 import javax.swing.BoxLayout;
 
 import Control.ImagePrint;
+import View.BaseClass.BasicLabel;
+import View.BaseClass.BasicPanel;
 
 @SuppressWarnings("serial")
 public class NextPanel extends BasicPanel{

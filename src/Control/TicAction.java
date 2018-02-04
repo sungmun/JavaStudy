@@ -12,6 +12,7 @@ import View.Single.SingleFrame;
 
 public class TicAction implements ActionListener {
 	ImagePrint mainprint;
+	int speed = (int) (500 * Math.pow(0.999, 1));
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -19,7 +20,7 @@ public class TicAction implements ActionListener {
 		TotalJsonObject moveMessage = new TotalJsonObject();
 		moveMessage.addProperty("method", "TetrinoBlockMove");
 		moveMessage.addProperty("MoveType", MoveType.DOWN.toString());
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class,moveMessage.toString());
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 		speedChange();
 	}
 
@@ -30,8 +31,12 @@ public class TicAction implements ActionListener {
 
 	public void speedChange() {
 		User user = UserControl.users.getPlayer();
-		int level = user.getInfo().getLevel();
-		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay", (int) (500 * Math.pow(0.999, level - 1)));
-		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay", (int) (500 * Math.pow(0.999, level - 1)));
+		if(user==null) {
+			return;
+		}
+		
+		this.speed = (int) (500 * Math.pow(0.999, user.getInfo().getLevel()-1));
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay", this.speed);
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay", this.speed);
 	}
 }

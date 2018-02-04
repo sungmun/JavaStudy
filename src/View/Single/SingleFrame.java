@@ -1,8 +1,8 @@
 package View.Single;
 
 import Control.KeyBoardEvent;
-import View.GameBasicFrame;
 import View.PanelForTheUser;
+import View.BaseClass.GameBasicFrame;
 
 @SuppressWarnings("serial")
 public class SingleFrame extends GameBasicFrame {

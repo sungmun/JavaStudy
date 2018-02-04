@@ -3,6 +3,8 @@ package View;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import View.BaseClass.BasicButton;
+
 @SuppressWarnings("serial")
 public class ExitButton extends BasicButton {
 	public ExitButton(Dimension size) {
