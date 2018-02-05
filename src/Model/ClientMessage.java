@@ -108,10 +108,6 @@ public class ClientMessage implements EventListener {
 	}
 
 	private void gameOver() {
-		String userStr = TotalJsonObject.GsonConverter(UserControl.users.getPlayer());
-		TotalJsonObject jsonObject = new TotalJsonObject();
-
-		jsonObject.addStringProperty(MessageTypeKey, MessageType.GAMEOVER_MESSAGE);
 
 		if (client == null) {
 			int value = JOptionPane.showOptionDialog(null, "기록을 남기시겠습니까?", null, JOptionPane.YES_NO_OPTION,
@@ -122,6 +118,13 @@ public class ClientMessage implements EventListener {
 				frameMessage.addProperty("openFrame", LoginFrame.class.getName());
 				MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toString());
 			}
+		}else {			
+			String userStr = TotalJsonObject.GsonConverter(UserControl.users.getPlayer());
+			
+			TotalJsonObject jsonObject = new TotalJsonObject();
+			jsonObject.addStringProperty(MessageTypeKey, MessageType.GAMEOVER_MESSAGE);
+			jsonObject.addStringProperty(User.class.getName(), userStr);
+			client.send(jsonObject.toString());
 		}
 	}
 }

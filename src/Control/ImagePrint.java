@@ -10,6 +10,7 @@ import java.util.HashMap;
 import Model.BlockType;
 import Model.CreateBlock;
 import Model.TetrinoType;
+import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
 import ValueObject.Space;
 import View.NextBlockPanel;
@@ -159,17 +160,16 @@ public class ImagePrint implements BlockType, EventListener {
 	public void methodCatch(Object event) {
 		TotalJsonObject obj = (TotalJsonObject) event;
 		try {
-//			System.out.println("sentClass : "+obj.get("sentClass"));
-//			System.out.println("----------------------------");
+			MessageType type=MessageType.valueOf((String)obj.get(MessageType.class.getSimpleName()));
 			sentClass = Class.forName(obj.get("sentClass").toString());
-			switch ((String)obj.get("method")) {
-			case "saveBlockPaint":
+			switch (type) {
+			case SAVE_BLOCK_MESSAGE:
 				saveBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
 				break;
-			case "nextBlockPaint":
+			case NEXT_BLOCK_MESSAGE:
 				nextBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
 				break;
-			case "TetrinoBlockPaint":
+			case MAP_MESSAGE:
 				tetrinoBlockPaint(obj.get(Space[][].class.getSimpleName()));
 				break;
 			}

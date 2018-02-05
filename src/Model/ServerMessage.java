@@ -74,10 +74,10 @@ public class ServerMessage {
 			gameMessage(obj);
 			break;
 		case LEVEL_MESSAGE:
-			levelEvent(msg);
+			levelEvent(obj.get("Level"));
 			break;
 		case SCORE_MESSAGE:
-			scoreEvent(msg);
+			scoreEvent(obj.get("Score"));
 			break;
 		case USER_SELECTING:
 			break;
