@@ -40,7 +40,7 @@ public class ClientMessage implements EventListener {
 		if (client == null) {
 			if (messageType == MessageType.LOGIN) {
 				login();
-			} else if (messageType == MessageType.GAMEOVER_MESSAGE) {
+			}else if(messageType == MessageType.GAMEOVER_MESSAGE) {
 				gameOver();
 			}
 			return;
@@ -122,8 +122,6 @@ public class ClientMessage implements EventListener {
 				frameMessage.addProperty("openFrame", LoginFrame.class.getName());
 				MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toString());
 			}
-			client=TetrisClient.createTetrisClient();
 		}
-		client.send(jsonObject.toString());
 	}
 }

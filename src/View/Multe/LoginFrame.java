@@ -52,7 +52,10 @@ public class LoginFrame extends BasicFrame {
 		back.addActionListener(new FrameChangeAction(LoginFrame.class, this.getClass()));
 		btnPanel.add(back);
 
-		btnPanel.add(new ExitButton(login.getPreferredSize()));
+		BasicButton exit=new BasicButton("Exit");
+		exit.addActionListener((e)->System.exit(0));
+		exit.setPreferredSize(login.getPreferredSize());
+		btnPanel.add(exit);
 
 		this.add(idPanel);
 		this.add(namePanel);

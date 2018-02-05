@@ -24,10 +24,10 @@ public class User implements Comparable<User>, Serializable {
 		this();
 		this.id = id;
 		this.name = name;
-		uuid = UUID.randomUUID();
 	}
 
 	public User() {
+		uuid = UUID.randomUUID();
 		info=new PlayerInformation();
 	}
 

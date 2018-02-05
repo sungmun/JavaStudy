@@ -1,6 +1,7 @@
 package View.BaseClass;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
 import javax.swing.Action;
@@ -39,5 +40,10 @@ public class BasicButton extends JButton {
 		setContentAreaFilled(false);
 		setForeground(Color.white);
 		setFocusable(false);
+		
+		Dimension temp=getPreferredSize();
+		temp.height+=temp.height*0.2;
+		temp.width+=temp.width*0.2;
+		setPreferredSize(temp);
 	}
 }

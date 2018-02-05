@@ -62,7 +62,7 @@ public class ServerMessage {
 		case GAMEOVER_MESSAGE:
 			gameOverEvent();
 		case RANK:
-			rankEvent(msg);
+			rankEvent(obj.toString());
 			break;
 		case USER_MESSAGE:
 			UserMessage(obj.get(User.class.getSimpleName()));
@@ -94,17 +94,18 @@ public class ServerMessage {
 	}
 
 	private static void setMyLogin(Object msg) {
-		UUID usernum = (UUID)msg;
+		
+		UUID usernum = UUID.fromString((String)msg);
 		User user = UserControl.users.getPlayer();
 		user.setUuid(usernum);
-		JOptionPane.showMessageDialog(null, null, "당신의 고유번호는 "+usernum.toString()+" 입니다", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null,  "당신의 고유번호는 "+usernum.toString()+" 입니다",null, JOptionPane.PLAIN_MESSAGE);
 		
 		TotalJsonObject object=new TotalJsonObject();
 		if(MainThread.gameflag) {
-			object.addProperty(MessageTypeKey, MessageType.USER_LIST_MESSAGE);
+			object.addProperty(MessageTypeKey, MessageType.USER_LIST_MESSAGE.toString());
 			ClientMessage.message.client.send(object.toString());
 		}else {
-			object.addProperty(MessageTypeKey, MessageType.RANK);
+			object.addProperty(MessageTypeKey, MessageType.RANK.toString());
 			ClientMessage.message.client.send(object.toString());
 		}
 		
@@ -194,7 +195,13 @@ public class ServerMessage {
 	}
 
 	private static void rankEvent(Object msg) {
-
+		TotalJsonObject jsonObject=new TotalJsonObject((String)msg);
+		String messageStr=null;
+		messageStr=jsonObject.get("RankingType").toString();
+		messageStr+="\n";
+		messageStr+="순위 : ";
+		messageStr+=jsonObject.get(int.class.getSimpleName());
+		JOptionPane.showMessageDialog(null,messageStr,null, JOptionPane.PLAIN_MESSAGE);
 	}
 
 	private static void scoreEvent(Object msg) {

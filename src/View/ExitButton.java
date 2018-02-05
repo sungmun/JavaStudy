@@ -7,11 +7,15 @@ import View.BaseClass.BasicButton;
 
 @SuppressWarnings("serial")
 public class ExitButton extends BasicButton {
-	public ExitButton(Dimension size) {
+	public ExitButton() {
 		super("Exit");
-		setPreferredSize(size);
-		setFont(new Font("Exit", Font.BOLD, 23));
 		addActionListener(e->System.exit(0));
+	}
+	public ExitButton(Dimension size) {
+		this();
+		setFont(new Font("Exit", Font.BOLD, 23));
+		setPreferredSize(size);
+		
 	}
 
 }
