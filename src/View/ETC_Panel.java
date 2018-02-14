@@ -7,8 +7,14 @@ import javax.swing.BorderFactory;
 import Control.ImagePrint;
 import View.BaseClass.BasicPanel;
 
-@SuppressWarnings("serial")
 public class ETC_Panel extends BasicPanel {
+
+	/**
+	 * EtcPanel은 게임에서 블럭이 내려오는 Panel을 제외한 그외의 Panel이며
+	 * NextPanel, SavePanel, ScorePanel, LevelPanel을 포함하며, 
+	 * ExitButton도 포함된다.
+	 */
+	private static final long serialVersionUID = -3306255840049170421L;
 
 	public ETC_Panel() {
 		super(true);

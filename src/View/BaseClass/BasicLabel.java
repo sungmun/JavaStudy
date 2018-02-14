@@ -7,8 +7,11 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-@SuppressWarnings("serial")
 public class BasicLabel extends JLabel {
+	/**
+	 * 이 Project에서의 almost 일련된 하나의 Image를 make위한 Label Class이다.
+	 */
+	private static final long serialVersionUID = 6868173717736667937L;
 	public BasicLabel() {
 		super();
 	}
@@ -33,6 +36,7 @@ public class BasicLabel extends JLabel {
 		init();
 	}
 	public void init() {
+		//Text는 White이며, BackGround는 투명해야한다
 		setForeground(Color.WHITE);
 		setOpaque(false);
 	}

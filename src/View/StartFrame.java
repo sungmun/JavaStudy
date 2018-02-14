@@ -1,24 +1,24 @@
 package View;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 
-import javax.swing.JFrame;
-
-import Control.EventListener;
 import Control.FrameChangeAction;
-import Control.MVC_Connect;
-import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicButton;
+import View.BaseClass.BasicFrame;
 import View.Multe.LoginFrame;
 import View.Single.SingleFrame;
 
-@SuppressWarnings("serial")
-public class StartFrame extends JFrame implements EventListener{
+public class StartFrame extends BasicFrame{
+
+	/**
+	 * 게임이 시작되면 가장 먼저 시작되는 프레임으로 게임의 모드를 선택할 수 있다
+	 */
+	private static final long serialVersionUID = -673414349082860728L;
 
 	public StartFrame() {
 		super();
-		MVC_Connect.ControlToView.addListener(this);
+		
+		this.setLayout(new FlowLayout());
 		
 		BasicButton single = new BasicButton("혼자하기");
 		single.addActionListener(new FrameChangeAction(SingleFrame.class, this.getClass()));
@@ -34,35 +34,7 @@ public class StartFrame extends JFrame implements EventListener{
 		add(exit);
 		
 		
-		this.getContentPane().setBackground(Color.BLACK);
-		this.setUndecorated(true);
-		this.setResizable(false);
-		this.setLayout(new FlowLayout());
-		this.pack();
-		this.setLocationRelativeTo(null);
 	}
 	
-	@Override
-	public void onEvent(Object event) {
-		TotalJsonObject object=(TotalJsonObject) event;
-		
-		if(object.get("method")==null) {
-			return;
-		}
-		methodCatch(object);
-	}
-
-	public void methodCatch(Object event) {
-		TotalJsonObject object=(TotalJsonObject) event;
-		switch (object.get("method").toString()) {
-		case "setVisible":
-			setVisible((Boolean)object.get("boolean"));
-			break;
-		case "dispose":
-			this.dispose();
-			break;
-		default:
-			break;
-		}
-	}
+	
 }

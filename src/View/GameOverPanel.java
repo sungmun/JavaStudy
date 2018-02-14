@@ -10,8 +10,13 @@ import javax.swing.border.LineBorder;
 import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicLabel;
 
-@SuppressWarnings("serial")
 public class GameOverPanel extends SendDataPanel {
+	/**
+	 * 이 클래스는 사용자의 게임이 끝났을 때, 나오는 패널로 사용자의 
+	 * 점수와 레벨을 보여준다.
+	 */
+	private static final long serialVersionUID = -5822284137939582971L;
+	
 	public JLabel score_lbl, level_lbl;
 	String score = "0", level = "1";
 

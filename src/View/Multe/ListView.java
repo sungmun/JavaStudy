@@ -11,8 +11,12 @@ import Control.UserListModel;
 import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicPanel;
 
-@SuppressWarnings("serial")
 public class ListView extends BasicPanel{
+	/**
+	 * 대전이 가능한 유저들의 정보를 보여주는 패널으로
+	 * 이 패널은 JTable을 기반으로 해서 만들어 졌다
+	 */
+	private static final long serialVersionUID = -4165956493948698794L;
 	String header[] = { "번호", "이름", "ID" };
 	String data[][];
 

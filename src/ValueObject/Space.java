@@ -4,31 +4,30 @@ import Model.BlockType;
 import Model.TetrinoType;
 
 public class Space {
-	private int isblock = BlockType.FLOW;
+	private BlockType isblock = BlockType.FLOW;
 	private TetrinoType type = TetrinoType.DEFULT;
 
 	public Space() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public Space(int isblock, TetrinoType type) {
+	public Space(BlockType isblock, TetrinoType type) {
 		this.isblock = isblock;
 		this.type = type;
 	}
 
-	public Space(int isblock) {
+	public Space(BlockType isblock) {
 		this.isblock = isblock;
 	}
 
-	public int getIsblock() {
+	public BlockType getIsblock() {
 		return isblock;
 	}
 
-	public void setIsblock(int isblock) {
+	public void setIsblock(BlockType isblock) {
 		this.isblock = isblock;
 	}
 
-	public int getSpace() {
+	public BlockType getSpace() {
 		return isblock;
 	}
 

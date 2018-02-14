@@ -4,8 +4,13 @@ import Control.KeyBoardEvent;
 import View.PanelForTheUser;
 import View.BaseClass.GameBasicFrame;
 
-@SuppressWarnings("serial")
 public class SingleFrame extends GameBasicFrame {
+
+	/**
+	 * 게임을 보여주는 가장 중요한 패널중 하나
+	 * 이 프레임에는 유저의 정보를 보여주는 패널로 이루어져 있다
+	 */
+	private static final long serialVersionUID = 6245602316943845280L;
 
 	public SingleFrame() {
 
@@ -13,10 +18,6 @@ public class SingleFrame extends GameBasicFrame {
 		time=userPanel.getTimer();
 
 		this.add(userPanel);
-
-		this.setUndecorated(true);
-		this.pack();
-		this.setLocationRelativeTo(null);
 
 		time.start();
 		this.addKeyListener(new KeyBoardEvent());

@@ -3,38 +3,24 @@ package View.BaseClass;
 import Control.Tic;
 import Serversynchronization.TotalJsonObject;
 
-@SuppressWarnings("serial")
-public class GameBasicFrame extends BasicFrame{
+public class GameBasicFrame extends BasicFrame {
+	/**
+	 * 이 Project에서의 almost 일련된 하나의 Image를 make위한 GameFrame Class이다.
+	 */
+	private static final long serialVersionUID = -7952471597925708344L;
 	protected int speed = 500;
 	public static Tic time;
-	public GameBasicFrame( ) {
+
+	public GameBasicFrame() {
 		super("Tetris");
 	}
-	
-	@Override
-	public void onEvent(Object event) {
-		TotalJsonObject object=new TotalJsonObject(event.toString());
-		
-		if(object.get("method")==null) {
-			return;
-		}
-		methodCatch(object);
-	}
 
+	@Override
 	public void methodCatch(Object event) {
-		TotalJsonObject object=(TotalJsonObject) event;
-		switch (object.get("method").toString()) {
-		case "setVisible":
-			setVisible((Boolean)object.get("boolean"));
-			break;
-		case "dispose":
-			dispose();
-			break;
-		case "stop":
+		super.methodCatch(event);
+		TotalJsonObject object = (TotalJsonObject) event;
+		if(object.get("method").equals("stop")) {
 			time.stop();
-			break;
-		default:
-			break;
 		}
 	}
 }

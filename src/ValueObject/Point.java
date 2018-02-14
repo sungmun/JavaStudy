@@ -5,7 +5,6 @@ public class Point {
 	private int y;
 	
 	public Point(int y,int x) {
-		// TODO Auto-generated constructor stub
 		this.x=x;
 		this.y=y;
 	}
