@@ -4,73 +4,47 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Client.TetrisClient;
 import Model.MoveType;
-import Model.UserTetrisManager;
-import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
-import ValueObject.Point;
-import View.GameBasicFrame;
+import Model.TetrisManager;
+import Serversynchronization.TotalJsonObject;
 
-public class KeyBoardEvent extends KeyAdapter implements KeyListener, MoveType,MessageType {
-	UserTetrisManager manager = UserTetrisManager.getTetrisManager();
+public class KeyBoardEvent extends KeyAdapter implements KeyListener {
 	ImagePrint mainprint;
-	public KeyBoardEvent(ImagePrint mainprint) {
-		this.mainprint=mainprint;
-	}
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (manager.getNowTetrino() == null) {
-			return;
-		}
+		TotalJsonObject moveMessage = new TotalJsonObject();
 		int key = e.getKeyCode();
 		switch (key) {
 		case KeyEvent.VK_RIGHT:
-			manager.TetrinoBlockMove(RIGHT);
+			moveMessage.addProperty("method", "TetrinoBlockMove");
+			moveMessage.addProperty("MoveType", MoveType.RIGHT.toString());
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 			break;
 		case KeyEvent.VK_LEFT:
-			manager.TetrinoBlockMove(LEFT);
+			moveMessage.addProperty("method", "TetrinoBlockMove");
+			moveMessage.addProperty("MoveType", MoveType.LEFT.toString());
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 			break;
 		case KeyEvent.VK_UP:
-			manager.TetrinoBlockMove(TURN);
+			moveMessage.addProperty("method", "TetrinoBlockMove");
+			moveMessage.addProperty("MoveType", MoveType.TURN.toString());
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 			break;
 		case KeyEvent.VK_DOWN:
-			if(!manager.TetrinoBlockMove(DOWN)) {
-				cheack();
-			}
+			moveMessage.addProperty("method", "TetrinoBlockMove");
+			moveMessage.addProperty("MoveType", MoveType.DOWN.toString());
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 			break;
 		case KeyEvent.VK_SPACE:
-			boolean success = true;
-			while (success) {
-				success = manager.TetrinoBlockMove(DOWN);
-			}
-			cheack();
+			moveMessage.addProperty("method", "TetrinoBlockDropMove");
+			moveMessage.addProperty("MoveType", MoveType.DROP.toString());
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 			break;
 		case KeyEvent.VK_Z:
-			manager.saveBlock();
-			mainprint.SaveBlockPaint(manager);
+			moveMessage.addProperty("method", "saveBlock");
+			MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 			break;
 		}
-		mapSend();
-		mainprint.TetrinoBlockPaint(manager);
 	}
-	public void mapSend() {
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
-		}
-	}
-	public boolean cheack() {
-		Point nowpos = manager.tetrino.getFlowTetrino();
-		if (manager.gameOverCheack(nowpos)) {
-			GameBasicFrame.time.stop();
-			return false;
-		}
-		manager.setNowTetrino(null);
-		int clearline = manager.lineCheack(nowpos);
-		if (clearline > 0) {
-			manager.lineClear(clearline, nowpos);
-		}
-		return true;
-	}
+
 }

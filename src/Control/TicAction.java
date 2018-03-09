@@ -3,55 +3,40 @@ package Control;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Client.TetrisClient;
 import Model.MoveType;
 import Model.TetrisManager;
-import Model.UserTetrisManager;
-import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
-import ValueObject.Point;
+import Serversynchronization.TotalJsonObject;
+import Serversynchronization.User;
+import View.Multe.MultiFrame;
+import View.Single.SingleFrame;
 
-public abstract class TicAction implements ActionListener, MoveType,MessageType {
-	protected TetrisManager manager = UserTetrisManager.getTetrisManager();
+public class TicAction implements ActionListener {
 	ImagePrint mainprint;
-	
-	public TicAction(ImagePrint mainprint) {
-		super();
-		this.mainprint = mainprint;
-	}
+	int speed = (int) (500 * Math.pow(0.999, 1));
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
-		if (manager.getNowTetrino() == null) {
-			manager.createBlock();
-			mainprint.NextBlockPaint(manager);
-		} else if (!manager.TetrinoBlockMove(DOWN)) {
-			check();
-		}
-		mainprint.TetrinoBlockPaint(manager);
+		TotalJsonObject moveMessage = new TotalJsonObject();
+		moveMessage.addProperty("method", "TetrinoBlockMove");
+		moveMessage.addProperty("MoveType", MoveType.DOWN.toString());
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
 		speedChange();
-		TetrisClient client=TetrisClient.getTetrisClient();
-		if(client!=null) {
-			client.send(new SocketMessage(MAP_MESSAGE, manager.getRealTimeMap()));
-		}
 	}
 
-	public boolean check() {
-		Point nowpos = manager.tetrino.getFlowTetrino();
-		if (manager.gameOverCheack(nowpos)) {
-			timeStop();
-			return false;
-		}
-		manager.setNowTetrino(null);
-		int clearline = manager.lineCheack(nowpos);
-		if (clearline > 0) {
-			manager.lineClear(clearline, nowpos);
-		}
-		return true;
+	public void timeStop() {
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "TimeStop");
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "TimeStop");
 	}
 
-	public abstract void timeStop();
-
-	public abstract void speedChange();
+	public void speedChange() {
+		User user = UserControl.users.getPlayer();
+		if(user==null) {
+			return;
+		}
+		
+		this.speed = (int) (500 * Math.pow(0.999, user.getInfo().getLevel()-1));
+		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay", this.speed);
+		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay", this.speed);
+	}
 }

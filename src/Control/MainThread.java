@@ -1,16 +1,18 @@
 package Control;
 
-import Model.OpponentManager;
-import Model.UserManager;
+import Model.ModelInstentCreate;
+import Serversynchronization.User;
 import View.StartFrame;
 
 public class MainThread {
-
+public static boolean gameflag=true;
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		UserManager.createUserManager();
-		OpponentManager.createOpponentManager();
-		StartFrame startfr = StartFrame.createStartFrame();
+		
+		new ControlInstentCreate();
+		new ModelInstentCreate();
+		UserControl.users.setPlayer(new User());
+		
+		StartFrame startfr = new StartFrame();
 		startfr.setVisible(true);
 	}
 

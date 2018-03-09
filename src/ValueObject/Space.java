@@ -1,37 +1,41 @@
 package ValueObject;
 
 import Model.BlockType;
-import Model.SpaceSize;
 import Model.TetrinoType;
 
-public class Space implements SpaceSize, BlockType, TetrinoType {
-	private int isblock = SPACE;
-	private int type = 0;
-	public Space() {}
-	public Space(int isblock) {
+public class Space {
+	private BlockType isblock = BlockType.FLOW;
+	private TetrinoType type = TetrinoType.DEFULT;
+
+	public Space() {
+	}
+
+	public Space(BlockType isblock, TetrinoType type) {
+		this.isblock = isblock;
+		this.type = type;
+	}
+
+	public Space(BlockType isblock) {
 		this.isblock = isblock;
 	}
-	public Space(int isblock,int type) {
-		this.isblock = isblock;
-		this.type=type;
-	}
-	public int getIsblock() {
+
+	public BlockType getIsblock() {
 		return isblock;
 	}
 
-	public void setIsblock(int isblock) {
+	public void setIsblock(BlockType isblock) {
 		this.isblock = isblock;
 	}
 
-	public int getSpace() {
+	public BlockType getSpace() {
 		return isblock;
 	}
 
-	public int getType() {
+	public TetrinoType getType() {
 		return type;
 	}
 
-	protected void setType(int type) {
+	public void setType(TetrinoType type) {
 		this.type = type;
 	}
 
@@ -41,6 +45,8 @@ public class Space implements SpaceSize, BlockType, TetrinoType {
 	}
 
 	public boolean equals(Space spc) {
+		if (spc == null)
+			return false;
 		return (isblock == spc.isblock) ? true : false;
 	}
 }

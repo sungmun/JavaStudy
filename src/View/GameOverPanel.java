@@ -5,41 +5,58 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import Control.Observer;
+import Serversynchronization.TotalJsonObject;
+import View.BaseClass.BasicLabel;
 
-@SuppressWarnings("serial")
-public class GameOverPanel extends JPanel implements Observer {
+public class GameOverPanel extends SendDataPanel {
+	/**
+	 * 이 클래스는 사용자의 게임이 끝났을 때, 나오는 패널로 사용자의 
+	 * 점수와 레벨을 보여준다.
+	 */
+	private static final long serialVersionUID = -5822284137939582971L;
+	
 	public JLabel score_lbl, level_lbl;
-	String score_txt="0",level_txt="1";
-	public GameOverPanel() {
-		setLayout(new GridLayout(5, 0));
-		this.setBackground(Color.BLACK);
-		this.add(new BasicJLabel("GAME OVER", Font.BOLD, 40));
-		this.add(new BasicJLabel("점수", Font.BOLD, 23));
-		score_lbl = new BasicJLabel("0", Font.CENTER_BASELINE, 16);
-		this.add(score_lbl);
+	String score = "0", level = "1";
 
-		this.add(new BasicJLabel("레벨", Font.BOLD, 23));
-		level_lbl = new BasicJLabel("1", Font.CENTER_BASELINE, 16);
-		this.add(level_lbl);
+	public GameOverPanel() {
+		super();
 		
-		this.setBorder(new LineBorder(Color.WHITE, 2));
+		setOpaque(true);
+		setLayout(new GridLayout(5, 0));
+		setBackground(Color.BLACK);
+		setBorder(new LineBorder(Color.WHITE, 2));
+		
+		add(new BasicLabel("GAME OVER", Font.BOLD, 40));
+		add(new BasicLabel("점수", Font.BOLD, 23));
+		
+		score_lbl = new BasicLabel("0", Font.CENTER_BASELINE, 16);
+		add(score_lbl);
+
+		add(new BasicLabel("레벨", Font.BOLD, 23));
+		
+		level_lbl = new BasicLabel("1", Font.CENTER_BASELINE, 16);
+		add(level_lbl);
+
+	}
+	public void initInfo() {
+		score_lbl.setText(score);
+		level_lbl.setText(level);
 	}
 
 	@Override
-	public void update(String title, String source) {
-		if (title.equals("score")) {
-			score_txt=source;
-		} else if (title.equals("level")) {
-			level_txt=source;
-		}
-	}
-	public void initInfo() {
-		score_lbl.setText(score_txt);
-		level_lbl.setText(level_txt);
+	void setData(Object obj) {
+		TotalJsonObject event = new TotalJsonObject(obj.toString());
+		
+		String level=event.get("Level").toString();
+		String score=event.get("Score").toString();
+		
+		this.level=(level==null)?this.level:level;
+		this.score=(score==null)?this.score:score;
+		
+		
+		repaint();
 	}
 
 }

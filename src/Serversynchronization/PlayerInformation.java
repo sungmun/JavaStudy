@@ -2,8 +2,8 @@ package Serversynchronization;
 
 public class PlayerInformation {
 	
-	private int level;
-	private int score;
+	private int level=1;
+	private int score=0;
 	public PlayerInformation() {
 	}
 	public PlayerInformation(int level, int score) {

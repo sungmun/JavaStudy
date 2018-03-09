@@ -2,83 +2,47 @@ package View.Multe;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.Random;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Client.TetrisClient;
-import Serversynchronization.MessageType;
-import Serversynchronization.SocketMessage;
-import Serversynchronization.User;
-import Serversynchronization.UsersList;
-import View.BasicButton;
+import Control.FrameChangeAction;
+import Control.MulitePlayAction;
 import View.StartFrame;
+import View.BaseClass.BasicButton;
+import View.BaseClass.BasicFrame;
+import View.BaseClass.BasicPanel;
 
-@SuppressWarnings("serial")
-public class ListViewFrame extends JFrame implements MessageType {
+public class ListViewFrame extends BasicFrame{
+	/**
+	 * 다른사람과 같이 게임을 할 떄 나오는 Frame으로 서버에 접속하여
+	 * 같이 게임이 가능한 유저의 목록을 보여준다. 그리고 같이 게임을 하기 위해 
+	 * 선택을 할시 상대방에개 같이 게임을 할것인지 게임여부를 알려준다  
+	 */
+	private static final long serialVersionUID = 3904446234633812536L;
 	ListView list;
 	BasicButton mulite_play_btn, back_frame_btn, random_multie_play_btn;
 
-	private static ListViewFrame listframe;
-
-	private ListViewFrame() {
+	public ListViewFrame() {
 		super("접속자 목록");
+		
 		setLayout(new BorderLayout());
-		list = ListView.createListView();
-		
-		JPanel etc = new JPanel(new GridLayout(3, 1));
+		list = new ListView();
+
+		JPanel etc = new BasicPanel(new GridLayout(3, 1));
 		etc.setBackground(Color.BLACK);
-		
-		mulite_play_btn = new BasicButton("지정한 사람과 같이하기");
-		random_multie_play_btn = new BasicButton("랜덤으로 같이하기");
-		back_frame_btn = new BasicButton("뒤로가기");
 
-		TetrisClient client = TetrisClient.getTetrisClient();
-
-		mulite_play_btn.addActionListener((e) -> {
-			Object us = list.getData();
-			if (UsersList.findList(us)) {
-				int index=UsersList.getList().indexOf(us);
-				us = UsersList.getList().get(index);
-				client.send(new SocketMessage(USER_SELECTING, us));
-			}
-		});
-		random_multie_play_btn.addActionListener((e) -> {
-			if(UsersList.getList().size()<1) {
-				return;
-			}
-			int random = new Random().nextInt(UsersList.getList().size());
-			User us = UsersList.getList().get(random);
-			client.send(new SocketMessage(USER_SELECTING, us));
-		});
-		back_frame_btn.addActionListener((e) -> {
-			client.send(new SocketMessage(LOGOUT, null));
-			client.deConnect();
-			StartFrame.getStartFrame().setVisible(true);
-			dispose();
-		});
-
+		mulite_play_btn = new BasicButton("Start",new MulitePlayAction());
 		etc.add(mulite_play_btn);
-		etc.add(random_multie_play_btn);
-		etc.add(back_frame_btn);
 
+		random_multie_play_btn = new BasicButton("RandomStart",new MulitePlayAction());
+		etc.add(random_multie_play_btn);
+
+		back_frame_btn = new BasicButton("Back",new FrameChangeAction(new StartFrame().getClass(), this.getClass()));
+		etc.add(back_frame_btn);
+		
 		add(list, BorderLayout.WEST);
 		add(etc, BorderLayout.EAST);
-		
-		this.getContentPane().setBackground(Color.BLACK);
-		this.setUndecorated(true);
-		this.setResizable(false);
-		this.pack();
-		this.setLocationRelativeTo(null);
-	}
 
-	public static ListViewFrame createListViewFrame() {
-		if (listframe == null) {
-			listframe = new ListViewFrame();
-		}
-		return listframe;
 	}
 }

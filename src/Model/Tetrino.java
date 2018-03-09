@@ -3,46 +3,67 @@ package Model;
 import ValueObject.Point;
 import ValueObject.Space;
 
-public class Tetrino implements MoveType, TetrinoType {
+public class Tetrino {
 
 	int mode = 1;
-	private int type;
-	private Point flowtetrino; 
+	private TetrinoType type;
+	private Point flowtetrino;
 	private Space[][] area = new Space[5][6];
 
-	public Tetrino(int[][] tetrino, int type) {
+	public Tetrino(int[][] tetrino, TetrinoType type) {
 		for (int y = 0; y < 4; y++) {
-			area[y][0] = new Space();
+			area[y][0] = null;
 			for (int x = 1; x < 5; x++) {
-				area[y][x] = (tetrino[y][x - 1] != 1) ? new Space() : new Space(BlockType.FLOW,type);
+				area[y][x] = (tetrino[y][x - 1] != 1) ? null : new Space(BlockType.FLOW, type);
 			}
-			area[y][5] = new Space();
+			area[y][5] = null;
 		}
 		for (int x = 0; x < 6; x++) {
-			area[4][x] = new Space();
+			area[4][x] = null;
 		}
 		this.type = type;
 	}
 
-	private boolean sideMoveTetrino(int direction) { 
+	private boolean rightMoveTetrino(MoveType direction) {
 		for (int y = 0; y < 5; y++) {
 			for (int x = 0; x < 6; x++) {
-				if (x + direction < 0 || x + direction >= 6) {
+				if (x + 1 < 0 || x + 1 >= 6) {
 					continue;
 				}
 				Space spc1 = area[y][x];
-				Space spc2 = area[y][x + direction];
-				if (spc1.getIsblock() == BlockType.ETC) {
+				Space spc2 = area[y][x + 1];
+
+				if (spc1 == null || spc1.getIsblock() != BlockType.FLOW) {
 					continue;
-				} 
-				if (spc1.getIsblock() == BlockType.FLOW) {
-					if (spc2.getIsblock() == BlockType.FIXED || (spc2.getIsblock() == BlockType.ETC)) {
-						return false;
-					}
+				}
+				if (!(spc2 == null || spc2.getIsblock() == BlockType.FLOW)) {
+					return false;
 				}
 			}
 		}
-		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + direction);
+		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() + 1);
+
+		return true;
+	}
+
+	private boolean leftMoveTetrino(MoveType direction) {
+		for (int y = 0; y < 5; y++) {
+			for (int x = 0; x < 6; x++) {
+				if (x - 1 < 0 || x - 1 >= 6) {
+					continue;
+				}
+				Space spc1 = area[y][x];
+				Space spc2 = area[y][x - 1];
+
+				if (spc1 == null || spc1.getIsblock() != BlockType.FLOW) {
+					continue;
+				}
+				if (!(spc2 == null || spc2.getIsblock() == BlockType.FLOW)) {
+					return false;
+				}
+			}
+		}
+		flowtetrino = new Point(flowtetrino.getY(), flowtetrino.getX() - 1);
 
 		return true;
 	}
@@ -50,16 +71,23 @@ public class Tetrino implements MoveType, TetrinoType {
 	private boolean downMoveTetrino() {
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
-				Space spc1 = area[y][x];
-				Space spc2 = area[y + 1][x];
 
-				if (spc1.getIsblock() == BlockType.ETC) {
-					continue;
-				} 
-				if (spc1.getIsblock() == BlockType.FLOW) {
-					if (spc2.getIsblock() == BlockType.FIXED || (spc2.getIsblock() == BlockType.ETC)) {
+				Space spc1;
+				Space spc2;
+				try {
+					spc1 = area[y][x];
+					spc2 = area[y + 1][x];
+
+					if (spc1 == null || spc1.getIsblock() != BlockType.FLOW) {
+						continue;
+					}
+
+					if (!(spc2 == null || spc2.getIsblock() == BlockType.FLOW)) {
 						return false;
 					}
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -67,11 +95,12 @@ public class Tetrino implements MoveType, TetrinoType {
 		return true;
 	}
 
-	public boolean moveTetrino(int direction) {
+	public boolean moveTetrino(MoveType direction) {
 		switch (direction) {
 		case RIGHT:
+			return rightMoveTetrino(direction);
 		case LEFT:
-			return sideMoveTetrino(direction);
+			return leftMoveTetrino(direction);
 		case DOWN:
 			return downMoveTetrino();
 		case TURN:
@@ -87,8 +116,11 @@ public class Tetrino implements MoveType, TetrinoType {
 		Space[][] temp1 = new Space[4][6];
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
-				temp[y][x] = new Space();
-				temp1[y][x] = (area[y][x].getIsblock() != BlockType.FLOW) ? area[y][x] : new Space();
+				temp[y][x] = null;
+				if (area[y][x] == null) {
+				} else {
+					temp1[y][x] = (area[y][x].getIsblock() != BlockType.FLOW) ? area[y][x] : null;
+				}
 
 			}
 		}
@@ -105,15 +137,17 @@ public class Tetrino implements MoveType, TetrinoType {
 		temp[3][3] = area[1][1];
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 6; x++) {
-				if (temp[y][x].getIsblock() != BlockType.FLOW) {
+				if (temp[y][x] == null) {
 					continue;
 				}
-				if (area[y][x].getIsblock() == BlockType.FIXED || area[y][x].getIsblock() == BlockType.ETC) {
+				if (area[y][x] == null) {
+				} else if (area[y][x].getIsblock() == BlockType.FIXED || area[y][x].getIsblock() == BlockType.ETC) {
 					return false;
 				}
 				temp1[y][x] = temp[y][x];
 			}
 		}
+
 		for (int i = 0; i < temp.length; i++) {
 			area[i] = temp1[i].clone();
 		}
@@ -133,7 +167,7 @@ public class Tetrino implements MoveType, TetrinoType {
 		return area;
 	}
 
-	public int getType() {
+	public TetrinoType getType() {
 		return type;
 	}
 
@@ -153,7 +187,7 @@ public class Tetrino implements MoveType, TetrinoType {
 		flowtetrino = pos;
 	}
 
-	public void setType(int type) {
+	public void setType(TetrinoType type) {
 		this.type = type;
 	}
 

@@ -1,23 +1,20 @@
 package View;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.JButton;
-import javax.swing.border.LineBorder;
+import View.BaseClass.BasicButton;
 
-@SuppressWarnings("serial")
-public class RankButton extends JButton {
+public class RankButton extends BasicButton {
+	/**
+	 * Rank를 보여주는 버튼이다
+	 */
+	private static final long serialVersionUID = 7916305449128036260L;
+
 	public RankButton(int width) {
 		super("Rank");
 		setPreferredSize(new Dimension(width * 5, 35));
 
-		setBorder(new LineBorder(Color.WHITE, 2));
 		setFont(new Font("Rank", Font.BOLD, 23));
-		setOpaque(false);
-		setContentAreaFilled(false);
-		setForeground(Color.white);
-		setFocusable(false);
 	}
 }

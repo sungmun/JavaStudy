@@ -1,25 +1,25 @@
 package View;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.border.LineBorder;
 
-@SuppressWarnings("serial")
-public class ExitButton extends JButton {
-	public ExitButton(int width) {
+import View.BaseClass.BasicButton;
+
+public class ExitButton extends BasicButton {
+	/**
+	 * 게임을 종료시키는 이벤트와 연결된 버튼으로 
+	 * 이 버튼을 클릭시, 프레임이 완전히 종료가된다 
+	 */
+	private static final long serialVersionUID = -7266153750431455156L;
+	public ExitButton() {
 		super("Exit");
-		setPreferredSize(new Dimension(width*5,35));
-		
-		setBorder(new LineBorder(Color.WHITE,2));
+		addActionListener(e->System.exit(0));
+	}
+	public ExitButton(Dimension size) {
+		this();
 		setFont(new Font("Exit", Font.BOLD, 23));
-		setOpaque(false);
-		setContentAreaFilled(false);
-		setForeground(Color.white);
-		setFocusable(false);
+		setPreferredSize(size);
 		
-		addActionListener(e-> System.exit(0));
 	}
 
 }

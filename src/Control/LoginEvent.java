@@ -2,36 +2,34 @@ package Control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
-import javax.swing.JOptionPane;
-
-import Client.TetrisClient;
-import Model.UserManager;
+import Model.ClientMessage;
+import Serversynchronization.MessageType;
+import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
-import View.StartFrame;
-import View.Multe.LoginFrame;
 
-public abstract class LoginEvent implements ActionListener{
+public abstract class LoginEvent implements ActionListener {
+	public String id = "";
+	public String name = "";
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String id=setId();
-		String name=setName();
+		setUserInfo();
+
+		User user = UserControl.users.getPlayer();
+		user.setID(id);
+		user.setName(name);
+		// 나중 수정 부분
+		UserControl.users.setPlayer(user);
 		if (id.equals("") || name.equals("")) {
-			JOptionPane.showMessageDialog(null, "ID나 Name을 입력하지 않으셨습니다.");
+			FrameControl.showMessageDialog(null, "ID나 Name을 입력하지 않으셨습니다.");
 			return;
 		}
-		UserManager.createUserManager().setUser(new User(id, name));
-		try {
-			TetrisClient client=TetrisClient.createTetrisClient(UserManager.createUserManager().getUser());
-			client.start();
-		} catch (IOException e1) {
-			StartFrame.getStartFrame().setVisible(true);
-			LoginFrame.getLoginFrame().dispose();
-		}
+		
+		TotalJsonObject jsonObject=new TotalJsonObject();
+		jsonObject.addProperty(MessageType.class.getSimpleName(), MessageType.LOGIN.toString());
+		MVC_Connect.ControlToModel.callEvent(ClientMessage.class, jsonObject.toString());
 	}
-	public abstract String setId();
-	public abstract String setName();
 	
+	public abstract void setUserInfo();
 }

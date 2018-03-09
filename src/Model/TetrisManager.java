@@ -2,48 +2,56 @@ package Model;
 
 import java.util.Arrays;
 
+import Control.EventListener;
+import Control.ImagePrint;
+import Control.MVC_Connect;
+import Control.UserControl;
+import Serversynchronization.MessageType;
 import Serversynchronization.PlayerInformation;
+import Serversynchronization.TotalJsonObject;
+import Serversynchronization.User;
 import ValueObject.Map;
 import ValueObject.Point;
 import ValueObject.Space;
 
-public class TetrisManager implements TetrinoType, MoveType {
+public class TetrisManager implements EventListener {
 
-	private static int height = 23;
-	private static int width = 10;
+	public static final int HEIGHT = 23;
+	public static final int WIDTH = 10;
 
-	public PlayerInformation info;
+	final String sentClass = this.getClass().getName();
+	private TetrinoType saveBlock = null;
+	private TetrinoType nextBlock = null;
 
-	protected int save_block = 0;
-	protected int next_block = 0;
-
-	protected Space[][] realtimemap;
+	private Space[][] realTimeMap;
 	public Tetrino tetrino;
 
-	protected TetrisManager() {
-		realtimemap = new Map(width, height).getMap();
+	public TetrisManager() {
+		MVC_Connect.ControlToModel.addListener(this);
+		realTimeMap = new Map(WIDTH, HEIGHT).getMap();
+		createBlock();
 	}
 
 	public void saveBlock() {
 		int y = 0;
-		for (Space[] spaces : realtimemap) {
+		for (Space[] spaces : realTimeMap) {
 			int x = 0;
 			for (Space space : spaces) {
-				if (space.getIsblock() == BlockType.FLOW) {
-					realtimemap[y][x] = new Space();
+				if (space != null && space.getIsblock() == BlockType.FLOW) {
+					realTimeMap[y][x] = null;
 				}
 				x++;
 			}
 			y++;
 		}
 
-		if (this.save_block == 0) {
-			setSave_block(tetrino.getType());
+		if (this.saveBlock == null) {
+			setSaveBlock(tetrino.getType());
 			createBlock();
 		} else {
-			int temp = tetrino.getType();
-			createChoiceBlock(save_block);
-			setSave_block(temp);
+			TetrinoType temp = tetrino.getType();
+			createChoiceBlock(saveBlock);
+			setSaveBlock(temp);
 		}
 	}
 
@@ -53,11 +61,11 @@ public class TetrisManager implements TetrinoType, MoveType {
 		int tempx = 6;
 		int tempy = 5;
 
-		if (x + 6 >= width) {
-			tempx += width - (x + 6);
+		if (x + 6 >= WIDTH) {
+			tempx += WIDTH - (x + 6);
 		}
-		if (y + 5 >= height) {
-			tempy += height - (y + 5);
+		if (y + 5 >= HEIGHT) {
+			tempy += HEIGHT - (y + 5);
 		}
 		return new Point(tempy, tempx);
 	}
@@ -68,166 +76,219 @@ public class TetrisManager implements TetrinoType, MoveType {
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
-				Space spc = (tetrino.getFlowTetrino().getY() + i > TetrisManager.getHeight() || x + j < 0
-						|| x + j > TetrisManager.getWidth() - 1) ? new Space(BlockType.ETC)
-								: realtimemap[y + i][x + j];
-				if (!tetrino.getArea()[i][j].equals(spc)) {
-					tetrino.setArea(i, j, spc);
-				}
+				Space spc = ((tetrino.getFlowTetrino().getY() + i > HEIGHT) || (x + j < 0) || (x + j > WIDTH - 1))
+						? new Space(BlockType.ETC)
+						: realTimeMap[y + i][x + j];
+				tetrino.setArea(i, j, spc);
 			}
 		}
-	}
-
-	public static int getWidth() {
-		return width;
-	}
-
-	public static int getHeight() {
-		return height;
 	}
 
 	public void createBlock() {
-		int createposition = width / 3;
-		tetrino = (next_block == 0) ? CreateBlock.tetrinoRandomCreate() : CreateBlock.tetrinoChoiceCreate(next_block);
-		setNext_block((int) (Math.random() * 10) % 7 + 1);
+		final int createPosition = WIDTH / 3;
+
+		if (gameOverCheack()) {
+			gameOver();
+			return;
+		}
+
+		if (nextBlock == null) {
+			setNextBlock(TetrinoType.getRandomTetrino());
+			tetrino = new CreateBlock().tetrinoRandomCreate();
+		} else {
+			tetrino = new CreateBlock().tetrinoChoiceCreate(nextBlock);
+			setNextBlock(TetrinoType.getRandomTetrino());
+		}
+
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
-				realtimemap[y][x + createposition] = tetrino.getTetrino()[y][x];
+				if (realTimeMap[y][x + createPosition] != null || tetrino.getTetrino()[y][x] == null) {
+					realTimeMap[y][x + createPosition] = tetrino.getTetrino()[y][x];
+				} else if (realTimeMap[y][x + createPosition] == null || tetrino.getTetrino()[y][x] != null) {
+					realTimeMap[y][x + createPosition] = tetrino.getTetrino()[y][x];
+				}
 			}
 		}
-		tetrino.setFlowTetrino(new Point(1, createposition + 2));
+
+		tetrino.setFlowTetrino(new Point(1, createPosition + 2));
+		sendRealTimeMap();
 	}
 
-	public void createChoiceBlock(int Type) {
-		int createposition = width / 3;
-		tetrino = CreateBlock.tetrinoChoiceCreate(Type);
+	public void createChoiceBlock(TetrinoType Type) {
+		int createposition = WIDTH / 3;
+		tetrino = new CreateBlock().tetrinoChoiceCreate(Type);
 		for (int y = 0; y < 4; y++) {
 			for (int x = 1; x < 5; x++) {
-				realtimemap[y][x + createposition] = tetrino.getTetrino()[y][x];
+				realTimeMap[y][x + createposition] = tetrino.getTetrino()[y][x];
 			}
 		}
 		tetrino.setFlowTetrino(new Point(1, createposition + 2));
 	}
 
 	public void lineClear(int clearline, Point pos) {
-		Space[] spc = new Space[width];
-		int startpos = pos.getY() - 1;
-		int endpos = 4;
+
+		final int CLEAR_LINE = 1;
+		final int NULL_LINE = 0;
+		final int START_POS = pos.getY() - 1;
+		final int END_POS = (START_POS > 17) ? HEIGHT - START_POS - 1 : 4;
+
+		Space[][] spc = new Space[2][WIDTH];
 		boolean success;
 
-		if (startpos > 17) {
-			endpos = TetrisManager.height - startpos - 1;
+		for (int x = 0; x < WIDTH; x++) {
+			spc[NULL_LINE][x] = null;
+			spc[CLEAR_LINE][x] = new Space(BlockType.CLEAR);
 		}
-		for (int x = 0; x < width; x++) {
-			spc[x] = new Space();
-		}
+
 		int score = 0;
-		for (int i = 0; i <= endpos; i++) {
+		for (int i = 0; i <= END_POS; i++) {
+			// 여기에서 clearline은 0101...과 같은 형식으로 삭제를 해야하는 줄과 삭제를 하지 말아야하는 줄로 나눠져있다
 			int bit = 0x01 << i;
-			if ((clearline & bit) == bit) {
-				realtimemap[startpos + i] = spc.clone();
+			// bit에는 한줄씩 1의 값을 넣어준다
+			if ((clearline & bit) == bit) {// clearline의 비트단위로 1이 있으면 실행한다.
+				realTimeMap[START_POS + i] = spc[CLEAR_LINE].clone();
 				score += 1 + score;
 			}
 		}
 
-		info.setScore(info.getScore() + score * 100);
-		int level=info.getScore() / 1000;
-		if(level>info.getLevel()) {
-			info.setLevel(level);
-		}
-		
-
 		success = true;
 		while (success) {
 			success = false;
-			for (int i = startpos + endpos; i > startpos + endpos - 4; i--) {
-				if (Arrays.equals(spc, realtimemap[i])) {
-					for (int j = i; j > 0; j--) {
-						realtimemap[j] = realtimemap[j - 1].clone();
+			for (int i = START_POS + END_POS; i > START_POS + END_POS - 4; i--) {
+				if (Arrays.equals(spc[1], realTimeMap[i])) {// 클리어 라인은 검색을 하며, 찾으면, success값을 true로 변경한다.
+					for (int j = i; j > 0; j--) {// 찾은 클리어 라인을 기준으로 모든 라인을 한칸씩 내려오개 해준다
+						realTimeMap[j] = realTimeMap[j - 1].clone();
 					}
-					realtimemap[0] = spc;
-					success = true;
+					realTimeMap[0] = spc[0].clone();// 가장위에 비어있는 공간을 만들어 준다.
+					success = true;// 라인을 찾았으므로 성공표시를 한다.
 				}
 			}
 		}
+
+		scoreCalculation(score);// 점수 계산후 저장
+		sendRealTimeMap();// controll로 맵 정보 전달
+
+	}
+
+	public void scoreCalculation(int score) {
+		PlayerInformation info = UserControl.users.getPlayer().getInfo();
+		info.setScore(info.getScore() + score * 100);
+
+		int level = info.getScore() / 1000;
+		if (level > info.getLevel()) {
+			info.setLevel(level);
+			TotalJsonObject msg = new TotalJsonObject();
+			msg.addProperty("Level", info.getLevel());
+			msg.addProperty("sentClass", sentClass);
+			msg.addProperty(MessageType.class.getSimpleName(), MessageType.LEVEL_MESSAGE.toString());
+			MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg);
+		}
+		TotalJsonObject msg = new TotalJsonObject();
+		msg.addProperty("Score", info.getScore());
+		msg.addProperty("sentClass", sentClass);
+		msg.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg);
+
+		User user = UserControl.users.getPlayer();
+		user.setInfo(info);
+		UserControl.users.setPlayer(user);
 	}
 
 	public void setNowTetrino(Tetrino ttrn) {
 		tetrino = ttrn;
 	}
 
-	public void TetrinoBlockDropMove() {
+	public boolean TetrinoBlockDropMove() {
 		boolean sucess = true;
 		while (sucess) {
-			sucess = TetrinoBlockMove(DOWN);
+			sucess = TetrinoBlockMove(MoveType.DOWN);
 		}
+
+		return false;
 	}
 
-	public boolean TetrinoBlockMove(int moveType) {
-		Space[][] temp = new Space[height][width];
-		for (int i = 0; i < realtimemap.length; i++) {
-			temp[i] = realtimemap[i].clone();
-		}
+	public boolean TetrinoBlockMove(MoveType moveType) {
+		/*
+		 * Space[][] temp = new Space[HEIGHT][WIDTH];
+		 * 
+		 * for (int i = 0; i < realTimeMap.length; i++) { temp[i] =
+		 * realTimeMap[i].clone(); }
+		 * 
+		 * int x = tetrino.getFlowTetrino().getX() - 3; int y =
+		 * tetrino.getFlowTetrino().getY() - 1; Point temp1 = pos(new Point(y, x)); x =
+		 * (x < 0) ? 0 : x;
+		 * 
+		 * for (int i = 0; i < temp1.getY(); i++) { for (int j = 0; j < temp1.getX();
+		 * j++) { Space spc = realTimeMap[y + i][x + j]; if (spc.getIsblock() ==
+		 * BlockType.FLOW) { realTimeMap[y + i][x + j] = null; } } }
+		 * 
+		 * if (!tetrino.moveTetrino(moveType)) {
+		 * 
+		 * for (int i = 0; i < temp.length; i++) realTimeMap[i] = temp[i].clone();
+		 * 
+		 * if (moveType == MoveType.RIGHT || moveType == MoveType.LEFT || moveType ==
+		 * MoveType.TURN) return false;
+		 * 
+		 * --이부분은 굳이 해줘야하는 의문이 든다 다른 부분의 오류를 다 고치고 지우던지 재판단 필요 -역활은 마지막 줄에 있는 블럭중 움직이는
+		 * 블럭이 있으면 움직이지 않는 블럭으로 변경해주는 부--
+		 * 
+		 * for (int i = 0; i < realTimeMap.length; i++) { for (int j = 0; j <
+		 * realTimeMap[i].length; j++) { if (realTimeMap[i][j].getIsblock() ==
+		 * BlockType.FLOW) { realTimeMap[i][j].setIsblock(BlockType.FIXED); } } } return
+		 * false; } x = tetrino.getFlowTetrino().getX() - 3; y =
+		 * tetrino.getFlowTetrino().getY() - 1; temp1 = pos(new Point(y, x));
+		 * 
+		 * for (int i = 0; i < temp1.getY(); i++) { for (int j = 0; j < temp1.getX();
+		 * j++) { Space spc = tetrino.getTetrino()[i][j]; if (spc.getIsblock() ==
+		 * BlockType.FLOW) { realTimeMap[i + y][j + x] = spc; } } }
+		 * tetrino.setFlowTetrino(new Point(y + 1, x + 3));
+		 */
+
 		int x = tetrino.getFlowTetrino().getX() - 3;
 		int y = tetrino.getFlowTetrino().getY() - 1;
+
+		if (!tetrino.moveTetrino(moveType)) {
+			return false;
+		}
+
 		Point temp1 = pos(new Point(y, x));
 		x = (x < 0) ? 0 : x;
+		// 블럭이 이동할 곳의 값중 움직이는 블럭만 비워준다
 		for (int i = 0; i < temp1.getY(); i++) {
 			for (int j = 0; j < temp1.getX(); j++) {
-				Space spc = realtimemap[y + i][x + j];
-				if (spc.getIsblock() == BlockType.FLOW) {
-					realtimemap[y + i][x + j] = new Space();
+				Space spc = realTimeMap[y + i][x + j];
+				if (spc != null && spc.getIsblock() == BlockType.FLOW) {
+					realTimeMap[y + i][x + j] = null;
 				}
 			}
-		}
-		if (!tetrino.moveTetrino(moveType)) {
-
-			for (int i = 0; i < temp.length; i++) {
-				realtimemap[i] = temp[i].clone();
-			}
-			if (moveType == RIGHT || moveType == LEFT || moveType == TURN) {
-				return false;
-			}
-
-			for (int i = 0; i < realtimemap.length; i++) {
-				for (int j = 0; j < realtimemap[i].length; j++) {
-					if (realtimemap[i][j].getIsblock() == BlockType.FLOW) {
-						realtimemap[i][j].setIsblock(BlockType.FIXED);
-					}
-				}
-			}
-			return false;
 		}
 		x = tetrino.getFlowTetrino().getX() - 3;
 		y = tetrino.getFlowTetrino().getY() - 1;
 		temp1 = pos(new Point(y, x));
-
+		// 이동한 블럭의 값만 넣어준다
 		for (int i = 0; i < temp1.getY(); i++) {
 			for (int j = 0; j < temp1.getX(); j++) {
 				Space spc = tetrino.getTetrino()[i][j];
-				if (spc.getIsblock() == BlockType.FLOW) {
-					realtimemap[i + y][j + x] = spc;
+				if (spc != null && spc.getIsblock() == BlockType.FLOW) {
+					realTimeMap[i + y][j + x] = spc;
 				}
 			}
 		}
 		tetrino.setFlowTetrino(new Point(y + 1, x + 3));
 		aroundSearch();
+		sendRealTimeMap();
 		return true;
 	}
 
-	public boolean gameOverCheack(Point pos) {
-		if (getNowTetrino().getFlowTetrino().getY() >= 5) {
-			return false;
-		}
-		Space[][] spaces=getRangeRealTimeMap(0);
-		for(int i=0;i<3;i++) {
-			for (Space space : spaces[i]) {
-				if (space.getIsblock() == BlockType.FIXED) {
+	public boolean gameOverCheack() {
+		for (int i = 0; i < 3; i++) {
+			for (Space space : realTimeMap[i]) {
+				if (space != null && space.getIsblock() == BlockType.FIXED) {
 					return true;
 				}
 			}
 		}
-			
+
 		return false;
 	}
 
@@ -235,19 +296,19 @@ public class TetrisManager implements TetrinoType, MoveType {
 
 		int temp_height = 4;
 		if (height > 17) {
-			temp_height = TetrisManager.height - height - 1;
+			temp_height = HEIGHT - height - 1;
 		}
-		Space[][] spc = new Space[temp_height + 1][width];
+		Space[][] spc = new Space[temp_height + 1][WIDTH];
 		for (int i = 0; i <= temp_height; i++) {
-			for (int j = 0; j < width; j++) {
-				spc[i][j] = realtimemap[i + height][j];
+			for (int j = 0; j < WIDTH; j++) {
+				spc[i][j] = realTimeMap[i + height][j];
 			}
 		}
 		return spc;
 	}
 
 	public Space[][] getRealTimeMap() {
-		return realtimemap;
+		return realTimeMap;
 	}
 
 	public Tetrino getNowTetrino() {
@@ -256,16 +317,14 @@ public class TetrisManager implements TetrinoType, MoveType {
 
 	public int lineCheack(Point pos) {
 		Space[][] spc = getRangeRealTimeMap(pos.getY() - 1);
-		boolean cheack = false;
 		int returnvalue = 0;
 
 		for (int i = 0; i < spc.length; i++) {
+			boolean cheack = true;
 			for (int j = 0; j < spc[i].length; j++) {
-				if (spc[i][j].getIsblock() == BlockType.SPACE) {
+				if (spc[i][j] == null) {
 					cheack = false;
 					break;
-				} else {
-					cheack = true;
 				}
 			}
 			if (cheack) {
@@ -275,24 +334,117 @@ public class TetrisManager implements TetrinoType, MoveType {
 		return returnvalue;
 	}
 
-	public int getSave_block() {
-		return save_block;
+	public TetrinoType getSaveBlock() {
+		return saveBlock;
 	}
 
-	public int getNext_block() {
-		return next_block;
+	public TetrinoType getNextBlock() {
+		return nextBlock;
 	}
 
 	public void setRealtimemap(Space[][] realtimemap) {
-		this.realtimemap = realtimemap;
+		this.realTimeMap = realtimemap;
 	}
 
-	public void setSave_block(int tetrino) {
-		this.save_block = tetrino;
+	public void setSaveBlock(TetrinoType tetrino) {
+		this.saveBlock = tetrino;
+		TotalJsonObject blockMessage = new TotalJsonObject();
+		blockMessage.addProperty("method", "saveBlockPaint");
+		blockMessage.addProperty(TetrinoType.class.getSimpleName(), saveBlock.toString());
+		blockMessage.addProperty("sentClass", sentClass);
+		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.getAsString());
+
+		blockMessage.removeValue("method");
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.getAsString());
 	}
 
-	public void setNext_block(int next_block) {
-		this.next_block = next_block;
+	public void setNextBlock(TetrinoType tetrino) {
+		this.nextBlock = tetrino;
+		TotalJsonObject blockMessage = new TotalJsonObject();
+		blockMessage.addProperty("method", "nextBlockPaint");
+		blockMessage.addProperty(TetrinoType.class.getSimpleName(), nextBlock.name());
+		blockMessage.addProperty("sentClass", sentClass);
+		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.toString());
+
+		blockMessage.removeValue("method");
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.toString());
 	}
 
+	private void dropCheck(Object obj) {
+
+		MoveType type = (MoveType) obj;
+		if (tetrino == null) {
+			createBlock();
+		}
+		boolean check = (MoveType.DROP != type) ? TetrinoBlockMove(type) : TetrinoBlockDropMove();
+		// 이동시 블럭이 멈추는지 아닌지를 판별
+		if (check) {
+			return;
+		}
+
+		Point nowpos = tetrino.getFlowTetrino();
+
+		if (MoveType.DROP == type || MoveType.DOWN == type) {
+			setNowTetrino(null);
+			for (int i = 0; i < realTimeMap.length; i++) {
+				for (int j = 0; j < realTimeMap[i].length; j++) {
+					if (realTimeMap[i][j] != null && realTimeMap[i][j].getIsblock() == BlockType.FLOW) {
+						realTimeMap[i][j].setIsblock(BlockType.FIXED);
+					}
+				}
+			}
+		}
+
+		if (gameOverCheack()) {
+			gameOver();
+			return;
+		}
+
+		int clearline = lineCheack(nowpos);
+		if (clearline > 0) {
+			lineClear(clearline, nowpos);
+		}
+	}
+
+	public void sendRealTimeMap() {
+		TotalJsonObject mapMessage = new TotalJsonObject();
+
+		mapMessage.addProperty("method", "TetrinoBlockPaint");
+		mapMessage.addProperty(realTimeMap.getClass().getSimpleName(), TotalJsonObject.GsonConverter(realTimeMap));
+		mapMessage.addProperty("sentClass", sentClass);
+		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage.toString());
+
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage.toString());
+	}
+
+	@Override
+	public void onEvent(Object event) {
+		TotalJsonObject object = new TotalJsonObject((String) event);
+		methodCatch(object);
+	}
+
+	public void methodCatch(Object event) {
+		TotalJsonObject object = (TotalJsonObject) event;
+		switch (object.get("method").toString()) {
+		case "TetrinoBlockDropMove":
+		case "TetrinoBlockMove":
+			MoveType type = MoveType.valueOf(object.get("MoveType").toString());
+			dropCheck(type);
+			break;
+		case "saveBlock":
+			saveBlock();
+			break;
+		}
+	}
+
+	public void gameOver() {
+		TotalJsonObject jsonObject = new TotalJsonObject();
+		jsonObject.addStringProperty("sentClass", sentClass);
+		jsonObject.addStringProperty(MessageType.class.getSimpleName(), MessageType.GAMEOVER_MESSAGE);
+		jsonObject.addStringProperty("method", "stop");
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, jsonObject);
+	}
 }
