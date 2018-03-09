@@ -1,6 +1,6 @@
 package Serversynchronization;
 
-public class PlayerInformation {
+public class PlayerInformation implements Cloneable{
 	
 	private int level=1;
 	private int score=0;
@@ -26,6 +26,15 @@ public class PlayerInformation {
 	public void setScore(int score) {
 		this.score = score;
 	}
-
+	@Override
+	protected Object clone() {
+		Object obj=null;
+		try {
+			obj= super.clone();
+			return obj;
+		}catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
 
 }

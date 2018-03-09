@@ -13,6 +13,6 @@ public class Map {
 	}
 
 	public Space[][] getMap(){
-		return map;
+		return map.clone();
 	}
 }

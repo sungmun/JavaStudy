@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class User implements Comparable<User>, Serializable {
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 사용자나 상대방들의 정보를 표현하기위한 클래스이다.
+	 */
+	private static final long serialVersionUID = 2831119754386306915L;
 	private UUID uuid;
 	private String id;
 	private String name;
@@ -48,7 +51,7 @@ public class User implements Comparable<User>, Serializable {
 	}
 
 	public PlayerInformation getInfo() {
-		return info;
+		return (PlayerInformation) info.clone();
 	}
 
 	public void setInfo(PlayerInformation info) {
