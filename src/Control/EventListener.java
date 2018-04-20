@@ -2,5 +2,5 @@ package Control;
 
 
 public interface EventListener {
-	public void onEvent(Object event);
+	public void onEvent(CallBackEvent event);
 }
