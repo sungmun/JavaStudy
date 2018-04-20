@@ -10,12 +10,7 @@ import java.util.HashMap;
 import Model.BlockType;
 import Model.CreateBlock;
 import Model.TetrinoType;
-import Serversynchronization.MessageType;
-import Serversynchronization.TotalJsonObject;
 import ValueObject.Space;
-import View.NextBlockPanel;
-import View.SaveBlockPanel;
-import View.TetrinoBlockPanel;
 
 public class ImagePrint implements EventListener {
 
@@ -23,8 +18,6 @@ public class ImagePrint implements EventListener {
 	public static final int HEIGHT = 36;
 
 	public static HashMap<TetrinoType, BufferedImage> tetrinoImg = new HashMap<>();
-
-	Class<?> sentClass = null;
 
 	BufferedImage background = null;
 
@@ -58,16 +51,14 @@ public class ImagePrint implements EventListener {
 		return background;
 	}
 
-	private void tetrinoBlockPaint(Object object) {
+	public BufferedImage tetrinoBlockPaint(Space[][] realtimeMap) {
+		if (realtimeMap == null) {
+			return null;
+		}
 
-		Space[][] realtimeMap = TotalJsonObject.GsonConverter(object.toString(), Space[][].class);
 		BufferedImage buffer = new BufferedImage(WIDTH * 10, HEIGHT * 20 - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = buffer.createGraphics();
 		g.drawImage(tetrinoMapBackgroundPaint(), 0, 0, null);
-
-		if (realtimeMap == null) {
-			return;
-		}
 
 		int indexY = 0;
 		for (Space[] spcs : realtimeMap) {
@@ -81,19 +72,11 @@ public class ImagePrint implements EventListener {
 			}
 			indexY++;
 		}
-
-		TotalJsonObject imageMessage = new TotalJsonObject();
-		imageMessage.addProperty("method", "paintComponent");
-		imageMessage.addProperty(buffer.getClass().getName(), buffer);
-
-		imageMessage.addProperty("sentClass", sentClass.getName());
-		MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class, imageMessage);
+		
+		return buffer;
 	}
 
-	private void nextBlockPaint(Object object) {
-		String str = (String) object;
-		TetrinoType nextBlock = TetrinoType.valueOf(str);
-
+	public BufferedImage nextBlockPaint(TetrinoType nextBlock) {
 		BufferedImage buffer = tetrinoImg.get(nextBlock);
 
 		if (buffer == null) {
@@ -101,11 +84,7 @@ public class ImagePrint implements EventListener {
 			tetrinoImg.put(nextBlock, buffer);
 		}
 
-		TotalJsonObject imageMessage = new TotalJsonObject();
-		imageMessage.addProperty("method", "paintComponent");
-		imageMessage.addProperty(buffer.getClass().getName(), buffer);
-		imageMessage.addProperty("sentClass", sentClass.getName());
-		MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, imageMessage);
+		return buffer;
 
 	}
 
@@ -131,9 +110,7 @@ public class ImagePrint implements EventListener {
 		return buffer;
 	}
 
-	private void saveBlockPaint(Object object) {
-
-		TetrinoType saveBlock = TetrinoType.valueOf(object.toString());
+	public BufferedImage saveBlockPaint(TetrinoType saveBlock) {
 
 		BufferedImage buffer = tetrinoImg.get(saveBlock);
 
@@ -141,43 +118,43 @@ public class ImagePrint implements EventListener {
 			buffer = blockPaint(new CreateBlock().tetrinoChoiceCreate(saveBlock).getArea());
 			tetrinoImg.put(saveBlock, buffer);
 		}
-
-		TotalJsonObject imageMessage = new TotalJsonObject();
-		imageMessage.addProperty("method", "paintComponent");
-		imageMessage.addProperty(buffer.getClass().getName(), buffer);
-		imageMessage.addProperty("sentClass", sentClass.getName());
-		MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, imageMessage);
-
+		return buffer;
 	}
 
 	@Override
-	public void onEvent(Object event) {
-		// System.out.println("ImagePrint.tetrinoBlockPaint()");
-		TotalJsonObject obj = new TotalJsonObject(event.toString());
-		methodCatch(obj);
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
 	}
 
-	public void methodCatch(Object event) {
-		TotalJsonObject obj = (TotalJsonObject) event;
-		try {
-			MessageType type = MessageType.valueOf((String) obj.get(MessageType.class.getSimpleName()));
-			sentClass = Class.forName(obj.get("sentClass").toString());
-			switch (type) {
-			case SAVE_BLOCK_MESSAGE:
-				saveBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
-				break;
-			case NEXT_BLOCK_MESSAGE:
-				nextBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
-				break;
-			case MAP_MESSAGE:
-				tetrinoBlockPaint(obj.get(Space[][].class.getSimpleName()));
-				break;
-			default:
-				break;
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+	// @Override
+	// public void onEvent(Object event) {
+	// // System.out.println("ImagePrint.tetrinoBlockPaint()");
+	// TotalJsonObject obj = new TotalJsonObject(event.toString());
+	// methodCatch(obj);
+	// }
+	//
+	// public void methodCatch(Object event) {
+	// TotalJsonObject obj = (TotalJsonObject) event;
+	// try {
+	// MessageType type = MessageType.valueOf((String)
+	// obj.get(MessageType.class.getSimpleName()));
+	// sentClass = Class.forName(obj.get("sentClass").toString());
+	// switch (type) {
+	// case SAVE_BLOCK_MESSAGE:
+	// saveBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
+	// break;
+	// case NEXT_BLOCK_MESSAGE:
+	// nextBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
+	// break;
+	// case MAP_MESSAGE:
+	// tetrinoBlockPaint(obj.get(Space[][].class.getSimpleName()));
+	// break;
+	// default:
+	// break;
+	// }
+	// } catch (ClassNotFoundException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 }
