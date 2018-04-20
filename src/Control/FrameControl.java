@@ -1,8 +1,7 @@
 package Control;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-import Serversynchronization.TotalJsonObject;
 
 public class FrameControl implements EventListener {
 	public FrameControl() {
@@ -10,78 +9,58 @@ public class FrameControl implements EventListener {
 		MVC_Connect.ViewToControl.addListener(this);
 	}
 
-	static void FrameOpen(TotalJsonObject obj) {
-		FrameOpen(obj.get("openFrame"));
-	}
-
-	static void FrameClose(TotalJsonObject obj) {
-		FrameClose(obj.get("closeFrame"));
-	}
-
-	static void FrameChange(TotalJsonObject obj) {
-		FrameChange(obj.get("firstFrame"), obj.get("secondFrame"));
-	}
-
-	static void FrameChange(Object fropen, Object frclose) {
+	public void FrameChange(Class<?> fropen, Class<?> frclose) {
 		FrameOpen(fropen);
 		FrameClose(frclose);
 	}
 
-	static void FrameClose(Object frclose) {
+	public void FrameClose(Class<?> frclose) {
+		MVC_Connect.ControlToView.callEvent(frclose, (fr) -> ((JFrame) fr).dispose());
+	}
+
+	public void FrameOpen(Class<?> fropen) {
 
 		try {
-			TotalJsonObject close = new TotalJsonObject();
-			close.addProperty("method", "dispose");
-			MVC_Connect.ControlToView.callEvent(Class.forName(frclose.toString()), close);
-		} catch (ClassNotFoundException e) {
+			fropen.newInstance();
+			MVC_Connect.ControlToView.callEvent(fropen, (fr) -> ((JFrame) fr).setVisible(true));
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
 
-	static void FrameOpen(Object fropen) {
-
-		try {
-			Class.forName(fropen.toString()).newInstance();
-
-			TotalJsonObject open = new TotalJsonObject();
-			open.addProperty("method", "setVisible");
-			open.addProperty("boolean", true);
-			MVC_Connect.ControlToView.callEvent(Class.forName(fropen.toString()), open);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
+	public int showOptionDialog(String title, String content, int JOptionPaneType, int JOptionPaneStyle) {
+		return JOptionPane.showOptionDialog(null, content, title, JOptionPaneType, JOptionPaneStyle, null, null, null);
 	}
 
-	static int showOptionDialog(Object title, Object content, Object JOptionPaneType, Object JOptionPaneStyle) {
-		int type = Integer.parseInt(JOptionPaneType.toString());
-		int style = Integer.parseInt(JOptionPaneStyle.toString());
-		return JOptionPane.showOptionDialog(null, (String) content, (String) title, type, style, null, null, null);
+	public void showMessageDialog(String title, String content) {
+		JOptionPane.showMessageDialog(null, content, title, JOptionPane.PLAIN_MESSAGE);
 	}
-
-	static void showMessageDialog(Object title, Object content) {
-		JOptionPane.showMessageDialog(null, (String) content, (String) title, JOptionPane.PLAIN_MESSAGE);
-	}
+	//
+	// @Override
+	// public void onEvent(Object event) {
+	// System.out.println("FrameControl.onEvent()");
+	// TotalJsonObject object = new TotalJsonObject((String) event);
+	// methodCatch(object);
+	// }
+	//
+	// public void methodCatch(Object event) {
+	// TotalJsonObject obj = (TotalJsonObject) event;
+	// switch (obj.get("method").toString()) {
+	// case "FrameChange":
+	// FrameChange(obj);
+	// break;
+	// case "FrameOpen":
+	// FrameOpen(obj);
+	// break;
+	// case "FrameClose":
+	// FrameClose(obj);
+	// break;
+	// }
+	//
+	// }
 
 	@Override
-	public void onEvent(Object event) {
-		System.out.println("FrameControl.onEvent()");
-		TotalJsonObject object = new TotalJsonObject((String) event);
-		methodCatch(object);
-	}
-
-	public void methodCatch(Object event) {
-		TotalJsonObject obj = (TotalJsonObject) event;
-		switch (obj.get("method").toString()) {
-		case "FrameChange":
-			FrameChange(obj);
-			break;
-		case "FrameOpen":
-			FrameOpen(obj);
-			break;
-		case "FrameClose":
-			FrameClose(obj);
-			break;
-		}
-
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
 	}
 }
