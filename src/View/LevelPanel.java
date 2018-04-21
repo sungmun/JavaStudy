@@ -38,7 +38,7 @@ public class LevelPanel extends SendDataPanel {
 	}
 
 	@Override
-	void setData(Object obj) {
+	public void setData(Object obj) {
 		TotalJsonObject event = new TotalJsonObject(obj.toString());
 
 		level.setText(event.get("Level").toString());

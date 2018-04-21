@@ -36,7 +36,7 @@ public class SaveBlockPanel extends SendDataPanel {
 	}
 
 	@Override
-	void setData(Object obj) {
+	public void setData(Object obj) {
 		TotalJsonObject jsonObj = (TotalJsonObject) obj;
 
 		graphics = (BufferedImage) jsonObj.get(BufferedImage.class.getName());

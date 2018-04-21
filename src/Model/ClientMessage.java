@@ -4,11 +4,13 @@ import javax.swing.JOptionPane;
 
 import Control.EventListener;
 import Control.FrameControl;
+import Control.ImagePrint;
 import Control.MVC_Connect;
 import Control.UserControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
+import ValueObject.Space;
 import View.Multe.LoginFrame;
 
 public class ClientMessage implements EventListener {
@@ -40,7 +42,7 @@ public class ClientMessage implements EventListener {
 		if (client == null) {
 			if (messageType == MessageType.LOGIN) {
 				login();
-			}else if(messageType == MessageType.GAMEOVER_MESSAGE) {
+			} else if (messageType == MessageType.GAMEOVER_MESSAGE) {
 				gameOver();
 			}
 			return;
@@ -56,13 +58,11 @@ public class ClientMessage implements EventListener {
 		case LOGOUT:
 			logout(obj);
 			break;
-		case GAMEOVER_MESSAGE:
-			gameOver();
-			break;
 		case RANK:
 
 		case USER_MESSAGE:
 		case MAP_MESSAGE:
+
 		case NEXT_BLOCK_MESSAGE:
 		case SAVE_BLOCK_MESSAGE:
 		case LEVEL_MESSAGE:
@@ -71,6 +71,41 @@ public class ClientMessage implements EventListener {
 		default:
 			break;
 		}
+	}
+
+	public void levelMessageSendEvent(int level) {
+		TotalJsonObject levelMessage = new TotalJsonObject();
+		levelMessage.addProperty("Level", level);
+		levelMessage.addProperty(MessageType.class.getSimpleName(), MessageType.LEVEL_MESSAGE.toString());
+		client.send(levelMessage.toString());
+	}
+
+	public void scoreMessageSendEvent(int score) {
+		TotalJsonObject scoreMessage = new TotalJsonObject();
+		scoreMessage.addProperty("Level", score);
+		scoreMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
+		client.send(scoreMessage.toString());
+	}
+
+	public void saveBlockMessageSendEvent(TetrinoType saveBlock) {
+		TotalJsonObject blockMessage = new TotalJsonObject();
+		blockMessage.addProperty(TetrinoType.class.getSimpleName(), saveBlock.name());
+		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
+		client.send(blockMessage.toString());
+	}
+
+	public void nextBlockMessageSendEvent(TetrinoType nextBlock) {
+		TotalJsonObject blockMessage = new TotalJsonObject();
+		blockMessage.addProperty(TetrinoType.class.getSimpleName(), nextBlock.name());
+		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
+		client.send(blockMessage.toString());
+	}
+
+	public void mapMessageSendEvent(Space[][] realTimeMap) {
+		TotalJsonObject mapMessage = new TotalJsonObject();
+		mapMessage.addProperty(realTimeMap.getClass().getSimpleName(), TotalJsonObject.GsonConverter(realTimeMap));
+		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
+		client.send(mapMessage.toString());
 	}
 
 	private void login() {
@@ -107,20 +142,20 @@ public class ClientMessage implements EventListener {
 		client.send(message.toString());
 	}
 
-	private void gameOver() {
+	public void gameOverEvent() {
 
 		if (client == null) {
 			int value = JOptionPane.showOptionDialog(null, "기록을 남기시겠습니까?", null, JOptionPane.YES_NO_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, null, null);
-			if(value==JOptionPane.OK_OPTION) {
+			if (value == JOptionPane.OK_OPTION) {
 				TotalJsonObject frameMessage = new TotalJsonObject();
 				frameMessage.addProperty("method", "FrameOpen");
 				frameMessage.addProperty("openFrame", LoginFrame.class.getName());
 				MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toString());
 			}
-		}else {			
+		} else {
 			String userStr = TotalJsonObject.GsonConverter(UserControl.users.getPlayer());
-			
+
 			TotalJsonObject jsonObject = new TotalJsonObject();
 			jsonObject.addStringProperty(MessageTypeKey, MessageType.GAMEOVER_MESSAGE);
 			jsonObject.addStringProperty(User.class.getName(), userStr);

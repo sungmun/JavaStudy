@@ -18,7 +18,7 @@ public abstract class SendDataPanel extends BasicPanel implements EventListener 
 	 * 표시하는 곳에 전달을 할 것인지 구별해준다
 	 */
 	private static final long serialVersionUID = 5122925426455093897L;
-	Class<?> originClass;
+	public Class<?> originClass;
 
 	public SendDataPanel() {
 		super(true);
@@ -62,6 +62,6 @@ public abstract class SendDataPanel extends BasicPanel implements EventListener 
 		}
 	}
 
-	abstract void setData(Object obj);
+	abstract public void setData(Object obj);
 
 }

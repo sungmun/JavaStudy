@@ -11,11 +11,13 @@ public class User implements Comparable<User>, Serializable {
 	private UUID uuid;
 	private String id;
 	private String name;
-	private PlayerInformation info;
+	private int level = 1;
+	private int score = 0;
 
 	public User(String id, String name, int level, int score) {
 		this(id, name);
-		info = new PlayerInformation(level, score);
+		this.level = level;
+		this.score = score;
 	}
 
 	public User(String id, String name, UUID uuid) {
@@ -31,7 +33,6 @@ public class User implements Comparable<User>, Serializable {
 
 	public User() {
 		uuid = UUID.randomUUID();
-		info=new PlayerInformation();
 	}
 
 	public String getID() {
@@ -50,12 +51,28 @@ public class User implements Comparable<User>, Serializable {
 		this.name = name;
 	}
 
-	public PlayerInformation getInfo() {
-		return (PlayerInformation) info.clone();
+	public int getLevel() {
+		return level;
 	}
 
-	public void setInfo(PlayerInformation info) {
-		this.info = info;
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public UUID getUuid() {
@@ -71,8 +88,7 @@ public class User implements Comparable<User>, Serializable {
 	}
 
 	public int compareTo(User user) {
-
-		return info.getScore() - user.info.getScore();
+		return this.getScore() - user.getScore();
 	}
 
 }

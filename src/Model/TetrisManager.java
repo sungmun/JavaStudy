@@ -1,18 +1,27 @@
 package Model;
 
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
+import Control.CallBackEvent;
 import Control.EventListener;
 import Control.ImagePrint;
 import Control.MVC_Connect;
+import Control.MainThread;
 import Control.UserControl;
-import Serversynchronization.MessageType;
-import Serversynchronization.PlayerInformation;
-import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
 import ValueObject.Map;
 import ValueObject.Point;
 import ValueObject.Space;
+import View.LevelPanel;
+import View.NextBlockPanel;
+import View.PanelForTheUser;
+import View.SaveBlockPanel;
+import View.ScorePanel;
+import View.TetrinoBlockPanel;
+import View.BaseClass.GameBasicFrame;
+import View.Multe.MultiFrame;
+import View.Single.SingleFrame;
 
 public class TetrisManager implements EventListener {
 
@@ -171,27 +180,36 @@ public class TetrisManager implements EventListener {
 	}
 
 	public void scoreCalculation(int score) {
-		PlayerInformation info = UserControl.users.getPlayer().getInfo();
-		info.setScore(info.getScore() + score * 100);
-
-		int level = info.getScore() / 1000;
-		if (level > info.getLevel()) {
-			info.setLevel(level);
-			TotalJsonObject msg = new TotalJsonObject();
-			msg.addProperty("Level", info.getLevel());
-			msg.addProperty("sentClass", sentClass);
-			msg.addProperty(MessageType.class.getSimpleName(), MessageType.LEVEL_MESSAGE.toString());
-			MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg);
-		}
-		TotalJsonObject msg = new TotalJsonObject();
-		msg.addProperty("Score", info.getScore());
-		msg.addProperty("sentClass", sentClass);
-		msg.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, msg);
-
 		User user = UserControl.users.getPlayer();
-		user.setInfo(info);
+		user.setScore(user.getScore() + score * 100);
+
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerObj) -> {
+			MVC_Connect.ControlToView.callEvent(ScorePanel.class, (viewObj) -> {
+				ScorePanel panel = ((ScorePanel) viewObj);
+				if (panel.originClass == PanelForTheUser.class) {
+					panel.setData(Integer.toString(score));
+				}
+			});
+		});
+		ClientMessage.message.scoreMessageSendEvent(score);
+
+		int level = user.getScore() / 1000;
 		UserControl.users.setPlayer(user);
+
+		if (level <= user.getLevel()) {
+			return;
+		}
+
+		user.setLevel(level);
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerObj) -> {
+			MVC_Connect.ControlToView.callEvent(LevelPanel.class, (viewObj) -> {
+				LevelPanel panel = ((LevelPanel) viewObj);
+				if (panel.originClass == PanelForTheUser.class) {
+					panel.setData(Integer.toString(level));
+				}
+			});
+		});
+		ClientMessage.message.levelMessageSendEvent(level);
 	}
 
 	public void setNowTetrino(Tetrino ttrn) {
@@ -348,31 +366,37 @@ public class TetrisManager implements EventListener {
 
 	public void setSaveBlock(TetrinoType tetrino) {
 		this.saveBlock = tetrino;
-		TotalJsonObject blockMessage = new TotalJsonObject();
-		blockMessage.addProperty("method", "saveBlockPaint");
-		blockMessage.addProperty(TetrinoType.class.getSimpleName(), saveBlock.toString());
-		blockMessage.addProperty("sentClass", sentClass);
-		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.getAsString());
 
-		blockMessage.removeValue("method");
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.getAsString());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+			BufferedImage image = ((ImagePrint) controllerObj).saveBlockPaint(saveBlock);
+			MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, (viewObj) -> {
+				SaveBlockPanel panel = ((SaveBlockPanel) viewObj);
+				if (panel.originClass == PanelForTheUser.class) {
+					panel.setData(image);
+				}
+			});
+		});
+
+		ClientMessage.message.saveBlockMessageSendEvent(saveBlock);
 	}
 
 	public void setNextBlock(TetrinoType tetrino) {
 		this.nextBlock = tetrino;
-		TotalJsonObject blockMessage = new TotalJsonObject();
-		blockMessage.addProperty("method", "nextBlockPaint");
-		blockMessage.addProperty(TetrinoType.class.getSimpleName(), nextBlock.name());
-		blockMessage.addProperty("sentClass", sentClass);
-		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, blockMessage.toString());
 
-		blockMessage.removeValue("method");
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, blockMessage.toString());
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+			BufferedImage image = ((ImagePrint) controllerObj).nextBlockPaint(nextBlock);
+			MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, (viewObj) -> {
+				TetrinoBlockPanel panel = ((TetrinoBlockPanel) viewObj);
+				if (panel.originClass == PanelForTheUser.class) {
+					panel.setData(image);
+				}
+			});
+		});
+
+		ClientMessage.message.nextBlockMessageSendEvent(nextBlock);
 	}
 
-	private void dropCheck(Object obj) {
+	public void dropCheck(Object obj) {
 
 		MoveType type = (MoveType) obj;
 		if (tetrino == null) {
@@ -409,42 +433,51 @@ public class TetrisManager implements EventListener {
 	}
 
 	public void sendRealTimeMap() {
-		TotalJsonObject mapMessage = new TotalJsonObject();
+		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+			BufferedImage image = ((ImagePrint) controllerObj).tetrinoBlockPaint(realTimeMap);
+			MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class, (viewObj) -> {
+				TetrinoBlockPanel panel = ((TetrinoBlockPanel) viewObj);
+				if (panel.originClass == PanelForTheUser.class) {
+					panel.setData(image);
+				}
+			});
+		});
 
-		mapMessage.addProperty("method", "TetrinoBlockPaint");
-		mapMessage.addProperty(realTimeMap.getClass().getSimpleName(), TotalJsonObject.GsonConverter(realTimeMap));
-		mapMessage.addProperty("sentClass", sentClass);
-		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, mapMessage.toString());
-
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, mapMessage.toString());
-	}
-
-	@Override
-	public void onEvent(Object event) {
-		TotalJsonObject object = new TotalJsonObject((String) event);
-		methodCatch(object);
-	}
-
-	public void methodCatch(Object event) {
-		TotalJsonObject object = (TotalJsonObject) event;
-		switch (object.get("method").toString()) {
-		case "TetrinoBlockDropMove":
-		case "TetrinoBlockMove":
-			MoveType type = MoveType.valueOf(object.get("MoveType").toString());
-			dropCheck(type);
-			break;
-		case "saveBlock":
-			saveBlock();
-			break;
-		}
+		ClientMessage.message.mapMessageSendEvent(realTimeMap);
 	}
 
 	public void gameOver() {
-		TotalJsonObject jsonObject = new TotalJsonObject();
-		jsonObject.addStringProperty("sentClass", sentClass);
-		jsonObject.addStringProperty(MessageType.class.getSimpleName(), MessageType.GAMEOVER_MESSAGE);
-		jsonObject.addStringProperty("method", "stop");
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, jsonObject);
+		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerobj) -> {
+			CallBackEvent event = (e) -> GameBasicFrame.time.stop();
+			MVC_Connect.ControlToView.callEvent(SingleFrame.class, event);
+			MVC_Connect.ControlToView.callEvent(MultiFrame.class, event);
+			MainThread.gameflag = false;
+		});
+
+		ClientMessage.message.gameOverEvent();
 	}
+
+	@Override
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
+	}
+	// @Override
+	// public void onEvent(Object event) {
+	// TotalJsonObject object = new TotalJsonObject((String) event);
+	// methodCatch(object);
+	// }
+	//
+	// public void methodCatch(Object event) {
+	// TotalJsonObject object = (TotalJsonObject) event;
+	// switch (object.get("method").toString()) {
+	// case "TetrinoBlockDropMove":
+	// case "TetrinoBlockMove":
+	// MoveType type = MoveType.valueOf(object.get("MoveType").toString());
+	// dropCheck(type);
+	// break;
+	// case "saveBlock":
+	// saveBlock();
+	// break;
+	// }
+	// }
 }
