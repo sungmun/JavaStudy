@@ -2,75 +2,26 @@ package Model;
 
 import javax.swing.JOptionPane;
 
-import Control.EventListener;
 import Control.FrameControl;
-import Control.ImagePrint;
 import Control.MVC_Connect;
-import Control.UserControl;
 import Serversynchronization.MessageType;
 import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
 import ValueObject.Space;
 import View.Multe.LoginFrame;
 
-public class ClientMessage implements EventListener {
+public class ClientMessage {
 	TetrisClient client;
-	static ClientMessage message;
+	private static ClientMessage clientMsgInstanse;
 	final String MessageTypeKey = MessageType.class.getSimpleName();
 
-	ClientMessage() {
-		message = this;
-		MVC_Connect.ControlToModel.addListener(this);
-	}
+	private ClientMessage() {	}
 
-	@Override
-	public void onEvent(Object event) {
-		TotalJsonObject parser = new TotalJsonObject((String) event);
-
-		if (parser.get(MessageTypeKey) == null)
-			return;
-		methodCatch(parser);
-		parser.removeValue("sentClass");
-	}
-
-	public void methodCatch(Object event) {
-		if (event == null)
-			return;
-		TotalJsonObject obj = (TotalJsonObject) event;
-		String messageTypeStr = (String) obj.get(MessageTypeKey);
-		MessageType messageType = MessageType.valueOf(messageTypeStr);
-		if (client == null) {
-			if (messageType == MessageType.LOGIN) {
-				login();
-			} else if (messageType == MessageType.GAMEOVER_MESSAGE) {
-				gameOver();
-			}
-			return;
+	public static ClientMessage getClientMessageInstanse() {
+		if (clientMsgInstanse == null) {
+			clientMsgInstanse = new ClientMessage();
 		}
-
-		switch (messageType) {
-		case USER_SELECTING:
-			UserSelecting(obj);
-			break;
-		case BATTLE_ACCEPT:
-			battleAccept();
-			break;
-		case LOGOUT:
-			logout(obj);
-			break;
-		case RANK:
-
-		case USER_MESSAGE:
-		case MAP_MESSAGE:
-
-		case NEXT_BLOCK_MESSAGE:
-		case SAVE_BLOCK_MESSAGE:
-		case LEVEL_MESSAGE:
-		case SCORE_MESSAGE:
-			client.send(obj.toString());
-		default:
-			break;
-		}
+		return clientMsgInstanse;
 	}
 
 	public void levelMessageSendEvent(int level) {
@@ -108,33 +59,29 @@ public class ClientMessage implements EventListener {
 		client.send(mapMessage.toString());
 	}
 
-	private void login() {
+	public void login(User user) {
 		client = TetrisClient.createTetrisClient();
 
 		TotalJsonObject message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.LOGIN.toString());
-		message.addProperty(UserControl.users.getPlayer().getClass().getSimpleName(),
-				TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
+		message.addProperty(user.getClass().getSimpleName(), TotalJsonObject.GsonConverter(user));
 
 		client.send(message.toString());
-
 	}
 
-	private void UserSelecting(Object obj) {
-		TotalJsonObject msg = (TotalJsonObject) obj;
-		client.send(msg.toString());
+	public void UserSelecting(Object obj) {
+		client.send(obj.toString());
 	}
 
-	private void logout(Object obj) {
-		TotalJsonObject msg = (TotalJsonObject) obj;
-		client.send(msg.toString());
+	public void logout(Object obj) {
+		client.send(obj.toString());
 	}
 
-	private void battleAccept() {
+	public void battleAccept(User user) {
 
 		TotalJsonObject message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.BATTLE_ACCEPT.toString());
-		message.addProperty(User.class.getSimpleName(), TotalJsonObject.GsonConverter(UserControl.users.getPlayer()));
+		message.addProperty(user.getClass().getSimpleName(), TotalJsonObject.GsonConverter(user));
 		client.send(message.toString());
 
 		message = new TotalJsonObject();
@@ -142,24 +89,71 @@ public class ClientMessage implements EventListener {
 		client.send(message.toString());
 	}
 
-	public void gameOverEvent() {
+	public void gameOverEvent(User user) {
 
-		if (client == null) {
-			int value = JOptionPane.showOptionDialog(null, "기록을 남기시겠습니까?", null, JOptionPane.YES_NO_OPTION,
-					JOptionPane.PLAIN_MESSAGE, null, null, null);
-			if (value == JOptionPane.OK_OPTION) {
-				TotalJsonObject frameMessage = new TotalJsonObject();
-				frameMessage.addProperty("method", "FrameOpen");
-				frameMessage.addProperty("openFrame", LoginFrame.class.getName());
-				MVC_Connect.ModelToControl.callEvent(FrameControl.class, frameMessage.toString());
-			}
+		if (client == null || user == null) {
+			MVC_Connect.ModelToControl.callEvent(FrameControl.class, (controllerObj) -> {
+				int value = ((FrameControl) controllerObj).showOptionDialog(null, "남기시겠습니까", JOptionPane.YES_NO_OPTION,
+						JOptionPane.PLAIN_MESSAGE);
+				if (value == JOptionPane.OK_OPTION) {
+					((FrameControl) controllerObj).FrameOpen(LoginFrame.class);
+				}
+			});
 		} else {
-			String userStr = TotalJsonObject.GsonConverter(UserControl.users.getPlayer());
-
 			TotalJsonObject jsonObject = new TotalJsonObject();
 			jsonObject.addStringProperty(MessageTypeKey, MessageType.GAMEOVER_MESSAGE);
-			jsonObject.addStringProperty(User.class.getName(), userStr);
+			jsonObject.addStringProperty(User.class.getName(), TotalJsonObject.GsonConverter(user));
 			client.send(jsonObject.toString());
 		}
 	}
+	// @Override
+	// public void onEvent(Object event) {
+	// TotalJsonObject parser = new TotalJsonObject((String) event);
+	//
+	// if (parser.get(MessageTypeKey) == null)
+	// return;
+	// methodCatch(parser);
+	// parser.removeValue("sentClass");
+	// }
+	//
+	// public void methodCatch(Object event) {
+	// if (event == null)
+	// return;
+	// TotalJsonObject obj = (TotalJsonObject) event;
+	// String messageTypeStr = (String) obj.get(MessageTypeKey);
+	// MessageType messageType = MessageType.valueOf(messageTypeStr);
+	// if (client == null) {
+	// if (messageType == MessageType.LOGIN) {
+	// login();
+	// } else if (messageType == MessageType.GAMEOVER_MESSAGE) {
+	// gameOver();
+	// }
+	// return;
+	// }
+	//
+	// switch (messageType) {
+	// case USER_SELECTING:
+	// UserSelecting(obj);
+	// break;
+	// case BATTLE_ACCEPT:
+	// battleAccept();
+	// break;
+	// case LOGOUT:
+	// logout(obj);
+	// break;
+	// case RANK:
+	//
+	// case USER_MESSAGE:
+	// case MAP_MESSAGE:
+	//
+	// case NEXT_BLOCK_MESSAGE:
+	// case SAVE_BLOCK_MESSAGE:
+	// case LEVEL_MESSAGE:
+	// case SCORE_MESSAGE:
+	// client.send(obj.toString());
+	// default:
+	// break;
+	// }
+	// }
+
 }
