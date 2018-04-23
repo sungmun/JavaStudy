@@ -12,20 +12,20 @@ import Serversynchronization.UsersList;
 public class UserListModel extends DefaultTableModel implements EventListener {
 	TotalJsonObject json;
 	static int selectedRow = -1;
-	static UserListModel model=null;
-	
+	static UserListModel model = null;
+
 	public UserListModel(String[] header, int date) {
 		super(header, date);
 		MVC_Connect.ModelToControl.addListener(this);
 		MVC_Connect.ViewToControl.addListener(this);
-		UserListModel.model=this;
+		UserListModel.model = this;
 	}
 
 	// User정보 전달 함수
 	static User getData() {
-		if (selectedRow == -1||UserListModel.model==null)
+		if (selectedRow == -1 || UserListModel.model == null)
 			return null;
-		UUID num=UUID.fromString(UserListModel.model.getValueAt(selectedRow, 0).toString());
+		UUID num = UUID.fromString(UserListModel.model.getValueAt(selectedRow, 0).toString());
 		String name = UserListModel.model.getValueAt(selectedRow, 1).toString();
 		String id = UserListModel.model.getValueAt(selectedRow, 2).toString();
 		return new User(id, name, num);
@@ -34,7 +34,7 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 	// 초기화 함수
 	public void initList() {
 		String[] str;
-		
+
 		this.setRowCount(0);
 		for (User user : UsersList.list.values()) {
 			str = new String[3];
@@ -47,25 +47,24 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 			addRow(str);
 		}
 	}
-	private void setUsersList(TotalJsonObject json) {
-		if(json.get(User[].class.getSimpleName())==null){
+
+	public void setUsersList(final User[] users) {
+		if (users == null) {
 			initList();
 			return;
 		}
-		final User[] users=TotalJsonObject.GsonConverter(json.get(User[].class.getSimpleName()).toString(), User[].class);
 
 		UsersList.list.clear();
 		for (User user : users) {
 			addData(user);
 		}
 	}
+
 	// User추가 함수
-	public void addData(Object data) {
-		if (!(data instanceof User) || UsersList.list.containsKey(((User) data).getUuid())) {
+	public void addData(User user) {
+		if (UsersList.list.containsKey((user).getUuid())) {
 			return;
 		}
-		User user = (User) data;
-
 		UsersList.list.put(user.getUuid(), user);
 
 		String[] str = new String[3];
@@ -74,7 +73,8 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 		str[2] = user.getID();
 		addRow(str);
 	}
-	private void delete(Object data) {
+
+	public void delete(Object data) {
 		UsersList.list.remove(data);
 		initList();
 	}
@@ -82,20 +82,21 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 	@Override
 	public void onEvent(Object event) {
 		json = new TotalJsonObject(event.toString());
-		String source=null;
+		String source = null;
 		switch (json.get("method").toString()) {
 		case "addData":
-			source=json.get("User").toString();
+			source = json.get("User").toString();
 			addData(TotalJsonObject.GsonConverter(source, User.class));
 			break;
 		case "setUsersList":
-			setUsersList(json);
+			setUsersList(
+					TotalJsonObject.GsonConverter(json.get(User[].class.getSimpleName()).toString(), User[].class));
 			break;
 		case "getData":
 			getData();
 			break;
 		case "delete":
-			source=json.get("User").toString();
+			source = json.get("User").toString();
 			delete(TotalJsonObject.GsonConverter(source, User.class));
 			break;
 		default:

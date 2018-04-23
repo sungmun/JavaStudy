@@ -191,7 +191,7 @@ public class TetrisManager implements EventListener {
 				}
 			});
 		});
-		ClientMessage.message.scoreMessageSendEvent(score);
+		ClientMessage.getClientMessageInstanse().scoreMessageSendEvent(score);
 
 		int level = user.getScore() / 1000;
 		UserControl.users.setPlayer(user);
@@ -209,7 +209,7 @@ public class TetrisManager implements EventListener {
 				}
 			});
 		});
-		ClientMessage.message.levelMessageSendEvent(level);
+		ClientMessage.getClientMessageInstanse().levelMessageSendEvent(level);
 	}
 
 	public void setNowTetrino(Tetrino ttrn) {
@@ -377,7 +377,7 @@ public class TetrisManager implements EventListener {
 			});
 		});
 
-		ClientMessage.message.saveBlockMessageSendEvent(saveBlock);
+		ClientMessage.getClientMessageInstanse().saveBlockMessageSendEvent(saveBlock);
 	}
 
 	public void setNextBlock(TetrinoType tetrino) {
@@ -386,14 +386,14 @@ public class TetrisManager implements EventListener {
 		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
 			BufferedImage image = ((ImagePrint) controllerObj).nextBlockPaint(nextBlock);
 			MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, (viewObj) -> {
-				TetrinoBlockPanel panel = ((TetrinoBlockPanel) viewObj);
+				NextBlockPanel panel = ((NextBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
 					panel.setData(image);
 				}
 			});
 		});
 
-		ClientMessage.message.nextBlockMessageSendEvent(nextBlock);
+		ClientMessage.getClientMessageInstanse().nextBlockMessageSendEvent(nextBlock);
 	}
 
 	public void dropCheck(Object obj) {
@@ -443,7 +443,7 @@ public class TetrisManager implements EventListener {
 			});
 		});
 
-		ClientMessage.message.mapMessageSendEvent(realTimeMap);
+		ClientMessage.getClientMessageInstanse().mapMessageSendEvent(realTimeMap);
 	}
 
 	public void gameOver() {
@@ -454,7 +454,7 @@ public class TetrisManager implements EventListener {
 			MainThread.gameflag = false;
 		});
 
-		ClientMessage.message.gameOverEvent();
+		ClientMessage.getClientMessageInstanse().gameOverEvent(UserControl.users.getPlayer());
 	}
 
 	@Override
