@@ -30,10 +30,79 @@ public class ServerMessage {
 
 	final TetrisClient client = TetrisClient.getTetrisClient();
 
+	public void onEvent(String event) {
+		TotalJsonObject parser = new TotalJsonObject(event);
+		if (parser.get(MessageTypeKey) == null)
+			return;
+		eventCatch(parser);
+	}
+
+	public void eventCatch(Object msg) {// 메세지 분류 함수
+		TotalJsonObject obj = (TotalJsonObject) msg;
+		String messageTypeStr = obj.get("MessageType").toString();
+		MessageType messageType = MessageType.valueOf(messageTypeStr);
+		switch (messageType) {
+		case LOGIN:
+			logIn((User) TotalJsonObject.GsonConverter(obj.get(User.class.getSimpleName()).toString(), User.class));
+			break;
+		case USER_SERIAL_NUM:
+			setMyLogin(
+					(UUID) TotalJsonObject.GsonConverter(obj.get(UUID.class.getSimpleName()).toString(), UUID.class));
+			break;
+		case USER_LIST_MESSAGE:
+			userListMessage((User[]) TotalJsonObject.GsonConverter(obj.get(User[].class.getSimpleName()).toString(),
+					User[].class));
+			break;
+		case BE_CHOSEN:
+			beChoice((User) TotalJsonObject.GsonConverter(obj.get(User.class.getSimpleName()).toString(), User.class));
+			break;
+		case BATTLE_ACCEPT:
+			accept(UserControl.users.getPlayer());
+			break;
+		case BATTLE_DENIAL:
+			battleDenial();
+			break;
+		case BATTLE_END:
+		case LOGOUT:
+			logOut((User) TotalJsonObject.GsonConverter(obj.get(User.class.getSimpleName()).toString(), User.class));
+			break;
+		case GAMEOVER_MESSAGE:
+			gameOverEvent();
+		case RANK:
+			rankEvent(obj.toString());
+			break;
+		case USER_MESSAGE:
+			UserMessage(
+					(User) TotalJsonObject.GsonConverter(obj.get(User.class.getSimpleName()).toString(), User.class));
+			break;
+		case MAP_MESSAGE:
+			mapMessageSendEvent((Space[][]) TotalJsonObject
+					.GsonConverter(obj.get(Space[][].class.getSimpleName()).toString(), Space[][].class));
+		case NEXT_BLOCK_MESSAGE:
+			nextBlockMessageSendEvent((TetrinoType) TotalJsonObject
+					.GsonConverter(obj.get(TetrinoType.class.getSimpleName()).toString(), TetrinoType.class));
+		case SAVE_BLOCK_MESSAGE:
+			saveBlockMessageSendEvent((TetrinoType) TotalJsonObject
+					.GsonConverter(obj.get(TetrinoType.class.getSimpleName()).toString(), TetrinoType.class));
+			break;
+		case LEVEL_MESSAGE:
+			levelEvent(Integer.parseInt(obj.get("Level").toString()));
+			break;
+		case SCORE_MESSAGE:
+			scoreEvent(Integer.parseInt(obj.get("Score").toString()));
+			break;
+		case USER_SELECTING:
+			break;
+		case WAITING_ROOM_CONNECT:
+			break;
+		default:
+			break;
+
+		}
+	}
+
 	public void battleDenial() {
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e) -> {
-			((FrameControl) e).showMessageDialog(null, "상대방이 거부하였습니다");
-		});
+		JOptionPane.showMessageDialog(null, null, "상대방이 거부하였습니다", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void setMyLogin(UUID usernum) {
@@ -109,18 +178,15 @@ public class ServerMessage {
 		});
 	}
 
-	public void gameOverEvent() {
+	private void gameOverEvent() {
 
 	}
 
 	public void rankEvent(Object msg) {
-		TotalJsonObject jsonObject = new TotalJsonObject((String) msg);
-		String messageStr = null;
-		messageStr = jsonObject.get("RankingType").toString();
-		messageStr += "\n";
-		messageStr += "순위 : ";
-		messageStr += jsonObject.get(int.class.getSimpleName());
-		JOptionPane.showMessageDialog(null, messageStr, null, JOptionPane.PLAIN_MESSAGE);
+		TotalJsonObject jsonObject = new TotalJsonObject(msg.toString());
+		String rank=jsonObject.get(int.class.getSimpleName()).toString();
+		String messageStr= jsonObject.get("RankingType").toString()+"\n 순위 : "+rank;
+		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e)->((FrameControl)e).showMessageDialog(null, messageStr));
 	}
 
 	public void scoreEvent(int score) {

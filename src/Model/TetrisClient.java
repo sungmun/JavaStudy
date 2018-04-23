@@ -57,7 +57,8 @@ public class TetrisClient extends Thread {
 		// ServerMessage event = new ServerMessage();
 		try {
 			String str = in.readLine();
-			ServerMessage.onEvent(str);
+			ServerMessage message=new ServerMessage();
+			message.onEvent(str);
 			
 			in.mark(0);
 			in.reset();
