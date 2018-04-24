@@ -78,30 +78,34 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 		UsersList.list.remove(data);
 		initList();
 	}
-
 	@Override
-	public void onEvent(Object event) {
-		json = new TotalJsonObject(event.toString());
-		String source = null;
-		switch (json.get("method").toString()) {
-		case "addData":
-			source = json.get("User").toString();
-			addData(TotalJsonObject.GsonConverter(source, User.class));
-			break;
-		case "setUsersList":
-			setUsersList(
-					TotalJsonObject.GsonConverter(json.get(User[].class.getSimpleName()).toString(), User[].class));
-			break;
-		case "getData":
-			getData();
-			break;
-		case "delete":
-			source = json.get("User").toString();
-			delete(TotalJsonObject.GsonConverter(source, User.class));
-			break;
-		default:
-			break;
-		}
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
 	}
+//
+//	@Override
+//	public void onEvent(Object event) {
+//		json = new TotalJsonObject(event.toString());
+//		String source = null;
+//		switch (json.get("method").toString()) {
+//		case "addData":
+//			source = json.get("User").toString();
+//			addData(TotalJsonObject.GsonConverter(source, User.class));
+//			break;
+//		case "setUsersList":
+//			setUsersList(
+//					TotalJsonObject.GsonConverter(json.get(User[].class.getSimpleName()).toString(), User[].class));
+//			break;
+//		case "getData":
+//			getData();
+//			break;
+//		case "delete":
+//			source = json.get("User").toString();
+//			delete(TotalJsonObject.GsonConverter(source, User.class));
+//			break;
+//		default:
+//			break;
+//		}
+//	}
 
 }
