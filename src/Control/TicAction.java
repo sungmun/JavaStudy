@@ -7,6 +7,7 @@ import Model.MoveType;
 import Model.TetrisManager;
 import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
+import View.BaseClass.GameBasicFrame;
 import View.Multe.MultiFrame;
 import View.Single.SingleFrame;
 
@@ -17,26 +18,24 @@ public class TicAction implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
-		TotalJsonObject moveMessage = new TotalJsonObject();
-		moveMessage.addProperty("method", "TetrinoBlockMove");
-		moveMessage.addProperty("MoveType", MoveType.DOWN.toString());
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, moveMessage.toString());
+		MVC_Connect.ControlToModel.callEvent(TetrisManager.class,
+				(modelObj) -> ((TetrisManager) modelObj).TetrinoBlockMove(MoveType.DOWN));
 		speedChange();
 	}
-
-	public void timeStop() {
-		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "TimeStop");
-		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "TimeStop");
-	}
+	//
+	// public void timeStop() {
+	// MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "TimeStop");
+	// MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "TimeStop");
+	// }
 
 	public void speedChange() {
 		User user = UserControl.users.getPlayer();
-		if(user==null) {
+		if (user == null) {
 			return;
 		}
-		
-		this.speed = (int) (500 * Math.pow(0.999, user.getInfo().getLevel()-1));
-		MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "Delay", this.speed);
-		MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "Delay", this.speed);
+
+		this.speed = (int) (500 * Math.pow(0.999, user.getLevel() - 1));
+		MVC_Connect.ControlToView.callEvent(SingleFrame.class, (frame) -> GameBasicFrame.time.setDelay(speed));
+		MVC_Connect.ControlToView.callEvent(MultiFrame.class, (frame) -> GameBasicFrame.time.setDelay(speed));
 	}
 }
