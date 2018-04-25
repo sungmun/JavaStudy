@@ -33,7 +33,7 @@ public class ClientMessage {
 
 	public void scoreMessageSendEvent(int score) {
 		TotalJsonObject scoreMessage = new TotalJsonObject();
-		scoreMessage.addProperty("Level", score);
+		scoreMessage.addProperty("Score", score);
 		scoreMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
 		client.send(scoreMessage.toString());
 	}
