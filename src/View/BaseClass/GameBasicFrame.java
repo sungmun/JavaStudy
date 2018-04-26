@@ -1,7 +1,7 @@
 package View.BaseClass;
 
+import Control.CallBackEvent;
 import Control.Tic;
-import Serversynchronization.TotalJsonObject;
 
 public class GameBasicFrame extends BasicFrame {
 	/**
@@ -16,11 +16,8 @@ public class GameBasicFrame extends BasicFrame {
 	}
 
 	@Override
-	public void methodCatch(Object event) {
-		super.methodCatch(event);
-		TotalJsonObject object = (TotalJsonObject) event;
-		if(object.get("method").equals("stop")) {
-			time.stop();
-		}
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
 	}
+
 }

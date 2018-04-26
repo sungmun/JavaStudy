@@ -28,8 +28,6 @@ public class ServerMessage {
 	final static String MessageTypeKey = MessageType.class.getSimpleName();
 	final static String SentClass = ServerMessage.class.getName();
 
-	final TetrisClient client = TetrisClient.getTetrisClient();
-
 	public void onEvent(String event) {
 		TotalJsonObject parser = new TotalJsonObject(event);
 		if (parser.get(MessageTypeKey) == null)
@@ -115,7 +113,7 @@ public class ServerMessage {
 		TotalJsonObject object = new TotalJsonObject();
 		object.addProperty(MessageTypeKey,
 				(MainThread.gameflag) ? MessageType.USER_LIST_MESSAGE.toString() : MessageType.RANK.toString());
-		ClientMessage.getClientMessageInstanse().client.send(object.toString());
+		TetrisClient.getclientInstance().send(object.toString());
 	}
 
 	public void logIn(User user) {
@@ -163,7 +161,7 @@ public class ServerMessage {
 			accept(UserControl.users.getPlayer());
 		} else {
 			jsonObject.addProperty(MessageTypeKey, MessageType.BATTLE_DENIAL.toString());
-			ClientMessage.getClientMessageInstanse().client.send(jsonObject.toString());
+			TetrisClient.getclientInstance().send(jsonObject.toString());
 		}
 
 	}
@@ -172,7 +170,7 @@ public class ServerMessage {
 		TotalJsonObject jsonObject = new TotalJsonObject();
 		jsonObject.addProperty(MessageTypeKey, MessageType.USER_MESSAGE.toString());
 		jsonObject.addProperty(User.class.getSimpleName(), TotalJsonObject.GsonConverter(user));
-		ClientMessage.getClientMessageInstanse().client.send(jsonObject.toString());
+		TetrisClient.getclientInstance().send(jsonObject.toString());
 		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e) -> {
 			((FrameControl) e).FrameChange(MultiFrame.class, ListViewFrame.class);
 		});
@@ -184,9 +182,10 @@ public class ServerMessage {
 
 	public void rankEvent(Object msg) {
 		TotalJsonObject jsonObject = new TotalJsonObject(msg.toString());
-		String rank=jsonObject.get(int.class.getSimpleName()).toString();
-		String messageStr= jsonObject.get("RankingType").toString()+"\n 순위 : "+rank;
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e)->((FrameControl)e).showMessageDialog(null, messageStr));
+		String rank = jsonObject.get(int.class.getSimpleName()).toString();
+		String messageStr = jsonObject.get("RankingType").toString() + "\n 순위 : " + rank;
+		MVC_Connect.ModelToControl.callEvent(FrameControl.class,
+				(e) -> ((FrameControl) e).showMessageDialog(null, messageStr));
 	}
 
 	public void scoreEvent(int score) {
@@ -198,7 +197,7 @@ public class ServerMessage {
 			MVC_Connect.ControlToView.callEvent(ScorePanel.class, (viewObj) -> {
 				ScorePanel panel = (ScorePanel) viewObj;
 				if (panel.originClass == PanelForTheOpponent.class) {
-					panel.setData(Integer.toString(score));
+					panel.score.setText(Integer.toString(score));
 				}
 			});
 		});
@@ -213,7 +212,7 @@ public class ServerMessage {
 			MVC_Connect.ControlToView.callEvent(LevelPanel.class, (viewObj) -> {
 				LevelPanel panel = (LevelPanel) viewObj;
 				if (panel.originClass == PanelForTheOpponent.class) {
-					panel.setData(Integer.toString(level));
+					panel.level.setText(Integer.toString(level));
 				}
 			});
 		});
@@ -225,7 +224,7 @@ public class ServerMessage {
 			MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, (viewObj) -> {
 				SaveBlockPanel panel = ((SaveBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheOpponent.class) {
-					panel.setData(image);
+					panel.paintImage(image);
 				}
 			});
 		});
@@ -236,9 +235,8 @@ public class ServerMessage {
 			BufferedImage image = ((ImagePrint) controllerObj).nextBlockPaint(nextBlock);
 			MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, (viewObj) -> {
 				NextBlockPanel panel = ((NextBlockPanel) viewObj);
-				if (panel.originClass == PanelForTheOpponent.class) {
-					panel.setData(image);
-				}
+				if (panel.originClass == PanelForTheOpponent.class)
+					panel.paintImage(image);
 			});
 		});
 	}
@@ -247,6 +245,6 @@ public class ServerMessage {
 		TotalJsonObject mapMessage = new TotalJsonObject();
 		mapMessage.addProperty(realTimeMap.getClass().getSimpleName(), TotalJsonObject.GsonConverter(realTimeMap));
 		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
-		client.send(mapMessage.toString());
+		TetrisClient.getclientInstance().send(mapMessage.toString());
 	}
 }

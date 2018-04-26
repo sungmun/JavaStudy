@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import Control.ImagePrint;
-import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicLabel;
 
 public class ScorePanel extends SendDataPanel {
@@ -18,7 +17,7 @@ public class ScorePanel extends SendDataPanel {
 	private static final long serialVersionUID = 4820927712664157020L;
 	
 	BasicLabel title;
-	BasicLabel score;
+	public BasicLabel score;
 
 	public ScorePanel() {
 
@@ -35,13 +34,5 @@ public class ScorePanel extends SendDataPanel {
 		add(title);
 		add(score);
 
-	}
-
-	@Override
-	public void setData(Object obj) {
-		TotalJsonObject event = new TotalJsonObject(obj.toString());
-
-		score.setText(event.get("Score").toString());
-		repaint();
 	}
 }

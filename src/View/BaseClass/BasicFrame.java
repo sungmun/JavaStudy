@@ -5,11 +5,11 @@ import java.awt.GraphicsConfiguration;
 
 import javax.swing.JFrame;
 
+import Control.CallBackEvent;
 import Control.EventListener;
 import Control.MVC_Connect;
-import Serversynchronization.TotalJsonObject;
 
-public abstract class BasicFrame extends JFrame implements EventListener {
+public class BasicFrame extends JFrame implements EventListener {
 
 	/**
 	 * 이 project에 정형화된 이미지를 위하여 사용되는 클래스로 프레임의 색깔과 커버를 할것인가 아닌가 그리고 프레임의 위치 마지막으로
@@ -57,6 +57,11 @@ public abstract class BasicFrame extends JFrame implements EventListener {
 			this.pack();
 			this.setLocationRelativeTo(null);
 		}
+	}
+
+	@Override
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
 	}
 
 //	@Override

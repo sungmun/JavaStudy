@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicLabel;
 
 public class GameOverPanel extends SendDataPanel {
@@ -45,18 +44,6 @@ public class GameOverPanel extends SendDataPanel {
 		level_lbl.setText(level);
 	}
 
-	@Override
-	void setData(Object obj) {
-		TotalJsonObject event = new TotalJsonObject(obj.toString());
-		
-		String level=event.get("Level").toString();
-		String score=event.get("Score").toString();
-		
-		this.level=(level==null)?this.level:level;
-		this.score=(score==null)?this.score:score;
-		
-		
-		repaint();
-	}
+	
 
 }

@@ -7,8 +7,6 @@ public class PlayerInformation implements Cloneable{
 	public PlayerInformation() {
 	}
 	public PlayerInformation(int level, int score) {
-		setLevel(level);
-		setScore(score);
 	}
 
 	public int getLevel() {

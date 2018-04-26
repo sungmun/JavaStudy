@@ -11,7 +11,6 @@ import ValueObject.Space;
 import View.Multe.LoginFrame;
 
 public class ClientMessage {
-	TetrisClient client;
 	private static ClientMessage clientMsgInstanse;
 	final String MessageTypeKey = MessageType.class.getSimpleName();
 
@@ -28,53 +27,53 @@ public class ClientMessage {
 		TotalJsonObject levelMessage = new TotalJsonObject();
 		levelMessage.addProperty("Level", level);
 		levelMessage.addProperty(MessageType.class.getSimpleName(), MessageType.LEVEL_MESSAGE.toString());
-		client.send(levelMessage.toString());
+		TetrisClient.getclientInstance().send(levelMessage.toString());
 	}
 
 	public void scoreMessageSendEvent(int score) {
 		TotalJsonObject scoreMessage = new TotalJsonObject();
 		scoreMessage.addProperty("Score", score);
 		scoreMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SCORE_MESSAGE.toString());
-		client.send(scoreMessage.toString());
+		TetrisClient.getclientInstance().send(scoreMessage.toString());
 	}
 
 	public void saveBlockMessageSendEvent(TetrinoType saveBlock) {
 		TotalJsonObject blockMessage = new TotalJsonObject();
 		blockMessage.addProperty(TetrinoType.class.getSimpleName(), saveBlock.name());
 		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.SAVE_BLOCK_MESSAGE.toString());
-		client.send(blockMessage.toString());
+		TetrisClient.getclientInstance().send(blockMessage.toString());
 	}
 
 	public void nextBlockMessageSendEvent(TetrinoType nextBlock) {
 		TotalJsonObject blockMessage = new TotalJsonObject();
 		blockMessage.addProperty(TetrinoType.class.getSimpleName(), nextBlock.name());
 		blockMessage.addProperty(MessageType.class.getSimpleName(), MessageType.NEXT_BLOCK_MESSAGE.toString());
-		client.send(blockMessage.toString());
+		TetrisClient.getclientInstance().send(blockMessage.toString());
 	}
 
 	public void mapMessageSendEvent(Space[][] realTimeMap) {
 		TotalJsonObject mapMessage = new TotalJsonObject();
 		mapMessage.addProperty(realTimeMap.getClass().getSimpleName(), TotalJsonObject.GsonConverter(realTimeMap));
 		mapMessage.addProperty(MessageType.class.getSimpleName(), MessageType.MAP_MESSAGE.toString());
-		client.send(mapMessage.toString());
+		TetrisClient.getclientInstance().send(mapMessage.toString());
 	}
 
 	public void login(User user) {
-		client = TetrisClient.createTetrisClient();
+		TetrisClient.getclientInstance().connect();
 
 		TotalJsonObject message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.LOGIN.toString());
 		message.addProperty(user.getClass().getSimpleName(), TotalJsonObject.GsonConverter(user));
 
-		client.send(message.toString());
+		TetrisClient.getclientInstance().send(message.toString());
 	}
 
 	public void UserSelecting(Object obj) {
-		client.send(obj.toString());
+		TetrisClient.getclientInstance().send(obj.toString());
 	}
 
 	public void logout(Object obj) {
-		client.send(obj.toString());
+		TetrisClient.getclientInstance().send(obj.toString());
 	}
 
 	public void battleAccept(User user) {
@@ -82,16 +81,16 @@ public class ClientMessage {
 		TotalJsonObject message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.BATTLE_ACCEPT.toString());
 		message.addProperty(user.getClass().getSimpleName(), TotalJsonObject.GsonConverter(user));
-		client.send(message.toString());
+		TetrisClient.getclientInstance().send(message.toString());
 
 		message = new TotalJsonObject();
 		message.addProperty(MessageTypeKey, MessageType.BATTLE_START.toString());
-		client.send(message.toString());
+		TetrisClient.getclientInstance().send(message.toString());
 	}
 
 	public void gameOverEvent(User user) {
 
-		if (client == null || user == null) {
+		if (TetrisClient.getclientInstance().socket == null || user == null) {
 			MVC_Connect.ModelToControl.callEvent(FrameControl.class, (controllerObj) -> {
 				int value = ((FrameControl) controllerObj).showOptionDialog(null, "남기시겠습니까", JOptionPane.YES_NO_OPTION,
 						JOptionPane.PLAIN_MESSAGE);
@@ -103,7 +102,7 @@ public class ClientMessage {
 			TotalJsonObject jsonObject = new TotalJsonObject();
 			jsonObject.addStringProperty(MessageTypeKey, MessageType.GAMEOVER_MESSAGE);
 			jsonObject.addStringProperty(User.class.getName(), TotalJsonObject.GsonConverter(user));
-			client.send(jsonObject.toString());
+			TetrisClient.getclientInstance().send(jsonObject.toString());
 		}
 	}
 	// @Override

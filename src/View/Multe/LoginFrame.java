@@ -3,10 +3,9 @@ package View.Multe;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
-import Control.FrameChangeAction;
+import Control.FrameControl;
 import Control.LoginEvent;
-import Serversynchronization.TotalJsonObject;
-import View.ExitButton;
+import Control.MVC_Connect;
 import View.BaseClass.BasicButton;
 import View.BaseClass.BasicFrame;
 import View.BaseClass.BasicLabel;
@@ -16,9 +15,8 @@ import View.BaseClass.BasicTextField;
 public class LoginFrame extends BasicFrame {
 
 	/**
-	 * First Frame에서 "같이하기"버튼을 누를 경우 나오는 Frame으로 
-	 * 서버에 접속전 자신의 정보를 입력후 보내는 작업이 이루어지는 Frame이다
-	 * 이 Frame다음에서 ListViewFrame이 나온다
+	 * First Frame에서 "같이하기"버튼을 누를 경우 나오는 Frame으로 서버에 접속전 자신의 정보를 입력후 보내는 작업이 이루어지는
+	 * Frame이다 이 Frame다음에서 ListViewFrame이 나온다
 	 */
 	private static final long serialVersionUID = 828881716387355186L;
 
@@ -51,8 +49,8 @@ public class LoginFrame extends BasicFrame {
 		});
 		btnPanel.add(login);
 
-		BasicButton back = new BasicButton("Back");
-		back.addActionListener(new FrameChangeAction(LoginFrame.class, this.getClass()));
+		BasicButton back = new BasicButton("Back", (e) -> MVC_Connect.ViewToControl.callEvent(FrameControl.class,
+				(controller) -> ((FrameControl) controller).FrameChange(LoginFrame.class, this.getClass())));
 		btnPanel.add(back);
 
 		BasicButton exit=new BasicButton("Exit");

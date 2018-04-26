@@ -34,12 +34,12 @@ public abstract class Tic extends Timer {
 
 				public void run() {
 					try {
-						while (true) {
-							FileInputStream fls = new FileInputStream(str);
-							playMp3 = new Player(fls);
-							playMp3.play();
-							fls.close();
-						}
+//						while (true) {
+//							FileInputStream fls = new FileInputStream(str);
+//							playMp3 = new Player(fls);
+//							playMp3.play();
+//							fls.close();
+//						}
 					} catch (Exception e) {
 					}
 				}

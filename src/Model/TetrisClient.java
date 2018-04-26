@@ -15,36 +15,36 @@ public class TetrisClient extends Thread {
 	PrintWriter out;
 	BufferedReader in;
 
-	private static TetrisClient client = null;
+	private static TetrisClient clientInstance = null;
 
 	private TetrisClient() {
-		try {
 
+	}
+
+	public void connect() {
+		try {
 			socket = new Socket(IP, PORT);
 			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
+			clientInstance.start();
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
+
 	}
 
 	public void deConnect() {
-		TetrisClient.client = null;
+		TetrisClient.clientInstance = null;
 		close();
 	}
 
-	public static TetrisClient createTetrisClient() {
-		if (client == null) {
-			client = new TetrisClient();
-			client.start();
+	public static TetrisClient getclientInstance() {
+		if (clientInstance == null) {
+			clientInstance = new TetrisClient();
 		}
-		return client;
+		return clientInstance;
 	}
 
-	public static TetrisClient getTetrisClient() {
-		return client;
-	}
 
 	@Override
 	public void run() {
@@ -57,9 +57,9 @@ public class TetrisClient extends Thread {
 		// ServerMessage event = new ServerMessage();
 		try {
 			String str = in.readLine();
-			ServerMessage message=new ServerMessage();
+			ServerMessage message = new ServerMessage();
 			message.onEvent(str);
-			
+
 			in.mark(0);
 			in.reset();
 		} catch (IOException e) {
@@ -70,6 +70,9 @@ public class TetrisClient extends Thread {
 	}
 
 	public void send(String msg) {
+		if(socket==null) {
+			return;
+		}
 		out.println(msg);
 		out.flush();
 		System.gc();

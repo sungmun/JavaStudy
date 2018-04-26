@@ -1,13 +1,10 @@
 package View;
 
+import Control.CallBackEvent;
 import Control.EventListener;
 import Control.MVC_Connect;
-import Model.ServerMessage;
-import Model.TetrisManager;
-import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicPanel;
 import View.Multe.MultiFrame;
-import View.Multe.PanelForTheOpponent;
 import View.Single.SingleFrame;
 
 public abstract class SendDataPanel extends BasicPanel implements EventListener {
@@ -41,27 +38,8 @@ public abstract class SendDataPanel extends BasicPanel implements EventListener 
 	}
 
 	@Override
-	public void onEvent(Object event) {
-		try {
-			TotalJsonObject message = (TotalJsonObject) event;
-			methodCatch(message);
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
+	public void onEvent(CallBackEvent event) {
+		event.callBackEvent(this);
 	}
-
-	public void methodCatch(Object event) {
-		TotalJsonObject element = (TotalJsonObject) event;
-		if (element.get("sentClass").equals(ServerMessage.class.getName())
-				&& originClass == PanelForTheOpponent.class) {
-			setData(element);
-		} else if (element.get("sentClass").equals(TetrisManager.class.getName())
-				&& originClass == PanelForTheUser.class) {
-			setData(element);
-		}
-	}
-
-	abstract public void setData(Object obj);
 
 }

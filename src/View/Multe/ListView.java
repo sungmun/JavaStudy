@@ -41,9 +41,7 @@ public class ListView extends BasicPanel{
 
 		setOpaque(false);
 		
-		TotalJsonObject json=new TotalJsonObject();
-		json.addProperty("method", "initList");
-		MVC_Connect.ViewToControl.callEvent(UserListModel.class, json.toString());
+		MVC_Connect.ViewToControl.callEvent(UserListModel.class, (e)->((UserListModel)e).initList());
 	}
 
 }

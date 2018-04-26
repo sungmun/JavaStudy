@@ -187,7 +187,7 @@ public class TetrisManager implements EventListener {
 			MVC_Connect.ControlToView.callEvent(ScorePanel.class, (viewObj) -> {
 				ScorePanel panel = ((ScorePanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
-					panel.setData(Integer.toString(score));
+					panel.score.setText(Integer.toString(score));
 				}
 			});
 		});
@@ -205,7 +205,7 @@ public class TetrisManager implements EventListener {
 			MVC_Connect.ControlToView.callEvent(LevelPanel.class, (viewObj) -> {
 				LevelPanel panel = ((LevelPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
-					panel.setData(Integer.toString(level));
+					panel.level.setText(Integer.toString(level));
 				}
 			});
 		});
@@ -372,7 +372,7 @@ public class TetrisManager implements EventListener {
 			MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, (viewObj) -> {
 				SaveBlockPanel panel = ((SaveBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
-					panel.setData(image);
+					panel.paintImage(image);
 				}
 			});
 		});
@@ -388,7 +388,7 @@ public class TetrisManager implements EventListener {
 			MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, (viewObj) -> {
 				NextBlockPanel panel = ((NextBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
-					panel.setData(image);
+					panel.paintImage(image);
 				}
 			});
 		});
@@ -438,7 +438,7 @@ public class TetrisManager implements EventListener {
 			MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class, (viewObj) -> {
 				TetrinoBlockPanel panel = ((TetrinoBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
-					panel.setData(image);
+					panel.paintImage(image);
 				}
 			});
 		});
@@ -461,23 +461,4 @@ public class TetrisManager implements EventListener {
 	public void onEvent(CallBackEvent event) {
 		event.callBackEvent(this);
 	}
-	// @Override
-	// public void onEvent(Object event) {
-	// TotalJsonObject object = new TotalJsonObject((String) event);
-	// methodCatch(object);
-	// }
-	//
-	// public void methodCatch(Object event) {
-	// TotalJsonObject object = (TotalJsonObject) event;
-	// switch (object.get("method").toString()) {
-	// case "TetrinoBlockDropMove":
-	// case "TetrinoBlockMove":
-	// MoveType type = MoveType.valueOf(object.get("MoveType").toString());
-	// dropCheck(type);
-	// break;
-	// case "saveBlock":
-	// saveBlock();
-	// break;
-	// }
-	// }
 }
