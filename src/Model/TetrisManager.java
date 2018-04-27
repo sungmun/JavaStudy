@@ -93,7 +93,7 @@ public class TetrisManager implements EventListener {
 		}
 	}
 
-	public void createBlock() {
+	private void createBlock() {
 		final int createPosition = WIDTH / 3;
 
 		if (gameOverCheack()) {
@@ -123,7 +123,7 @@ public class TetrisManager implements EventListener {
 		sendRealTimeMap();
 	}
 
-	public void createChoiceBlock(TetrinoType Type) {
+	private void createChoiceBlock(TetrinoType Type) {
 		int createposition = WIDTH / 3;
 		tetrino = new CreateBlock().tetrinoChoiceCreate(Type);
 		for (int y = 0; y < 4; y++) {
@@ -134,7 +134,7 @@ public class TetrisManager implements EventListener {
 		tetrino.setFlowTetrino(new Point(1, createposition + 2));
 	}
 
-	public void lineClear(int clearline, Point pos) {
+	private void lineClear(int clearline, Point pos) {
 
 		final int CLEAR_LINE = 1;
 		final int NULL_LINE = 0;
@@ -179,7 +179,7 @@ public class TetrisManager implements EventListener {
 
 	}
 
-	public void scoreCalculation(int score) {
+	private void scoreCalculation(int score) {
 		User user = UserControl.users.getPlayer();
 		user.setScore(user.getScore() + score * 100);
 
@@ -187,7 +187,7 @@ public class TetrisManager implements EventListener {
 			MVC_Connect.ControlToView.callEvent(ScorePanel.class, (viewObj) -> {
 				ScorePanel panel = ((ScorePanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
-					panel.score.setText(Integer.toString(score));
+					panel.score.setText(Integer.toString(user.getScore()));
 				}
 			});
 		});
@@ -212,11 +212,11 @@ public class TetrisManager implements EventListener {
 		ClientMessage.getClientMessageInstanse().levelMessageSendEvent(level);
 	}
 
-	public void setNowTetrino(Tetrino ttrn) {
+	private void setNowTetrino(Tetrino ttrn) {
 		tetrino = ttrn;
 	}
 
-	public boolean TetrinoBlockDropMove() {
+	private boolean TetrinoBlockDropMove() {
 		boolean sucess = true;
 		while (sucess) {
 			sucess = TetrinoBlockMove(MoveType.DOWN);
@@ -225,7 +225,7 @@ public class TetrisManager implements EventListener {
 		return false;
 	}
 
-	public boolean TetrinoBlockMove(MoveType moveType) {
+	private boolean TetrinoBlockMove(MoveType moveType) {
 		/*
 		 * Space[][] temp = new Space[HEIGHT][WIDTH];
 		 * 
@@ -333,7 +333,7 @@ public class TetrisManager implements EventListener {
 		return tetrino;
 	}
 
-	public int lineCheack(Point pos) {
+	private int lineCheack(Point pos) {
 		Space[][] spc = getRangeRealTimeMap(pos.getY() - 1);
 		int returnvalue = 0;
 

@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import Model.MoveType;
 import Model.TetrisManager;
-import Serversynchronization.TotalJsonObject;
 import Serversynchronization.User;
 import View.BaseClass.GameBasicFrame;
 import View.Multe.MultiFrame;
@@ -19,14 +18,15 @@ public class TicAction implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
 		MVC_Connect.ControlToModel.callEvent(TetrisManager.class,
-				(modelObj) -> ((TetrisManager) modelObj).TetrinoBlockMove(MoveType.DOWN));
+				(modelObj) -> ((TetrisManager) modelObj).dropCheck(MoveType.DOWN));
 		speedChange();
 	}
-	//
-	// public void timeStop() {
-	// MVC_Connect.ControlToView.quickCallEvent(SingleFrame.class, "TimeStop");
-	// MVC_Connect.ControlToView.quickCallEvent(MultiFrame.class, "TimeStop");
-	// }
+
+	public void timeStop() {
+		MVC_Connect.ControlToView.callEvent(SingleFrame.class, (view) -> {
+			GameBasicFrame.time.timerstop();
+		});
+	}
 
 	public void speedChange() {
 		User user = UserControl.users.getPlayer();
