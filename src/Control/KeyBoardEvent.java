@@ -8,7 +8,6 @@ import Model.MoveType;
 import Model.TetrisManager;
 
 public class KeyBoardEvent extends KeyAdapter implements KeyListener {
-	ImagePrint mainprint;
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -36,7 +35,7 @@ public class KeyBoardEvent extends KeyAdapter implements KeyListener {
 		default:
 			return;
 		}
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class, event);
+		MVC_Connect.Model.callEvent(TetrisManager.class, event);
 	}
 
 }
