@@ -17,13 +17,13 @@ public class TicAction implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.gc();
-		MVC_Connect.ControlToModel.callEvent(TetrisManager.class,
+		MVC_Connect.Model.callEvent(TetrisManager.class,
 				(modelObj) -> ((TetrisManager) modelObj).dropCheck(MoveType.DOWN));
 		speedChange();
 	}
 
 	public void timeStop() {
-		MVC_Connect.ControlToView.callEvent(SingleFrame.class, (view) -> {
+		MVC_Connect.View.callEvent(SingleFrame.class, (view) -> {
 			GameBasicFrame.time.timerstop();
 		});
 	}
@@ -35,7 +35,7 @@ public class TicAction implements ActionListener {
 		}
 
 		this.speed = (int) (500 * Math.pow(0.999, user.getLevel() - 1));
-		MVC_Connect.ControlToView.callEvent(SingleFrame.class, (frame) -> GameBasicFrame.time.setDelay(speed));
-		MVC_Connect.ControlToView.callEvent(MultiFrame.class, (frame) -> GameBasicFrame.time.setDelay(speed));
+		MVC_Connect.View.callEvent(SingleFrame.class, (frame) -> GameBasicFrame.time.setDelay(speed));
+		MVC_Connect.View.callEvent(MultiFrame.class, (frame) -> GameBasicFrame.time.setDelay(speed));
 	}
 }
