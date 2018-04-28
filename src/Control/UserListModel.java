@@ -16,8 +16,7 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 
 	public UserListModel(String[] header, int date) {
 		super(header, date);
-		MVC_Connect.ModelToControl.addListener(this);
-		MVC_Connect.ViewToControl.addListener(this);
+		MVC_Connect.Controller.addListener(this);
 		UserListModel.model = this;
 	}
 
@@ -82,30 +81,5 @@ public class UserListModel extends DefaultTableModel implements EventListener {
 	public void onEvent(CallBackEvent event) {
 		event.callBackEvent(this);
 	}
-//
-//	@Override
-//	public void onEvent(Object event) {
-//		json = new TotalJsonObject(event.toString());
-//		String source = null;
-//		switch (json.get("method").toString()) {
-//		case "addData":
-//			source = json.get("User").toString();
-//			addData(TotalJsonObject.GsonConverter(source, User.class));
-//			break;
-//		case "setUsersList":
-//			setUsersList(
-//					TotalJsonObject.GsonConverter(json.get(User[].class.getSimpleName()).toString(), User[].class));
-//			break;
-//		case "getData":
-//			getData();
-//			break;
-//		case "delete":
-//			source = json.get("User").toString();
-//			delete(TotalJsonObject.GsonConverter(source, User.class));
-//			break;
-//		default:
-//			break;
-//		}
-//	}
 
 }
