@@ -22,8 +22,7 @@ public class ImagePrint implements EventListener {
 	BufferedImage background = null;
 
 	public ImagePrint() {
-		MVC_Connect.ModelToControl.addListener(this);
-		MVC_Connect.ViewToControl.addListener(this);
+		MVC_Connect.Controller.addListener(this);
 	}
 
 	public BufferedImage backgroundImage(int x, int y) {
@@ -125,36 +124,5 @@ public class ImagePrint implements EventListener {
 	public void onEvent(CallBackEvent event) {
 		event.callBackEvent(this);
 	}
-
-	// @Override
-	// public void onEvent(Object event) {
-	// // System.out.println("ImagePrint.tetrinoBlockPaint()");
-	// TotalJsonObject obj = new TotalJsonObject(event.toString());
-	// methodCatch(obj);
-	// }
-	//
-	// public void methodCatch(Object event) {
-	// TotalJsonObject obj = (TotalJsonObject) event;
-	// try {
-	// MessageType type = MessageType.valueOf((String)
-	// obj.get(MessageType.class.getSimpleName()));
-	// sentClass = Class.forName(obj.get("sentClass").toString());
-	// switch (type) {
-	// case SAVE_BLOCK_MESSAGE:
-	// saveBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
-	// break;
-	// case NEXT_BLOCK_MESSAGE:
-	// nextBlockPaint(obj.get(TetrinoType.class.getSimpleName()));
-	// break;
-	// case MAP_MESSAGE:
-	// tetrinoBlockPaint(obj.get(Space[][].class.getSimpleName()));
-	// break;
-	// default:
-	// break;
-	// }
-	// } catch (ClassNotFoundException e) {
-	// e.printStackTrace();
-	// }
-	// }
 
 }
