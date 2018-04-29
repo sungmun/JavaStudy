@@ -107,7 +107,7 @@ public class ServerMessage {
 
 		User user = UserControl.users.getPlayer();
 		user.setUuid(usernum);
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e) -> {
+		MVC_Connect.Controller.callEvent(FrameControl.class, (e) -> {
 			((FrameControl) e).showMessageDialog(null, "당신의 고유번호는 " + usernum.toString() + " 입니다");
 		});
 		TotalJsonObject object = new TotalJsonObject();
@@ -117,23 +117,23 @@ public class ServerMessage {
 	}
 
 	public void logIn(User user) {
-		MVC_Connect.ModelToControl.callEvent(UserListModel.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(UserListModel.class, (controllerObj) -> {
 			((UserListModel) controllerObj).addData(user);
 		});
 	}
 
 	public void logOut(User user) {
-		MVC_Connect.ModelToControl.callEvent(UserListModel.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(UserListModel.class, (controllerObj) -> {
 			((UserListModel) controllerObj).delete(user);
 		});
 	}
 
 	public void userListMessage(User[] users) {
-		MVC_Connect.ModelToControl.callEvent(UserListModel.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(UserListModel.class, (controllerObj) -> {
 			((UserListModel) controllerObj).setUsersList(users);
 		});
 
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e) -> {
+		MVC_Connect.Controller.callEvent(FrameControl.class, (e) -> {
 			((FrameControl) e).FrameChange(ListViewFrame.class, LoginFrame.class);
 		});
 	}
@@ -142,7 +142,7 @@ public class ServerMessage {
 		/*----이때 부터 상대플레이어가 필요하므로 상대플레이어를 유저컨트롤에 상대플레이어 생성----*/
 		UserControl.users.setOpplayer(user);
 		/*-------------------------------------------------------------------------*/
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e) -> {
+		MVC_Connect.Controller.callEvent(FrameControl.class, (e) -> {
 			((FrameControl) e).FrameChange(MultiFrame.class, ListViewFrame.class);
 		});
 	}
@@ -171,7 +171,7 @@ public class ServerMessage {
 		jsonObject.addProperty(MessageTypeKey, MessageType.USER_MESSAGE.toString());
 		jsonObject.addProperty(User.class.getSimpleName(), TotalJsonObject.GsonConverter(user));
 		TetrisClient.getclientInstance().send(jsonObject.toString());
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class, (e) -> {
+		MVC_Connect.Controller.callEvent(FrameControl.class, (e) -> {
 			((FrameControl) e).FrameChange(MultiFrame.class, ListViewFrame.class);
 		});
 	}
@@ -184,7 +184,7 @@ public class ServerMessage {
 		TotalJsonObject jsonObject = new TotalJsonObject(msg.toString());
 		String rank = jsonObject.get(int.class.getSimpleName()).toString();
 		String messageStr = jsonObject.get("RankingType").toString() + "\n 순위 : " + rank;
-		MVC_Connect.ModelToControl.callEvent(FrameControl.class,
+		MVC_Connect.Controller.callEvent(FrameControl.class,
 				(e) -> ((FrameControl) e).showMessageDialog(null, messageStr));
 	}
 
@@ -193,13 +193,11 @@ public class ServerMessage {
 		user.setScore(score);
 		UserControl.users.setOpplayer(user);
 
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerObj) -> {
-			MVC_Connect.ControlToView.callEvent(ScorePanel.class, (viewObj) -> {
-				ScorePanel panel = (ScorePanel) viewObj;
-				if (panel.originClass == PanelForTheOpponent.class) {
-					panel.score.setText(Integer.toString(score));
-				}
-			});
+		MVC_Connect.View.callEvent(ScorePanel.class, (viewObj) -> {
+			ScorePanel panel = (ScorePanel) viewObj;
+			if (panel.originClass == PanelForTheOpponent.class) {
+				panel.score.setText(Integer.toString(score));
+			}
 		});
 	}
 
@@ -208,20 +206,18 @@ public class ServerMessage {
 		user.setLevel(level);
 		UserControl.users.setOpplayer(user);
 
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerObj) -> {
-			MVC_Connect.ControlToView.callEvent(LevelPanel.class, (viewObj) -> {
-				LevelPanel panel = (LevelPanel) viewObj;
-				if (panel.originClass == PanelForTheOpponent.class) {
-					panel.level.setText(Integer.toString(level));
-				}
-			});
+		MVC_Connect.View.callEvent(LevelPanel.class, (viewObj) -> {
+			LevelPanel panel = (LevelPanel) viewObj;
+			if (panel.originClass == PanelForTheOpponent.class) {
+				panel.level.setText(Integer.toString(level));
+			}
 		});
 	}
 
 	public void saveBlockMessageSendEvent(TetrinoType saveBlock) {
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(ImagePrint.class, (controllerObj) -> {
 			BufferedImage image = ((ImagePrint) controllerObj).saveBlockPaint(saveBlock);
-			MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, (viewObj) -> {
+			MVC_Connect.View.callEvent(SaveBlockPanel.class, (viewObj) -> {
 				SaveBlockPanel panel = ((SaveBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheOpponent.class) {
 					panel.paintImage(image);
@@ -231,9 +227,9 @@ public class ServerMessage {
 	}
 
 	public void nextBlockMessageSendEvent(TetrinoType nextBlock) {
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(ImagePrint.class, (controllerObj) -> {
 			BufferedImage image = ((ImagePrint) controllerObj).nextBlockPaint(nextBlock);
-			MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, (viewObj) -> {
+			MVC_Connect.View.callEvent(NextBlockPanel.class, (viewObj) -> {
 				NextBlockPanel panel = ((NextBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheOpponent.class)
 					panel.paintImage(image);
