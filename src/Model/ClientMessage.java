@@ -14,7 +14,8 @@ public class ClientMessage {
 	private static ClientMessage clientMsgInstanse;
 	final String MessageTypeKey = MessageType.class.getSimpleName();
 
-	private ClientMessage() {	}
+	private ClientMessage() {
+	}
 
 	public static ClientMessage getClientMessageInstanse() {
 		if (clientMsgInstanse == null) {
@@ -91,7 +92,7 @@ public class ClientMessage {
 	public void gameOverEvent(User user) {
 
 		if (TetrisClient.getclientInstance().socket == null || user == null) {
-			MVC_Connect.ModelToControl.callEvent(FrameControl.class, (controllerObj) -> {
+			MVC_Connect.Controller.callEvent(FrameControl.class, (controllerObj) -> {
 				int value = ((FrameControl) controllerObj).showOptionDialog(null, "남기시겠습니까", JOptionPane.YES_NO_OPTION,
 						JOptionPane.PLAIN_MESSAGE);
 				if (value == JOptionPane.OK_OPTION) {
@@ -105,54 +106,5 @@ public class ClientMessage {
 			TetrisClient.getclientInstance().send(jsonObject.toString());
 		}
 	}
-	// @Override
-	// public void onEvent(Object event) {
-	// TotalJsonObject parser = new TotalJsonObject((String) event);
-	//
-	// if (parser.get(MessageTypeKey) == null)
-	// return;
-	// methodCatch(parser);
-	// parser.removeValue("sentClass");
-	// }
-	//
-	// public void methodCatch(Object event) {
-	// if (event == null)
-	// return;
-	// TotalJsonObject obj = (TotalJsonObject) event;
-	// String messageTypeStr = (String) obj.get(MessageTypeKey);
-	// MessageType messageType = MessageType.valueOf(messageTypeStr);
-	// if (client == null) {
-	// if (messageType == MessageType.LOGIN) {
-	// login();
-	// } else if (messageType == MessageType.GAMEOVER_MESSAGE) {
-	// gameOver();
-	// }
-	// return;
-	// }
-	//
-	// switch (messageType) {
-	// case USER_SELECTING:
-	// UserSelecting(obj);
-	// break;
-	// case BATTLE_ACCEPT:
-	// battleAccept();
-	// break;
-	// case LOGOUT:
-	// logout(obj);
-	// break;
-	// case RANK:
-	//
-	// case USER_MESSAGE:
-	// case MAP_MESSAGE:
-	//
-	// case NEXT_BLOCK_MESSAGE:
-	// case SAVE_BLOCK_MESSAGE:
-	// case LEVEL_MESSAGE:
-	// case SCORE_MESSAGE:
-	// client.send(obj.toString());
-	// default:
-	// break;
-	// }
-	// }
 
 }
