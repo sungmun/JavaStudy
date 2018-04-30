@@ -21,18 +21,15 @@ public class StartFrame extends BasicFrame {
 
 		this.setLayout(new FlowLayout());
 
-		BasicButton single = new BasicButton("혼자하기");
-		single.addActionListener((e) -> MVC_Connect.ViewToControl.callEvent(FrameControl.class,
+		BasicButton single = new BasicButton("혼자하기", (e) -> MVC_Connect.Controller.callEvent(FrameControl.class,
 				(controller) -> ((FrameControl) controller).FrameChange(SingleFrame.class, this.getClass())));
 		add(single);
 
-		BasicButton mulite = new BasicButton("같이하기");
-		mulite.addActionListener((e) -> MVC_Connect.ViewToControl.callEvent(FrameControl.class,
+		BasicButton mulite = new BasicButton("같이하기", (e) -> MVC_Connect.Controller.callEvent(FrameControl.class,
 				(controller) -> ((FrameControl) controller).FrameChange(LoginFrame.class, this.getClass())));
 		add(mulite);
 
-		BasicButton exit = new BasicButton("Exit");
-		exit.addActionListener((e) -> System.exit(0));
+		BasicButton exit = new BasicButton("Exit", (e) -> System.exit(0));
 		exit.setPreferredSize(single.getPreferredSize());
 		add(exit);
 
