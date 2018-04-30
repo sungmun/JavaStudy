@@ -20,7 +20,7 @@ public abstract class SendDataPanel extends BasicPanel implements EventListener 
 	public SendDataPanel() {
 		super(true);
 
-		MVC_Connect.ControlToView.addListener(this);
+		MVC_Connect.View.addListener(this);
 
 		StackTraceElement[] elements = new Throwable().getStackTrace();
 		try {
