@@ -36,7 +36,7 @@ public class TetrisManager implements EventListener {
 	public Tetrino tetrino;
 
 	public TetrisManager() {
-		MVC_Connect.ControlToModel.addListener(this);
+		MVC_Connect.Model.addListener(this);
 		realTimeMap = new Map(WIDTH, HEIGHT).getMap();
 		createBlock();
 	}
@@ -183,13 +183,11 @@ public class TetrisManager implements EventListener {
 		User user = UserControl.users.getPlayer();
 		user.setScore(user.getScore() + score * 100);
 
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerObj) -> {
-			MVC_Connect.ControlToView.callEvent(ScorePanel.class, (viewObj) -> {
-				ScorePanel panel = ((ScorePanel) viewObj);
-				if (panel.originClass == PanelForTheUser.class) {
-					panel.score.setText(Integer.toString(user.getScore()));
-				}
-			});
+		MVC_Connect.View.callEvent(ScorePanel.class, (viewObj) -> {
+			ScorePanel panel = ((ScorePanel) viewObj);
+			if (panel.originClass == PanelForTheUser.class) {
+				panel.score.setText(Integer.toString(user.getScore()));
+			}
 		});
 		ClientMessage.getClientMessageInstanse().scoreMessageSendEvent(score);
 
@@ -201,13 +199,11 @@ public class TetrisManager implements EventListener {
 		}
 
 		user.setLevel(level);
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerObj) -> {
-			MVC_Connect.ControlToView.callEvent(LevelPanel.class, (viewObj) -> {
-				LevelPanel panel = ((LevelPanel) viewObj);
-				if (panel.originClass == PanelForTheUser.class) {
-					panel.level.setText(Integer.toString(level));
-				}
-			});
+		MVC_Connect.View.callEvent(LevelPanel.class, (viewObj) -> {
+			LevelPanel panel = ((LevelPanel) viewObj);
+			if (panel.originClass == PanelForTheUser.class) {
+				panel.level.setText(Integer.toString(level));
+			}
 		});
 		ClientMessage.getClientMessageInstanse().levelMessageSendEvent(level);
 	}
@@ -367,9 +363,9 @@ public class TetrisManager implements EventListener {
 	public void setSaveBlock(TetrinoType tetrino) {
 		this.saveBlock = tetrino;
 
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(ImagePrint.class, (controllerObj) -> {
 			BufferedImage image = ((ImagePrint) controllerObj).saveBlockPaint(saveBlock);
-			MVC_Connect.ControlToView.callEvent(SaveBlockPanel.class, (viewObj) -> {
+			MVC_Connect.View.callEvent(SaveBlockPanel.class, (viewObj) -> {
 				SaveBlockPanel panel = ((SaveBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
 					panel.paintImage(image);
@@ -383,9 +379,9 @@ public class TetrisManager implements EventListener {
 	public void setNextBlock(TetrinoType tetrino) {
 		this.nextBlock = tetrino;
 
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(ImagePrint.class, (controllerObj) -> {
 			BufferedImage image = ((ImagePrint) controllerObj).nextBlockPaint(nextBlock);
-			MVC_Connect.ControlToView.callEvent(NextBlockPanel.class, (viewObj) -> {
+			MVC_Connect.View.callEvent(NextBlockPanel.class, (viewObj) -> {
 				NextBlockPanel panel = ((NextBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
 					panel.paintImage(image);
@@ -433,9 +429,9 @@ public class TetrisManager implements EventListener {
 	}
 
 	public void sendRealTimeMap() {
-		MVC_Connect.ModelToControl.callEvent(ImagePrint.class, (controllerObj) -> {
+		MVC_Connect.Controller.callEvent(ImagePrint.class, (controllerObj) -> {
 			BufferedImage image = ((ImagePrint) controllerObj).tetrinoBlockPaint(realTimeMap);
-			MVC_Connect.ControlToView.callEvent(TetrinoBlockPanel.class, (viewObj) -> {
+			MVC_Connect.View.callEvent(TetrinoBlockPanel.class, (viewObj) -> {
 				TetrinoBlockPanel panel = ((TetrinoBlockPanel) viewObj);
 				if (panel.originClass == PanelForTheUser.class) {
 					panel.paintImage(image);
@@ -447,12 +443,10 @@ public class TetrisManager implements EventListener {
 	}
 
 	public void gameOver() {
-		MVC_Connect.ModelToControl.callEvent(MVC_Connect.class, (controllerobj) -> {
-			CallBackEvent event = (e) -> GameBasicFrame.time.stop();
-			MVC_Connect.ControlToView.callEvent(SingleFrame.class, event);
-			MVC_Connect.ControlToView.callEvent(MultiFrame.class, event);
-			MainThread.gameflag = false;
-		});
+		CallBackEvent event = (e) -> GameBasicFrame.time.stop();
+		MVC_Connect.View.callEvent(SingleFrame.class, event);
+		MVC_Connect.View.callEvent(MultiFrame.class, event);
+		MainThread.gameflag = false;
 
 		ClientMessage.getClientMessageInstanse().gameOverEvent(UserControl.users.getPlayer());
 	}
