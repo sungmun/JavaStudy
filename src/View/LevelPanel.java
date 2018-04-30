@@ -20,7 +20,7 @@ public class LevelPanel extends SendDataPanel {
 	public BasicLabel level;
 
 	public LevelPanel() {
-		MVC_Connect.ControlToView.addListener(this);
+		MVC_Connect.View.addListener(this);
 
 		int height = 70;
 
