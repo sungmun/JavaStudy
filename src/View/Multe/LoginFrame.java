@@ -49,7 +49,7 @@ public class LoginFrame extends BasicFrame {
 		});
 		btnPanel.add(login);
 
-		BasicButton back = new BasicButton("Back", (e) -> MVC_Connect.ViewToControl.callEvent(FrameControl.class,
+		BasicButton back = new BasicButton("Back", (e) -> MVC_Connect.Controller.callEvent(FrameControl.class,
 				(controller) -> ((FrameControl) controller).FrameChange(LoginFrame.class, this.getClass())));
 		btnPanel.add(back);
 
