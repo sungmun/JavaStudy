@@ -8,7 +8,6 @@ import javax.swing.JTable;
 import Control.ListSelectAction;
 import Control.MVC_Connect;
 import Control.UserListModel;
-import Serversynchronization.TotalJsonObject;
 import View.BaseClass.BasicPanel;
 
 public class ListView extends BasicPanel{
@@ -41,7 +40,7 @@ public class ListView extends BasicPanel{
 
 		setOpaque(false);
 		
-		MVC_Connect.ViewToControl.callEvent(UserListModel.class, (e)->((UserListModel)e).initList());
+		MVC_Connect.Controller.callEvent(UserListModel.class, (e)->((UserListModel)e).initList());
 	}
 
 }
