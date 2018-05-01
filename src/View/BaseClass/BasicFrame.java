@@ -41,13 +41,13 @@ public class BasicFrame extends JFrame implements EventListener {
 		this.getContentPane().setBackground(Color.BLACK);
 		this.setUndecorated(true);
 		this.setResizable(false);
-		MVC_Connect.ControlToView.addListener(this);
+		MVC_Connect.View.addListener(this);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		MVC_Connect.ControlToView.removeListener(this);
+		MVC_Connect.View.removeListener(this);
 	}
 
 	@Override
