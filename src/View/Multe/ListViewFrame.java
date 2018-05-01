@@ -37,7 +37,7 @@ public class ListViewFrame extends BasicFrame {
 
 		random_multie_play_btn = new BasicButton("RandomStart", new MulitePlayAction());
 		etc.add(random_multie_play_btn);
-		back_frame_btn = new BasicButton("Back", (e) -> MVC_Connect.ViewToControl.callEvent(FrameControl.class,
+		back_frame_btn = new BasicButton("Back", (e) -> MVC_Connect.Controller.callEvent(FrameControl.class,
 				(controller) -> ((FrameControl) controller).FrameChange(StartFrame.class, this.getClass())));
 		etc.add(back_frame_btn);
 
