@@ -14,6 +14,7 @@ public static boolean gameflag=true;
 		
 		StartFrame startfr = new StartFrame();
 		startfr.setVisible(true);
+		
 	}
 
 }
